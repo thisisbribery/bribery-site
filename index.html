@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRIBERY</title>
+<meta name="description" content="The creative alias of Dr Mitch Catterall. Modified firmware, broken, glitch and distorted electronic music, and music production.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="BRIBERY">
+<meta property="og:description" content="Modified firmware, broken, glitch and distorted electronic music, and music production.">
+<meta property="og:image" content="assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+:root{
+  --pink:#ff1fd6; --pink-deep:#b3009a; --pink-glow:rgba(255,31,214,.45);
+  --teal:#19ffe0;
+  --black:#000; --ink:#f4f1ec; --muted:#9a9097; --line:#2a2228;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --gutter:clamp(16px,4vw,56px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--black);color:var(--ink);font:17px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+::selection{background:var(--pink);color:var(--black)}
+
+/* scanlines over everything, very faint */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px var(--gutter);border-bottom:1px solid var(--line)}
+.coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:14px;line-height:1.2}
+.coinlink b{font-weight:800;letter-spacing:.04em}
+.coinlink small{display:block;color:var(--muted);font:12.5px var(--mono)}
+.coinlink:hover small{color:var(--pink)}
+.coin{display:block;width:38px;height:38px;perspective:220px;flex:0 0 auto}
+.coin-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinspin 4s steps(24) infinite}
+.coinlink:hover .coin-inner{animation-duration:1.6s}
+.coin img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(2.5px)}
+.coin .back{transform:rotateY(180deg) translateZ(2.5px)}
+.coin .edge{display:block;position:absolute;left:50%;top:8%;width:5px;height:84%;margin-left:-2.5px;background:linear-gradient(#9a9a9a,#6f6f6f 50%,#4a4a4a);transform:rotateY(90deg)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+nav{display:flex;gap:clamp(14px,3vw,36px);font:600 13px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+nav a{text-decoration:none;color:var(--muted)}
+nav a:hover{color:var(--pink)}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(28px,6vw,72px) var(--gutter) clamp(36px,6vw,80px);position:relative}
+.kicker{font:600 12.5px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pink);margin:0 0 clamp(10px,2vw,22px)}
+.kicker span{color:var(--muted)}
+h1.glitch{position:relative;margin:0;font-weight:900;line-height:.78;letter-spacing:-.045em;color:var(--pink);
+  font-size:19vw;white-space:nowrap;text-shadow:0 0 40px var(--pink-glow)}
+h1.glitch .fit{display:inline-block}
+h1.glitch::before,h1.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;pointer-events:none;text-shadow:none}
+h1.glitch::before{color:var(--teal);mix-blend-mode:screen;animation:slice1 4.2s steps(1) infinite}
+h1.glitch::after{color:var(--ink);mix-blend-mode:difference;animation:slice2 4.2s steps(1) infinite}
+@keyframes slice1{
+  0%,86%,100%{clip-path:inset(100% 0 0 0);transform:none}
+  87%{clip-path:inset(12% 0 70% 0);transform:translate(-1.2vw,0)}
+  89%{clip-path:inset(55% 0 28% 0);transform:translate(1.6vw,0)}
+  91%{clip-path:inset(30% 0 52% 0);transform:translate(-.6vw,0)}
+  93%{clip-path:inset(78% 0 6% 0);transform:translate(2.2vw,0)}
+  95%{clip-path:inset(100% 0 0 0)}
+}
+@keyframes slice2{
+  0%,88%,100%{clip-path:inset(100% 0 0 0);transform:none}
+  89%{clip-path:inset(40% 0 44% 0);transform:translate(1vw,0)}
+  92%{clip-path:inset(4% 0 86% 0);transform:translate(-2vw,0)}
+  94%{clip-path:inset(66% 0 20% 0);transform:translate(.8vw,0)}
+  96%{clip-path:inset(100% 0 0 0)}
+}
+.hero-foot{display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,3vw,36px);align-items:center;margin-top:clamp(22px,4vw,48px)}
+.bigcoin{width:clamp(72px,9vw,112px);height:clamp(72px,9vw,112px);perspective:500px}
+.bigcoin .edge{width:8px;margin-left:-4px}
+.bigcoin img{transform:translateZ(4px)}
+.bigcoin .back{transform:rotateY(180deg) translateZ(4px)}
+.lede{margin:0;font-size:clamp(19px,2.3vw,30px);line-height:1.3;font-weight:500;max-width:46ch}
+.lede b{color:var(--pink);font-weight:800}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(22px,3vw,34px)}
+.btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font:700 14px var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:14px 20px;border:2px solid var(--pink);color:var(--pink);transition:background .12s,color .12s}
+.btn:hover{background:var(--pink);color:var(--black)}
+.btn.solid{background:var(--pink);color:var(--black)}
+.btn.solid:hover{background:var(--black);color:var(--pink)}
+
+/* ---------- marquee ---------- */
+.marquee{background:var(--pink);color:var(--black);overflow:hidden;border-block:2px solid var(--pink)}
+.marquee-track{display:flex;width:max-content;animation:scroll 28s linear infinite}
+.marquee span{font:900 clamp(22px,3.4vw,44px)/1 var(--sans);letter-spacing:-.02em;text-transform:uppercase;padding:14px 0;white-space:nowrap}
+.marquee i{font-style:normal;padding:0 .5em;opacity:.55}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+section{padding:clamp(56px,8vw,120px) var(--gutter)}
+.sec-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;border-bottom:2px solid var(--pink);padding-bottom:18px;margin-bottom:0}
+.sec-head h2{margin:0;font-weight:900;font-size:clamp(44px,9vw,140px);line-height:.85;letter-spacing:-.04em;text-transform:uppercase}
+.sec-head p{margin:0;max-width:38ch;color:var(--muted);font-size:clamp(15px,1.4vw,18px);text-align:right}
+.num{font:600 13px var(--mono);color:var(--pink);letter-spacing:.12em}
+
+/* firmware rows: full width, no cards */
+.rows{list-style:none;margin:0;padding:0}
+.row{border-bottom:1px solid var(--line)}
+.row a{display:grid;grid-template-columns:70px minmax(0,1.1fr) minmax(0,1.3fr) 44px;gap:clamp(14px,3vw,40px);align-items:center;
+  padding:clamp(20px,3vw,34px) 0;text-decoration:none;position:relative;transition:padding .15s,background .15s,color .15s}
+.row a:hover,.row a:focus-visible{background:var(--pink);color:var(--black);padding-inline:clamp(12px,2vw,24px);outline:none}
+.row a:hover .num,.row a:hover .dev,.row a:hover .desc,.row a:focus-visible .num,.row a:focus-visible .dev,.row a:focus-visible .desc{color:var(--black)}
+.row h3{margin:0;font-weight:900;font-size:clamp(26px,3.6vw,54px);line-height:.95;letter-spacing:-.03em;text-transform:uppercase}
+.dev{display:block;margin-top:8px;font:600 12.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--pink)}
+.desc{margin:0;color:#cfc8cd;font-size:clamp(15px,1.3vw,17.5px)}
+.arrow{width:44px;height:44px;justify-self:end;stroke:currentColor;fill:none;stroke-width:2.5;transition:transform .15s}
+.row a:hover .arrow{transform:translate(4px,-4px)}
+.fine{margin:22px 0 0;font-size:13.5px;color:var(--muted)}
+
+/* music: pink band */
+.music{background:var(--pink);color:var(--black)}
+.music .sec-head{border-color:var(--black)}
+.music .sec-head p,.music .num{color:var(--black)}
+.music-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end;margin-top:clamp(28px,4vw,52px)}
+.music-body p{margin:0 0 22px;font-size:clamp(19px,2.1vw,28px);line-height:1.3;font-weight:600;max-width:30ch}
+.music .btn{border-color:var(--black);color:var(--black)}
+.music .btn:hover,.music .btn.solid{background:var(--black);color:var(--pink)}
+.music .btn.solid:hover{background:transparent;color:var(--black)}
+.viz{display:flex;align-items:flex-end;gap:3px;height:clamp(140px,22vw,300px)}
+.viz b{flex:1;background:var(--black);height:var(--h,30%);min-height:2px;transform-origin:bottom}
+
+/* learn */
+.learn-intro{margin:clamp(28px,4vw,52px) 0 clamp(10px,2vw,20px);font-size:clamp(19px,2.1vw,28px);line-height:1.3;font-weight:600;max-width:40ch}
+.learn-intro b{color:var(--pink)}
+.topics{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(24px,5vw,72px)}
+.topics li{border-bottom:1px solid var(--line)}
+.topics a{display:grid;grid-template-columns:52px 1fr;gap:14px;padding:22px 0;text-decoration:none}
+.topics h3{margin:0;font-size:clamp(19px,1.8vw,24px);font-weight:800;letter-spacing:-.01em;text-transform:uppercase}
+.topics p{margin:4px 0 0;color:var(--muted);font-size:15.5px}
+.topics a:hover h3{color:var(--pink)}
+.topics a:hover p{color:var(--ink)}
+
+/* footer */
+footer{border-top:2px solid var(--pink);padding:clamp(36px,5vw,64px) var(--gutter) 40px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
+.foot-word{font-weight:900;font-size:clamp(48px,10vw,150px);line-height:.8;letter-spacing:-.045em;color:var(--pink);margin:0}
+.foot-meta{font:13px/1.7 var(--mono);color:var(--muted);text-align:right}
+.foot-meta a{color:var(--ink)}
+.foot-meta a:hover{color:var(--pink)}
+
+@media (max-width:860px){
+  .top{flex-wrap:wrap}
+  .sec-head{grid-template-columns:1fr}
+  .sec-head p{text-align:left}
+  .row a{grid-template-columns:44px minmax(0,1fr) 30px;row-gap:10px}
+  .row .desc{grid-column:2 / 3}
+  .row .arrow{grid-row:1;grid-column:3;width:30px;height:30px}
+  .music-body,.topics{grid-template-columns:1fr}
+  footer{grid-template-columns:1fr}
+  .foot-meta{text-align:left}
+}
+@media (max-width:520px){
+  nav{width:100%;justify-content:space-between}
+  .hero-foot{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .coin-inner,.marquee-track,h1.glitch::before,h1.glitch::after,.viz b{animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="coinlink" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">
+    <span class="coin" aria-hidden="true"><span class="coin-inner"><img src="assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="assets/coin-back.png" alt=""></span></span>
+    <span><b>BRIBERY</b><small>@thisisbribery</small></span>
+  </a>
+  <nav aria-label="Sections">
+    <a href="#firmware">Firmware</a>
+    <a href="#music">Music</a>
+    <a href="#learn">Learn</a>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <p class="kicker">Firmware <span>/</span> Music <span>/</span> Production</p>
+    <h1 class="glitch" data-text="BRIBERY"><span class="fit">BRIBERY</span></h1>
+    <div class="hero-foot">
+      <span class="coin bigcoin" aria-hidden="true"><span class="coin-inner"><img src="assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="assets/coin-back.png" alt=""></span></span>
+      <div>
+        <p class="lede">The creative alias of <b>Dr Mitch Catterall</b>. Explore the modified firmware, listen to Bribery's broken, glitch and distorted electronic music, and learn about music production.</p>
+        <div class="ctas">
+          <a class="btn solid" href="#firmware">Firmware</a>
+          <a class="btn" href="#music">Listen</a>
+          <a class="btn" href="#learn">Learn</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Broken<i>/</i>Glitch<i>/</i>Distorted<i>/</i>Stumble swing<i>/</i>Drum synths<i>/</i>Live reverse<i>/</i>Granular<i>/</i>Moarrrrr<i>/</i></span>
+      <span>Broken<i>/</i>Glitch<i>/</i>Distorted<i>/</i>Stumble swing<i>/</i>Drum synths<i>/</i>Live reverse<i>/</i>Granular<i>/</i>Moarrrrr<i>/</i></span>
+    </div>
+  </div>
+
+  <section id="firmware">
+    <div class="sec-head">
+      <h2>Firmware</h2>
+      <p>Unofficial mods for hardware I play. More wonk, more destruction, more speed.</p>
+    </div>
+    <ul class="rows">
+      <li class="row"><a href="https://github.com/thisisbribery/deluge-bribes-v1" target="_blank" rel="noopener">
+        <span class="num">01</span>
+        <div><h3>Bribeluge</h3><span class="dev">Synthstrom Deluge</span></div>
+        <p class="desc">Custom firmware on the community beta: stumble swing, Autofill, a mono bassline sequencer, LXR, Cycles-style and GIN drum synths, a 303, Rings, a Pro-54 and a Juno, saturation and crush types.</p>
+        <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a></li>
+      <li class="row"><a href="https://thisisbribery.github.io/bribes-companion/" target="_blank" rel="noopener">
+        <span class="num">02</span>
+        <div><h3>Bribeluge Companion</h3><span class="dev">Phone or tablet + Deluge</span></div>
+        <p class="desc">A second screen over USB. The display mirrored and spelled out, a drawing of each engine, picker tiles, waveforms and song view. Works in Chrome, with a STOCK mode for plain firmware.</p>
+        <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a></li>
+      <li class="row"><a href="https://thisisbribery.github.io/SealEggs_v1/" target="_blank" rel="noopener">
+        <span class="num">03</span>
+        <div><h3>Seal Eggs</h3><span class="dev">Sealegs delay</span></div>
+        <p class="desc">A browser flasher for the Sealegs: live reverse delay, Digi doppler, a second character on NOISE, the Seal Beads granular mode and the Seal Microloops micro-looper.</p>
+        <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a></li>
+      <li class="row"><a href="https://thisisbribery.github.io/stolperbeats-ultra-v1/" target="_blank" rel="noopener">
+        <span class="num">04</span>
+        <div><h3>Stolperbeats Ultra</h3><span class="dev">Making Sound Machines Stolperbeats</span></div>
+        <p class="desc">Alt swing tables, ratchets, a pitch per step and on-demand fills, written into your own copy of firmware 163 and flashed over USB.</p>
+        <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a></li>
+      <li class="row"><a href="https://github.com/thisisbribery/qiemem-bribery-edition" target="_blank" rel="noopener">
+        <span class="num">05</span>
+        <div><h3>Qiemem Bribery Edition</h3><span class="dev">Mutable Instruments Stages</span></div>
+        <p class="desc">qiemem's bipolar firmware plus segment linking from the buttons and Follow segments, an envelope follower on any segment.</p>
+        <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a></li>
+    </ul>
+    <p class="fine">Unofficial, modified firmware. Use it at your own risk. Not affiliated with or endorsed by any of the hardware makers.</p>
+  </section>
+
+  <section id="music" class="music">
+    <div class="sec-head">
+      <h2>Music</h2>
+      <p>Broken, glitch, distorted electronic music.</p>
+    </div>
+    <div class="music-body">
+      <div>
+        <p>Made on the same instruments the firmware is built for, pushed until they break.</p>
+        <div class="ctas">
+          <!-- Add streaming links here, e.g. Spotify, SoundCloud, Bandcamp -->
+          <a class="btn solid" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+      <div class="viz" id="viz" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section id="learn">
+    <div class="sec-head">
+      <h2>Learn</h2>
+      <p>Music production, sound design and the thinking behind the mods.</p>
+    </div>
+    <p class="learn-intro">Every firmware ships with a manual that explains <b>why</b>, not just which button. Start here.</p>
+    <ul class="topics">
+      <li><a href="https://thisisbribery.github.io/stolperbeats_v2/" target="_blank" rel="noopener"><span class="num">01</span><div><h3>Swing that stumbles</h3><p>See swing tables tick by tick, then build your own timings.</p></div></a></li>
+      <li><a href="https://github.com/thisisbribery/deluge-bribes-v1#6-drum-synth" target="_blank" rel="noopener"><span class="num">02</span><div><h3>Drum synthesis</h3><p>How synthesised kicks, snares and hats are built, engine by engine.</p></div></a></li>
+      <li><a href="https://github.com/thisisbribery/deluge-bribes-v1#7-saturation" target="_blank" rel="noopener"><span class="num">03</span><div><h3>Saturation and destruction</h3><p>Drive curves, hard clipping and crush types, and when to use which.</p></div></a></li>
+      <li><a href="https://github.com/thisisbribery/SealEggs_v1#seal-microloops" target="_blank" rel="noopener"><span class="num">04</span><div><h3>Granular and micro-loops</h3><p>Grains, loops and drones built from what you just played.</p></div></a></li>
+      <li><a href="https://github.com/thisisbribery/deluge-bribes-v1#4-mono-sequencer" target="_blank" rel="noopener"><span class="num">05</span><div><h3>Basslines and slides</h3><p>Accent, slide and octave per step on a mono sequencer.</p></div></a></li>
+      <li><a href="https://github.com/thisisbribery/qiemem-bribery-edition" target="_blank" rel="noopener"><span class="num">06</span><div><h3>Envelopes and followers</h3><p>Linked segments and envelope followers on a modular function generator.</p></div></a></li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <p class="foot-word">BRIBERY</p>
+  <div class="foot-meta">
+    <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Instagram</a> &middot;
+    <a href="https://github.com/thisisbribery" target="_blank" rel="noopener">GitHub</a><br>
+    &copy; <span id="yr">2026</span> Bribery
+  </div>
+</footer>
+
+<script>
+// Fit BRIBERY to the full width between the gutters.
+(function(){
+  var h = document.querySelector("h1.glitch"), f = h.querySelector(".fit");
+  function fit(){
+    h.style.fontSize = "100px";
+    var avail = h.clientWidth, w = f.getBoundingClientRect().width;
+    if (w > 0) h.style.fontSize = (100 * avail / w * 0.995) + "px";
+  }
+  fit();
+  addEventListener("resize", fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+
+// Level-meter visual in the Music band.
+(function(){
+  var viz = document.getElementById("viz"), n = innerWidth < 600 ? 32 : 56, bars = [];
+  for (var i = 0; i < n; i++){ var b = document.createElement("b"); viz.appendChild(b); bars.push(b); }
+  var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function frame(t){
+    for (var i = 0; i < n; i++){
+      var x = i / n, base = 0.25 + 0.45 * Math.abs(Math.sin(x * 9 + t / 700)) * Math.abs(Math.sin(x * 3.1 - t / 1300));
+      var spike = Math.random() < 0.06 ? Math.random() * 0.6 : 0;   // glitch spikes
+      bars[i].style.setProperty("--h", Math.min(100, (base + spike) * 100) + "%");
+    }
+  }
+  if (still) { frame(1200); return; }
+  var last = 0;
+  (function loop(t){ if (t - last > 90){ frame(t); last = t; } requestAnimationFrame(loop); })(0);
+})();
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
