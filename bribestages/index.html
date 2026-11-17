@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BRIBESTAGES · Stages firmware · BRIBERY</title>
-<meta name="description" content="BRIBESTAGES: custom firmware for Mutable Instruments Stages with segment linking from the buttons and envelope follower segments.">
+<meta name="description" content="BRIBESTAGES: custom firmware for Mutable Instruments Stages with segment linking from the buttons, envelope follower segments and clock-synced LFO banks.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBESTAGES for Mutable Instruments Stages">
-<meta property="og:description" content="Segment linking and Follow segments for Mutable Instruments Stages, on qiemem's bipolar firmware.">
+<meta property="og:description" content="Segment linking, Follow segments and Sync LFOs for Mutable Instruments Stages, on qiemem's bipolar firmware.">
 <meta property="og:image" content="https://thisisbribery.com/assets/devices/stages.webp">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
@@ -20,15 +20,16 @@
 
 <main>
   <section class="bx-hero">
-    <p class="bx-kicker">Mutable Instruments Stages <span>/</span> v1.0 <span>/ formerly Qiemem Bribery Edition</span></p>
+    <p class="bx-kicker">Mutable Instruments Stages <span>/</span> v1.1 <span>/ formerly Qiemem Bribery Edition</span></p>
     <h1 class="bx-mega bx-glitch" data-text="BRIBESTAGES" data-fit><span class="bx-fit">BRIBESTAGES</span></h1>
     <div class="bx-hero-grid">
       <div>
-        <p class="bx-lede">qiemem's bipolar multi-mode firmware v1.3.0 with two additions: <b>segment linking</b> from the buttons, and <b>Follow segments</b>, an envelope follower on any segment. Everything qiemem's firmware does still works.</p>
+        <p class="bx-lede">qiemem's bipolar multi-mode firmware v1.3.0 with three additions: <b>segment linking</b> from the buttons, <b>Follow segments</b>, an envelope follower on any segment, and <b>Sync LFOs</b>, a bank of LFOs locked to one clock. Everything qiemem's firmware does still works.</p>
         <div class="bx-ctas">
           <a class="bx-btn bx-solid" href="#update">Update from this page</a>
           <a class="bx-btn" href="#linking">Linking</a>
           <a class="bx-btn" href="#follow">Follow</a>
+          <a class="bx-btn" href="#sync">Sync LFO</a>
         </div>
       </div>
       <figure class="bx-shot">
@@ -93,7 +94,7 @@
       <h2>Follow</h2>
       <p>Patch audio into a segment's CV jack and its output becomes the envelope of that audio.</p>
     </div>
-    <p class="bx-prose" style="margin-top:clamp(20px,3vw,32px)"><b>Making one:</b> tap the segment's button past the last type. Stages and Slow LFO modes: ramp, step, hold, <b>follow</b>. Advanced mode: ramp, step, hold, random, <b>follow</b>.</p>
+    <p class="bx-prose" style="margin-top:clamp(20px,3vw,32px)"><b>Making one:</b> tap the segment's button past the last type. Stages and Slow LFO modes: ramp, step, hold, <b>follow</b>, sync LFO. Advanced mode: ramp, step, hold, random, <b>follow</b>, sync LFO.</p>
     <dl class="bx-rows">
       <div><dt>CV jack</dt><dd>Audio in. DC is blocked, so an offset doesn't read as level.</dd></div>
       <div><dt>Slider</dt><dd>Release, 5 ms at the bottom to 5 s at the top.</dd></div>
@@ -107,6 +108,26 @@
     <p class="bx-note"><b>Good to know:</b> a Follow segment always stands alone; links into or out of it are kept and come back when you change its type. With a very short release, low notes ripple, so raise the release to smooth it.</p>
   </section>
 
+  <section class="bx-section" id="sync" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Sync LFO</h2>
+      <p>One clock in, a bank of LFOs out. Link a few Sync LFO segments and each one sends its own LFO, all locked to the clock in the first segment's gate.</p>
+    </div>
+    <p class="bx-prose" style="margin-top:clamp(20px,3vw,32px)"><b>Making one:</b> tap the segment's button past Follow. Stages and Slow LFO modes: ramp, step, hold, follow, <b>sync LFO</b>. Advanced mode: ramp, step, hold, random, follow, <b>sync LFO</b>. Then link them as usual: hold the first, tap the last.</p>
+    <p class="bx-prose"><b>Example:</b> clock into segment 1's gate, make segments 1 to 4 Sync LFOs, hold button 1 and tap button 4. Four LFOs come out of outputs 1 to 4, all on that clock. Set one to x1, one to x2, one to /4 and they stay in step for as long as the clock runs.</p>
+    <dl class="bx-rows">
+      <div><dt>Gate jack, first segment</dt><dd>Clock in. Each rising edge is one clock period. Gates in the other segments of the group are ignored.</dd></div>
+      <div><dt>Slider (plus CV)</dt><dd>Rate against the clock: /32, /16, /8, /6, /4, /3, /2 in the lower half, x1 in the middle, x2, x3, x4, x6, x8, x16, x32 in the upper half.</dd></div>
+      <div><dt>Pot</dt><dd>Shape, morphing from sine to triangle to saw (falling) to ramp (rising) to square to random. Random picks a new level every cycle and holds it.</dd></div>
+      <div><dt>Hold button + pot</dt><dd>Bipolar: -5 V to +5 V instead of 0 to 8 V.</dd></div>
+      <div><dt>Hold button + slider</dt><dd>Phase offset in four zones, bottom to top: 0, 90, 180, 270 degrees. Two LFOs at the same rate, one at 90, make a quadrature pair.</dd></div>
+      <div><dt>Output</dt><dd>That segment's own LFO: 0 to 8 V, or -5 V to +5 V bipolar.</dd></div>
+      <div><dt>No clock</dt><dd>The LFOs keep going at the last tempo (120 BPM before any clock arrives). When the clock starts again after a stop, every LFO restarts from the top, so divisions line up with the first clock.</dd></div>
+      <div><dt>Lights</dt><dd>The button flashes at the start of every cycle: green when it multiplies the clock, yellow at x1, red when it divides. Between flashes it's dark, or a dim glow when bipolar. While setting the phase: green 0, yellow 90, red 180, red and green 270. The slider light follows the LFO.</dd></div>
+    </dl>
+    <p class="bx-note"><b>Good to know:</b> a Sync LFO only links to other Sync LFOs; a stored link to another type is kept but ignored. A Sync LFO on its own is a group of one, clocked by its own gate. In 6EG and Ouroboros modes, or with two Stages chained, it runs as a ramp.</p>
+  </section>
+
   <section class="bx-section" id="update" style="padding-top:0">
     <div class="bx-sec-head">
       <h2>Update</h2>
@@ -115,11 +136,11 @@
     <p class="bx-prose" style="margin-top:clamp(20px,3vw,32px)"><b>You need:</b> a computer or phone with a headphone jack (a wired USB headphone adapter works, Bluetooth doesn't) and a 3.5 mm patch cable. Play the file below from this page, or download it and play it in any player.</p>
     <div style="border-top:1px solid var(--bx-line);margin-top:clamp(18px,3vw,30px)">
       <div class="bx-player"><h4>Normal<small>Module mounted the right way up</small></h4>
-        <audio controls preload="none" data-bx-gate="stages" src="/bribestages/firmware/qiemem-bribery-edition-v1.0.wav"></audio>
-        <a class="bx-btn" href="/bribestages/firmware/qiemem-bribery-edition-v1.0.wav" download data-bx-download="stages">.wav</a></div>
+        <audio controls preload="none" data-bx-gate="stages" src="/bribestages/firmware/bribestages-v1.1.wav"></audio>
+        <a class="bx-btn" href="/bribestages/firmware/bribestages-v1.1.wav" download data-bx-download="stages">.wav</a></div>
       <div class="bx-player"><h4>Flipped<small>Module mounted upside down</small></h4>
-        <audio controls preload="none" data-bx-gate="stages" src="/bribestages/firmware/qiemem-bribery-edition-v1.0-flipped.wav"></audio>
-        <a class="bx-btn" href="/bribestages/firmware/qiemem-bribery-edition-v1.0-flipped.wav" download data-bx-download="stages">.wav</a></div>
+        <audio controls preload="none" data-bx-gate="stages" src="/bribestages/firmware/bribestages-v1.1-flipped.wav"></audio>
+        <a class="bx-btn" href="/bribestages/firmware/bribestages-v1.1-flipped.wav" download data-bx-download="stages">.wav</a></div>
     </div>
     <ol class="bx-steps">
       <li><div>Power the rack off. Unplug every cable from the Stages.</div></li>
@@ -148,7 +169,7 @@
   </section>
 
   <section class="bx-section">
-    <p class="bx-fine">Stages and its code: Emilie Gillet, Mutable Instruments. Multi-mode firmware: joeSeggiola. Bipolar firmware: qiemem. Linking and Follow: Bribery. Unofficial firmware, not made or supported by Mutable Instruments.</p>
+    <p class="bx-fine">Stages and its code: Emilie Gillet, Mutable Instruments. Multi-mode firmware: joeSeggiola. Bipolar firmware: qiemem. Linking, Follow and Sync LFO: Bribery. Unofficial firmware, not made or supported by Mutable Instruments.</p>
   </section>
 </main>
 </body>

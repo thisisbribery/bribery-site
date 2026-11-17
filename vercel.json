@@ -2,6 +2,16 @@
   "trailingSlash": true,
   "redirects": [
     {
+      "source": "/bribestages/firmware/qiemem-bribery-edition-v1.0.wav",
+      "destination": "/bribestages/firmware/bribestages-v1.1.wav",
+      "permanent": false
+    },
+    {
+      "source": "/bribestages/firmware/qiemem-bribery-edition-v1.0-flipped.wav",
+      "destination": "/bribestages/firmware/bribestages-v1.1-flipped.wav",
+      "permanent": false
+    },
+    {
       "source": "/stages",
       "destination": "/bribestages/",
       "permanent": true
