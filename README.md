@@ -35,3 +35,7 @@ Ported tools keep their original look as **Classic** mode (toggle in the top bar
 The flasher logic and data files are copies of the source repos. After a flasher update run `scripts/sync-tools.sh`, test the page, then push. If a flasher's `index.html` changed, rebuild its sub-page from the source page with the generator in `scripts/port/` (each folder holds the generator and the page's new-mode `new.css`; Stolperbeats: `python3 scripts/port/stolperbeats/compose.py scripts/port/stolperbeats`), then check the result with that folder's `equiv.py`, which compares built firmware against the original page. `scripts/` is not deployed (`.vercelignore`).
 
 `vercel.json` sets `trailingSlash: true` so `/sealeggs` redirects to `/sealeggs/` and relative script paths resolve.
+
+## Old addresses
+
+The old GitHub Pages tools (SealEggs_v1, stolperbeats-ultra-v1, stolperbeats_v1, stolperbeats_v2, bribes-companion) redirect here. Each of those repos serves a `gh-pages` branch built by `scripts/redirects/make.py` (their `main` branches are unchanged). The redirect carries the visitor's saved tool data (custom Timings, banks, Companion settings) in a `#bx-import=` URL fragment; `assets/site.js` imports it once without overwriting anything already saved here. Pushing to those repos' `main` no longer publishes anything: update the matching sub-page here instead.
