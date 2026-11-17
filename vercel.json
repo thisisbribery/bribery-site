@@ -7,8 +7,13 @@
       "permanent": true
     },
     {
-      "source": "/stages/:path*",
-      "destination": "/bribestages/:path*",
+      "source": "/stages/",
+      "destination": "/bribestages/",
+      "permanent": true
+    },
+    {
+      "source": "/stages/:path+",
+      "destination": "/bribestages/:path+",
       "permanent": true
     }
   ]
