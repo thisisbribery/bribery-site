@@ -16,6 +16,7 @@ Static HTML, no build step. Vercel deploys every push to `main`.
 | `/stolperbeats/` | STOLPERBEATS ULTRA flasher |
 | `/stolperbeats/visualiser/` | Stolperbeats Timing visualiser |
 | `/stages/` | Qiemem Bribery Edition (Stages) with in-page update audio |
+| `/kali/` | KALI SMASH (dsp.coffee Kali) with a gated zip download |
 
 Ported tools keep their original look as **Classic** mode (toggle in the top bar, remembered per browser). Their original CSS sits in `<style data-bx="classic">`, the new look in `<style data-bx="new">`.
 
@@ -48,3 +49,7 @@ The old GitHub Pages tools (SealEggs_v1, stolperbeats-ultra-v1, stolperbeats_v1,
 ## Bribeluge download
 
 The firmware downloads from the site through a gate on `/bribeluge/` (pink Download band, hero and install buttons, and the manual's Download button): name, email, optional artist name and a music link go to Web3Forms, then the bin downloads. The file lives in `bribeluge/download/` with `latest.json`, written by `scripts/bribeluge_bin.py`, which refuses a bin whose sha256 isn't in the firmware README. On every release run it (or `scripts/sync-tools.sh`) and push. If Web3Forms fails, the download still goes ahead.
+
+## KALI SMASH download
+
+`kali/download/` holds a zip (firmware, Daisy bootloader + MIT licence, `flash-kali.sh`, INSTALL.txt) and `latest.json`, built by `scripts/kali_zip.py` from `~/dev/kaliv1/release`. Run it on every KALI SMASH release, then push. The page's Download buttons use the same gate as Bribeluge (`data-bx-download="kali"`). Device render: `scripts/renders` (`python3 render.py kali --final`).

@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<script>try{if(localStorage.getItem("bribeluge-top-collapsed")==="1")document.documentElement.classList.add("cx-collapsed")}catch(e){}</script>
+<script>try{if(localStorage.getItem("bribeluge-top-collapsed")==="1")document.documentElement.classList.add("cx-collapsed");if(!localStorage.getItem("bribeluge-hide-pressed"))document.documentElement.classList.add("cx-hint")}catch(e){}</script>
 <style data-bx="classic">
 :root{
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
@@ -691,6 +691,10 @@ html.cx-collapsed .cx-mini{display:inline-block}
 @keyframes cxsl2{0%,87%,100%{clip-path:inset(100% 0 0 0);transform:none}88%{clip-path:inset(35% 0 40% 0);transform:translate(3px,0)}91%{clip-path:inset(0 0 75% 0);transform:translate(-2px,0)}93%{clip-path:inset(100% 0 0 0)}}
 @media (prefers-reduced-motion:reduce){.cx-mini,.cx-mini::before,.cx-mini::after{animation:none}}
 @media (max-width:640px){.cx-mini{font-size:10px}}
+
+/* the Hide header tab stays pink until it's been pressed once on this device */
+html.cx-hint:not(.cx-collapsed) .cx-hide{background:var(--pink);color:#000;border-color:var(--pink);box-shadow:0 0 18px rgba(255,31,214,.5)}
+html.cx-hint:not(.cx-collapsed) .cx-hide:hover,html.cx-hint:not(.cx-collapsed) .cx-hide:focus-visible{color:#000}
 html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .brand,html.cx-collapsed #bar .cx-fwlinks{display:none!important}
 </style>
 </head>
@@ -720,6 +724,8 @@ html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .br
       <li><b>Tap Connect</b> in the bar below, then <b>Allow</b> when Chrome asks to control your MIDI devices.</li>
       <li><b>You're live.</b> The Deluge port is picked for you and the light turns green. Any of the Deluge's ports works.</li>
       <li><b>Optional: install it.</b> Chrome menu &#8942; &rarr; <b>Add to Home screen</b>. It then runs fullscreen, keeps the screen awake and reconnects on its own.</li>
+    
+      <li><b>Hide this header once you've connected.</b> Tap the pink <b>HIDE HEADER</b> tab under the bar for more room. It folds by itself when the Deluge connects, and comes back from the same tab.</li>
     </ol>
     <ol class="cx-steps" id="cxWindows" role="tabpanel" aria-labelledby="cxTabWindows" hidden>
       <li><b>Plug in.</b> Connect the Deluge's USB port to your computer with a data USB cable.</li>
@@ -727,12 +733,16 @@ html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .br
       <li><b>Open in Chrome or Edge.</b> Firefox and other browsers may not support Web MIDI with SysEx.</li>
       <li><b>Click Connect</b> in the bar below, then <b>Allow</b> when the browser asks to control your MIDI devices.</li>
       <li><b>You're live.</b> The Deluge port is picked for you and the light turns green. If not, choose it in the port list.</li>
+    
+      <li><b>Hide this header once you've connected.</b> Tap the pink <b>HIDE HEADER</b> tab under the bar for more room. It folds by itself when the Deluge connects, and comes back from the same tab.</li>
     </ol>
     <ol class="cx-steps" id="cxMac" role="tabpanel" aria-labelledby="cxTabMac" hidden>
       <li><b>Plug in.</b> Connect the Deluge's USB port to your Mac with a data USB cable (or a USB-C adapter).</li>
       <li><b>Open in Chrome or Edge.</b> Safari doesn't support Web MIDI.</li>
       <li><b>Click Connect</b> in the bar below, then <b>Allow</b> when the browser asks to control your MIDI devices.</li>
       <li><b>You're live.</b> The Deluge port is picked for you and the light turns green. Your DAW can keep using the Deluge at the same time.</li>
+    
+      <li><b>Hide this header once you've connected.</b> Tap the pink <b>HIDE HEADER</b> tab under the bar for more room. It folds by itself when the Deluge connects, and comes back from the same tab.</li>
     </ol>
     <p class="cx-fwnote"><b>Firmware:</b> everything works with <a href="/bribeluge/" target="_blank" rel="noopener">Bribeluge</a> v1.32 or later. Plain community firmware 1.3 works in <b>STOCK</b> mode after a one-time MIDI Follow setup, listed in the app once you pick STOCK. The STOCK / BRIBELUGE switch picks itself when the Deluge answers.</p>
   </div>
@@ -815,6 +825,8 @@ html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .br
     if (!on && window.BRIBERY) setTimeout(window.BRIBERY.fit, 0);
   }
   btn.addEventListener("click", function () {
+    root.classList.remove("cx-hint");
+    try { localStorage.setItem("bribeluge-hide-pressed", "1"); } catch (e) {}
     var on = !root.classList.contains("cx-collapsed");
     set(on, true);
     if (on) scrollTo(0, 0);

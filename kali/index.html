@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KALI SMASH · Kali firmware · BRIBERY</title>
+<meta name="description" content="KALI SMASH: alternative firmware that turns the dsp.coffee Kali into a stereo end-of-chain mix-buss destroyer, from transparent to completely wrecked.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="KALI SMASH">
+<meta property="og:description" content="A stereo mix-buss destroyer for the dsp.coffee Kali: 15 drives, MS-20 style HPF, motion, resonators, SQUASH and music-following CV.">
+<meta property="og:image" content="https://thisisbribery.com/assets/devices/kali.webp">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/pages.css">
+<style>
+.k-chain{margin:clamp(22px,3vw,36px) 0 0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-block:2px solid var(--bx-pink)}
+.k-chain div{padding:16px 14px;border-right:1px solid var(--bx-line);position:relative}
+.k-chain div:last-child{border-right:0}
+.k-chain b{display:block;font-weight:900;font-size:clamp(17px,1.7vw,24px);letter-spacing:-.02em;text-transform:uppercase}
+.k-chain span{display:block;margin-top:6px;font-size:13.5px;color:var(--bx-muted);line-height:1.4}
+.k-chain div:not(:last-child)::after{content:"\2192";position:absolute;right:-9px;top:14px;color:var(--bx-pink);font-weight:900;background:var(--bx-black);padding:0 2px}
+.k-chain .k-side{color:var(--bx-pink)}
+@media (max-width:960px){.k-chain{grid-template-columns:1fr}.k-chain div{border-right:0;border-bottom:1px solid var(--bx-line)}.k-chain div:last-child{border-bottom:0}
+  .k-chain div:not(:last-child)::after{content:"\2193";right:14px;top:auto;bottom:-12px}}
+</style>
+<script src="/assets/site.js"></script>
+</head>
+<body class="bx" data-bx-page="kali" data-bx-foot>
+
+<main>
+  <section class="bx-hero">
+    <p class="bx-kicker">dsp.coffee Kali firmware <span>/</span> <span data-bx-bin-version="kali">beta</span> <span>/</span> Experimental</p>
+    <h1 class="bx-mega bx-glitch" data-text="KALI SMASH" data-fit><span class="bx-fit">KALI SMASH</span></h1>
+    <div class="bx-hero-grid">
+      <div>
+        <p class="bx-lede">Alternative firmware that turns the dsp.coffee Kali into a <b>stereo end-of-chain mix-buss destroyer</b>, from transparent to completely wrecked.</p>
+        <div class="bx-ctas">
+          <a class="bx-btn bx-solid" href="#download" data-bx-download="kali">Download</a>
+          <a class="bx-btn" href="#features">Features</a>
+          <a class="bx-btn" href="#install">Install</a>
+        </div>
+      </div>
+      <figure class="bx-shot">
+        <img src="/assets/devices/kali.webp" width="1600" height="1000" alt="A Eurorack module with a glowing screen and eight knobs, lit in pink on a black studio background">
+      </figure>
+    </div>
+  </section>
+
+  <div class="bx-stats">
+    <div class="bx-stat"><b>15</b><span>Drive types, two in series</span></div>
+    <div class="bx-stat"><b>4x</b><span>Oversampled drives</span></div>
+    <div class="bx-stat"><b>6</b><span>Music-following CV outs</span></div>
+    <div class="bx-stat"><b>8</b><span>Preset slots + autosave</span></div>
+  </div>
+
+  <section class="bx-section" id="chain" style="padding-bottom:0">
+    <div class="bx-sec-head">
+      <h2>The chain</h2>
+      <p>Stereo in, stereo out. Every block on its own knob.</p>
+    </div>
+    <div class="k-chain">
+      <div><b>HPF</b><span>MS-20 style, howling resonance, audio-rate FM from the input</span></div>
+      <div><b>Motion</b><span class="k-side">pre or post</span><span>flanger, chaos chorus, ensemble, phaser, warp</span></div>
+      <div><b>Drive A</b><span>15 types, its own SHAPE knob</span></div>
+      <div><b>Drive B</b><span>in series, 4x linear-phase oversampling</span></div>
+      <div><b>LPF</b><span>clean SVF, closes to silence</span></div>
+      <div><b>Mix</b><span>dry/wet, latency-matched so blends never comb</span></div>
+      <div><b>Squash</b><span>gain in, compressor, master clipper</span></div>
+    </div>
+  </section>
+
+  <section class="bx-section" id="features">
+    <div class="bx-sec-head">
+      <h2>Features</h2>
+      <p>Open a panel for the detail.</p>
+    </div>
+    <div class="bx-toolbar"><button class="bx-linkbtn" type="button" id="toggleAll">Open all</button></div>
+
+    <div class="bx-panels">
+      <details class="bx-panel" id="panel">
+        <summary><span class="bx-num">01</span><div><h3>The panel</h3><span class="bx-pv">8 knobs · 2 minis · 2 encoders · SMASH · BYPASS</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <p class="bx-panel-intro">Fixed knobs, no paging: each big knob is one block. Turning a knob jumps the screen to that block's page.</p>
+          <dl class="bx-rows">
+            <div><dt>Knob 1 · HPF</dt><dd>Off (10 Hz) up to 16 kHz, then closed to silence in the last 3%.</dd></div>
+            <div><dt>Knob 2 · DRV A</dt><dd>Clean bypass to +36 dB into the curve (+48 dB on FUZZ, DIST and METAL).</dd></div>
+            <div><dt>Knob 3 · SHP A</dt><dd>Drive A's character, different on every type.</dd></div>
+            <div><dt>Knobs 4, 5 · DRV B, SHP B</dt><dd>The second drive, in series.</dd></div>
+            <div><dt>Knob 6 · LPF</dt><dd>Closed (silent) to off (22 kHz).</dd></div>
+            <div><dt>Knob 7 · MOTION</dt><dd>First half: depth and wet to full. Second half: feedback to max.</dd></div>
+            <div><dt>Knob 8 · MIX</dt><dd>Dry to wet.</dd></div>
+            <div><dt>Mini left · RESO</dt><dd>Fades the resonator in, then raises its decay; the top self-oscillates.</dd></div>
+            <div><dt>Mini right · SQUASH</dt><dd>Transparent to +24 dB into the compressor and clipper.</dd></div>
+            <div><dt>FREEZE · SMASH</dt><dd>While held: everything slammed. Its gate jack does the same.</dd></div>
+            <div><dt>SYNC · BYPASS</dt><dd>Press to toggle a latency-matched bypass. Both buttons can be reassigned.</dd></div>
+          </dl>
+        </div>
+      </details>
+
+      <details class="bx-panel" id="drives">
+        <summary><span class="bx-num">02</span><div><h3>Drives</h3><span class="bx-pv">Tape · Tanh · Tube · Seal · Fuzz · Metal · Fold · Wrap · XOR · crushers</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <p class="bx-panel-intro">Two drive stages in series inside 4x linear-phase oversampling. DRV always gets louder as it goes up: nothing auto-compensates, and SQUASH catches the top. Each stage has OUTPUT, TONE, BIAS, STAGE MIX and a STEREO mode that can drive only the sides, so kick and bass stay clean while the width gets dirty.</p>
+          <div class="bx-chips">
+            <span class="bx-seg">TAPE <i>worn cassette</i></span><span class="bx-seg">TANH <i>focus lows/highs</i></span><span class="bx-seg">TUBE <i>starved, spitting</i></span>
+            <span class="bx-seg">SEAL <i>the Bribes drive</i></span><span class="bx-seg">HARD <i>digital clip</i></span><span class="bx-seg">FOLD <i>wavefolder</i></span>
+            <span class="bx-seg">FUZZ <i>+48 dB, sputters</i></span><span class="bx-seg">DIST <i>op-amp pedal</i></span><span class="bx-seg">METAL <i>scooped high gain</i></span>
+            <span class="bx-seg">RECT <i>octave up</i></span><span class="bx-seg">WRAP <i>overflow tears</i></span><span class="bx-seg">XOR <i>bitwise garble</i></span>
+            <span class="bx-seg">VINT <i>old sampler</i></span><span class="bx-seg">ULAW <i>phone line</i></span><span class="bx-seg">JITR <i>unstable clock</i></span>
+          </div>
+        </div>
+      </details>
+
+      <details class="bx-panel" id="filters">
+        <summary><span class="bx-num">03</span><div><h3>Filters</h3><span class="bx-pv">MS-20 style HPF · audio FM · stereo spread · clean LPF</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <ul class="bx-feats">
+            <li class="bx-feat"><h4>HPF<small>MS-20 style</small></h4><p>Resonance feeds back through an asymmetric diode-style clipper, so it howls and dirties when pushed. Self-oscillates from about 80% RES. 12 or 24 dB.</p><span></span></li>
+            <li class="bx-feat"><h4>Audio FM</h4><p>The input audio moves its own cutoff at audio rate: gritty sidebands, and the cutoff jumps with every hit. SELF, CROSS or MONO sources make the stereo field wobble.</p><span></span></li>
+            <li class="bx-feat"><h4>Spread</h4><p>Pushes the left and right cutoffs apart, up to 2 octaves each way, and SPREAD FM throws them around at audio rate for chaotic width even from a mono mix.</p><span></span></li>
+            <li class="bx-feat"><h4>Filters = all</h4><p>The dry path is filtered too, so the HPF works like a DJ filter at any MIX.</p><span></span></li>
+            <li class="bx-feat"><h4>LPF</h4><p>A clean SVF after the drives, 20 Hz to 20 kHz, 12 or 24 dB, closing to silence at the bottom.</p><span></span></li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="bx-panel" id="motion">
+        <summary><span class="bx-num">04</span><div><h3>Motion &amp; reso</h3><span class="bx-pv">Flanger · chaos chorus · ensemble · phaser · warp · comb · chord · modal · formant · karplus</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <p class="bx-panel-intro">Both can sit before the drives (so the drives distort them) or after the LPF.</p>
+          <p class="bx-group">Motion</p>
+          <div class="bx-chips"><span class="bx-seg">FLANGER</span><span class="bx-seg">CHAOS <i>Lorenz chorus</i></span><span class="bx-seg">ENSEMBLE</span><span class="bx-seg">PHASER</span><span class="bx-seg">WARP <i>worn tape</i></span></div>
+          <p class="bx-group">Reso</p>
+          <div class="bx-chips"><span class="bx-seg">COMB</span><span class="bx-seg">CHORD</span><span class="bx-seg">MODAL <i>string to bell</i></span><span class="bx-seg">FORMANT <i>vowels</i></span><span class="bx-seg">KARPLUS <i>hits pluck a string</i></span></div>
+          <p class="bx-panel-intro" style="margin-top:18px">The top of the RESO knob goes past unity: combs and strings sing on their own while the input keeps coming through, and FREEZE holds whatever is ringing.</p>
+        </div>
+      </details>
+
+      <details class="bx-panel" id="squash">
+        <summary><span class="bx-num">05</span><div><h3>Squash</h3><span class="bx-pv">Glue · slam · soft · tanh · hard · tape · fold</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <p class="bx-panel-intro">The master section after MIX, so it acts on the blended signal, dry included. The knob pushes 0 to +24 dB into a compressor (OFF, GLUE or SLAM) and then a master clipper (SOFT, TANH, HARD, TAPE or FOLD), with a ceiling and output level. Near-silence is left alone.</p>
+        </div>
+      </details>
+
+      <details class="bx-panel" id="cv">
+        <summary><span class="bx-num">06</span><div><h3>CV outs &amp; meters</h3><span class="bx-pv">Envelopes · transients · bite · LFOs · chaos · LED level meters</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <p class="bx-panel-intro">Six CV outs that follow the music, each with its own source, polarity and offset, and two clock outs that light as fast level meters or fire gates.</p>
+          <dl class="bx-rows">
+            <div><dt>Envelopes</dt><dd>The whole mix, the kick band, the mids, the hats and air, or the stereo difference, in dB so quiet parts still move it.</dd></div>
+            <div><dt>Transients</dt><dd>A decay fired by each hit, or a new random value on each hit.</dd></div>
+            <div><dt>Bite and squash</dt><dd>How hard the drives are clipping, and SQUASH's gain reduction.</dd></div>
+            <div><dt>LFOs and chaos</dt><dd>The MOTION LFO, a free sine, or a Lorenz attractor's X and Y.</dd></div>
+            <div><dt>Clock L / R</dt><dd>LED level meters (input or output), a 10 ms pulse per hit, or a gate while the drives clip hard.</dd></div>
+          </dl>
+        </div>
+      </details>
+
+      <details class="bx-panel" id="saving">
+        <summary><span class="bx-num">07</span><div><h3>Buttons, presets &amp; saving</h3><span class="bx-pv">Smash · bypass · kill lows · mute · 8 slots · autosave</span></div><span class="bx-plus" aria-hidden="true"></span></summary>
+        <div class="bx-panel-body">
+          <ul class="bx-feats">
+            <li class="bx-feat"><h4>Buttons</h4><p>Each button and its gate jack can SMASH, BYPASS, KILL LOWS or MUTE, momentary or latching.</p><span></span></li>
+            <li class="bx-feat"><h4>Presets</h4><p>Eight slots store every page setting: types, values, CV bases, the output map and button actions. Knobs stay live.</p><span></span></li>
+            <li class="bx-feat"><h4>Autosave</h4><p>Settings save themselves three seconds after your last change and come back at power-up.</p><span></span></li>
+            <li class="bx-feat"><h4>CV in</h4><p>Kali's big knobs are attenuators on their CV jacks, so each knob gets a CV BASE setting to add an offset under patched CV.</p><span></span></li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="bx-section" id="install" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Install</h2>
+      <p>The download includes the firmware, the Daisy bootloader, a Mac flash script and these steps.</p>
+    </div>
+    <div class="bx-split">
+      <div>
+        <h3>First install (Mac)</h3>
+        <ol class="bx-steps" style="margin-top:0">
+          <li><div>Install dfu-util once (<code class="bx-code">brew install dfu-util</code>) and plug Kali straight into the computer with a USB <b>data</b> cable, no hub.</div></li>
+          <li><div>Unzip the download and run <code class="bx-code">./flash-kali.sh --first KaliSmash-….bin</code> in that folder.</div></li>
+          <li><div>When it asks: hold <b>BOOT</b>, press and release <b>RESET</b>, release BOOT. It installs the bootloader, catches it as it starts and installs KALI SMASH. No timing on your side.</div></li>
+        </ol>
+      </div>
+      <div>
+        <h3>Updates (any computer)</h3>
+        <ol class="bx-steps" style="margin-top:0">
+          <li><div>On the module: <b>SYSTEM &rarr; UPDATE</b>, turn to <b>GO</b>. It waits for an upload.</div></li>
+          <li><div>In Chrome, open <a href="https://flash.daisy.audio" target="_blank" rel="noopener" style="color:var(--bx-pink)">flash.daisy.audio</a> and choose <b>File Upload</b>.</div></li>
+          <li><div>Pick the <b>.bin</b> and the <b>Daisy Bootloader</b> device (not "DFU in FS Mode"). On a Mac, <code class="bx-code">./flash-kali.sh KaliSmash-….bin</code> does the same.</div></li>
+        </ol>
+      </div>
+    </div>
+    <p class="bx-note"><b>Status: beta.</b> Every block has been played on hardware; polish is still going on. The first install currently needs a Mac. To go back to stock, flash Kali's v2.22 image the factory way (hold BOOT, tap RESET, File Upload, "DFU in FS Mode"), which also removes the Daisy bootloader.</p>
+  </section>
+
+  <section class="bx-section bx-band" id="download">
+    <a class="bx-dl-hit" href="#download" data-bx-download="kali" aria-label="Download KALI SMASH">
+      <div class="bx-sec-head">
+        <h2>Download</h2>
+        <p>KALI SMASH <span data-bx-bin-version="kali">beta</span> for the dsp.coffee Kali. Free.</p>
+      </div>
+    </a>
+    <div class="bx-band-body">
+      <p>Leave your name and email (and a link to your music if you like, so I can check it out), and the download starts straight away. I'll only ever contact you about updates to KALI SMASH and other creative projects or tech builds.</p>
+      <div class="bx-ctas">
+        <a class="bx-btn bx-ink bx-solid bx-dl-big" href="#download" data-bx-download="kali">Download <span data-bx-bin-version="kali">beta</span> &#8595;</a>
+        <a class="bx-btn bx-ink" data-bx-support href="#" target="_blank" rel="noopener">Support</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bx-section">
+    <p class="bx-fine">Unofficial firmware, not made or supported by dsp.coffee or Electrosmith. KALI SMASH's DSP and firmware are original code, building on the Bribes Deluge firmware's drives and crushers; the platform is Electrosmith's libDaisy (MIT), and the bundled Daisy bootloader is Electrosmith's (MIT, licence included). Stock Kali firmware was only examined to confirm the hardware pin map.</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  var panels = document.querySelectorAll(".bx-panel"), btn = document.getElementById("toggleAll");
+  function sync(){ var all = Array.prototype.every.call(panels, function(p){ return p.open; }); btn.textContent = all ? "Close all" : "Open all"; }
+  btn.addEventListener("click", function(){ var open = btn.textContent === "Open all"; Array.prototype.forEach.call(panels, function(p){ p.open = open; }); sync(); });
+  Array.prototype.forEach.call(panels, function(p){ p.addEventListener("toggle", sync); });
+  var h = location.hash && document.getElementById(location.hash.slice(1));
+  if (h && h.tagName === "DETAILS") h.open = true;
+  sync();
+})();
+</script>
+</body>
+</html>

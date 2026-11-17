@@ -23,6 +23,7 @@
     ["Seal Eggs", "/sealeggs/", "sealeggs"],
     ["Stolperbeats", "/stolperbeats/", "stolperbeats"],
     ["Stages", "/stages/", "stages"],
+    ["Kali Smash", "/kali/", "kali"],
     ["Music", "/#music", "music"],
     ["Learn", "/#learn", "learn"]
   ];
@@ -169,34 +170,47 @@
     setTimeout(function () { modal.querySelector("#bxName").focus(); }, 30);
   }
 
-  /* ---------------- Bribeluge download gate (Web3Forms, then the bin downloads) ---------------- */
-  var dl, latest;
+  /* ---------------- firmware download gate (Web3Forms, then the file downloads) ----------------
+     <a data-bx-download="kali">  opens the gate for that product (no value = bribeluge). Each product's
+     latest.json says which file is current; scripts/bribeluge_bin.py and scripts/kali_zip.py write them. */
+  var PRODUCTS = {
+    bribeluge: { name: "Bribeluge", json: "/bribeluge/download/latest.json", install: "/bribeluge/#install",
+      ver: function (i) { return "v" + i.version; }, note: "Unofficial firmware: use it at your own risk and back up your SD card first." },
+    kali: { name: "KALI SMASH", json: "/kali/download/latest.json", install: "/kali/#install",
+      ver: function (i) { return i.version; }, note: "Unofficial firmware: use it at your own risk. Back to stock any time with Kali's own v2.22 image." }
+  };
+  var dls = {}, latests = {};
   var DL_SAVED = "bribery-download-details";
-  function getLatest() {
-    if (!latest) latest = fetch("/bribeluge/download/latest.json", { cache: "no-cache" }).then(function (r) { return r.json(); });
-    return latest;
+  function product(key) { return PRODUCTS[key] ? key : "bribeluge"; }
+  function getLatest(key) {
+    key = product(key);
+    if (!latests[key]) latests[key] = fetch(PRODUCTS[key].json, { cache: "no-cache" }).then(function (r) { return r.json(); });
+    return latests[key];
   }
   function startDownload(info) {
     var a = document.createElement("a");
     a.href = info.file; a.download = info.name; a.rel = "noopener";
     document.body.appendChild(a); a.click(); a.remove();
   }
-  function downloadModal() {
-    if (dl) return dl;
-    dl = el("div", { "class": "bx-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "bxDlTitle" },
+  function downloadModal(key) {
+    key = product(key);
+    if (dls[key]) return dls[key];
+    var P = PRODUCTS[key], id = "bxDl" + key;
+    var dl = dls[key] = el("div", { "class": "bx-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": id + "Title" },
       '<form class="bx-dialog" novalidate>' +
       '<button type="button" class="bx-close" aria-label="Close">&times;</button>' +
-      '<h3 id="bxDlTitle">Download Bribeluge</h3>' +
+      '<h3 id="' + id + 'Title">Download ' + P.name + '</h3>' +
       '<p>Free. Tell me who you are and the download starts straight after.</p>' +
-      '<label for="bxDlName">Name</label><input id="bxDlName" name="name" autocomplete="name" required>' +
-      '<label for="bxDlEmail">Email</label><input id="bxDlEmail" name="email" type="email" autocomplete="email" required>' +
-      '<label for="bxDlArtist">Artist name (optional)</label><input id="bxDlArtist" name="artist_name" autocomplete="off">' +
-      '<label for="bxDlMusic">Link to your music (optional, so I can check it out)</label><input id="bxDlMusic" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram...">' +
+      '<label for="' + id + 'Name">Name</label><input id="' + id + 'Name" name="name" autocomplete="name" required>' +
+      '<label for="' + id + 'Email">Email</label><input id="' + id + 'Email" name="email" type="email" autocomplete="email" required>' +
+      '<label for="' + id + 'Artist">Artist name (optional)</label><input id="' + id + 'Artist" name="artist_name" autocomplete="off">' +
+      '<label for="' + id + 'Music">Link to your music (optional, so I can check it out)</label><input id="' + id + 'Music" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram...">' +
       '<input type="checkbox" name="botcheck" class="bx-hp" tabindex="-1" autocomplete="off">' +
-      '<p class="bx-dl-promise">I\'ll only ever contact you about updates to Bribeluge and other creative projects or tech builds.</p>' +
-      '<p class="bx-dl-note">Unofficial firmware: use it at your own risk and back up your SD card first.</p>' +
+      '<p class="bx-dl-promise">I\'ll only ever contact you about updates to ' + P.name + ' and other creative projects or tech builds.</p>' +
+      '<p class="bx-dl-note">' + P.note + '</p>' +
       '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Download <span class="bx-dl-ver"></span></button></div>' +
       '<div class="bx-status" role="status"></div></form>');
+    dl.setAttribute("data-product", key);
     document.body.appendChild(dl);
     var form = dl.querySelector("form"), status = dl.querySelector(".bx-status"), go = form.querySelector("button[type=submit]");
     function close() { dl.classList.remove("bx-open"); }
@@ -207,13 +221,13 @@
       var saved = JSON.parse(localStorage.getItem(DL_SAVED) || "null");
       if (saved) ["name", "email", "artist_name", "music_link"].forEach(function (k) { if (saved[k]) form[k].value = saved[k]; });
     } catch (e) {}
-    getLatest().then(function (info) { dl.querySelector(".bx-dl-ver").textContent = "v" + info.version; }).catch(function () {});
+    getLatest(key).then(function (info) { dl.querySelector(".bx-dl-ver").textContent = P.ver(info); }).catch(function () {});
 
     function done(info, sent) {
       status.className = "bx-status bx-ok";
-      status.innerHTML = (sent ? "Thanks! " : "") + "Your download of v" + info.version + " is starting. " +
+      status.innerHTML = (sent ? "Thanks! " : "") + "Your download of " + P.name + " " + P.ver(info) + " is starting. " +
         '<a href="' + info.file + '" download="' + info.name + '">Didn\'t start? Download it here.</a>' +
-        '<br><a href="/bribeluge/#install">How to install &rarr;</a>';
+        '<br><a href="' + P.install + '">How to install &rarr;</a>';
       go.disabled = false;
       startDownload(info);
     }
@@ -231,13 +245,13 @@
       try { localStorage.setItem(DL_SAVED, JSON.stringify({ name: form.name.value.trim(), email: form.email.value.trim(),
         artist_name: form.artist_name.value.trim(), music_link: music })); } catch (e2) {}
       go.disabled = true; status.textContent = "Sending...";
-      getLatest().then(function (info) {
+      getLatest(key).then(function (info) {
         if (!CONFIG.web3formsKey) return done(info, false);
         var data = new FormData(form);
         data.append("access_key", CONFIG.web3formsKey);
-        data.append("subject", "Bribeluge download v" + info.version + ": " + (form.artist_name.value.trim() || form.name.value.trim()));
+        data.append("subject", P.name + " download " + P.ver(info) + ": " + (form.artist_name.value.trim() || form.name.value.trim()));
         data.append("from_name", "thisisbribery.com");
-        data.append("firmware", "Bribeluge v" + info.version);
+        data.append("firmware", P.name + " " + P.ver(info));
         return fetch("https://api.web3forms.com/submit", { method: "POST", body: data })
           .then(function (r) { return r.json(); })
           .then(function (j) { done(info, !!(j && j.success)); })
@@ -249,7 +263,11 @@
     });
     return dl;
   }
-  function openDownload() { downloadModal().classList.add("bx-open"); setTimeout(function () { dl.querySelector("#bxDlName").focus(); }, 30); }
+  function openDownload(key) {
+    var dl = downloadModal(key);
+    dl.classList.add("bx-open");
+    setTimeout(function () { dl.querySelector("input[name=name]").focus(); }, 30);
+  }
 
   /* ---------------- fit .bx-fit text to its .bx-mega container ---------------- */
   function fitAll() {
@@ -273,9 +291,10 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-bx-support]"), function (a) {
       if (CONFIG.supportUrl) a.href = CONFIG.supportUrl; else a.style.display = "none";
     });
-    if (document.querySelector("[data-bx-bin-version]")) getLatest().then(function (info) {
-      Array.prototype.forEach.call(document.querySelectorAll("[data-bx-bin-version]"), function (v) { v.textContent = "v" + info.version; });
-    }).catch(function () {});
+    Array.prototype.forEach.call(document.querySelectorAll("[data-bx-bin-version]"), function (v) {
+      var key = product(v.getAttribute("data-bx-bin-version"));
+      getLatest(key).then(function (info) { v.textContent = PRODUCTS[key].ver(info); }).catch(function () {});
+    });
     Array.prototype.forEach.call(document.querySelectorAll("[data-bx-support-block]"), function (b) {
       if (!CONFIG.supportUrl) b.style.display = "none";
     });
@@ -283,7 +302,7 @@
       var t = e.target.closest && e.target.closest("[data-bx-beta]");
       if (t) { e.preventDefault(); openBeta(t.getAttribute("data-bx-beta")); }
       var d = e.target.closest && e.target.closest("[data-bx-download]");
-      if (d) { e.preventDefault(); openDownload(); }
+      if (d) { e.preventDefault(); openDownload(d.getAttribute("data-bx-download")); }
     });
     setMode(root.getAttribute("data-mode"), false);
     fitAll();

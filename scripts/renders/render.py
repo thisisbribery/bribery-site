@@ -20,7 +20,7 @@ from playwright.sync_api import sync_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
 SITE = os.path.expanduser("~/dev/bribery-site/assets/devices")
-ALL = ["deluge", "companion", "sealegs", "stolperbeats", "stages"]
+ALL = ["deluge", "companion", "sealegs", "stolperbeats", "stages", "kali"]
 PORT = 8797
 
 # Per-device URL params, tuned by eye
