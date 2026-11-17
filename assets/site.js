@@ -196,6 +196,11 @@
     });
     setMode(root.getAttribute("data-mode"), false);
     fitAll();
+    // fitting the big titles moves the page, so land on #section links again afterwards
+    if (location.hash.length > 1 && !/^#bx-/.test(location.hash)) {
+      var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) requestAnimationFrame(function () { target.scrollIntoView({ behavior: "instant", block: "start" }); });
+    }
     addEventListener("resize", fitAll);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
   }

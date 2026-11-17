@@ -10,6 +10,7 @@ Static HTML, no build step. Vercel deploys every push to `main`.
 | --- | --- |
 | `/` | Home: firmware rows with device shots, music, learn |
 | `/bribeluge/` | Bribeluge (Deluge firmware) feature guide |
+| `/bribeluge/manual/` | Full Bribeluge manual, generated from the firmware README |
 | `/companion/` | Bribeluge Companion app (PWA, Web MIDI) |
 | `/sealeggs/` | Seal Eggs flasher (Sealegs) |
 | `/stolperbeats/` | STOLPERBEATS ULTRA flasher |
@@ -39,3 +40,7 @@ The flasher logic and data files are copies of the source repos. After a flasher
 ## Old addresses
 
 The old GitHub Pages tools (SealEggs_v1, stolperbeats-ultra-v1, stolperbeats_v1, stolperbeats_v2, bribes-companion) redirect here. Each of those repos serves a `gh-pages` branch built by `scripts/redirects/make.py` (their `main` branches are unchanged). The redirect carries the visitor's saved tool data (custom Timings, banks, Companion settings) in a `#bx-import=` URL fragment; `assets/site.js` imports it once without overwriting anything already saved here. Pushing to those repos' `main` no longer publishes anything: update the matching sub-page here instead.
+
+## Bribeluge manual
+
+`bribeluge/manual/index.html` is generated from the firmware README by `scripts/manual/build.py` (layout in `scripts/manual/template.html`), using GitHub's Markdown renderer via `gh api markdown`, so it reads exactly like the README and keeps GitHub's heading anchors (`#6-drum-synth` and so on). After every README change: `python3 scripts/manual/build.py ~/research/deluge-bribes-v1/README.md`, then push. Don't edit the generated page by hand.
