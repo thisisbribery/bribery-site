@@ -128,7 +128,7 @@
       '<label for="bxName">Name</label><input id="bxName" name="name" autocomplete="name" required>' +
       '<label for="bxEmail">Email</label><input id="bxEmail" name="email" type="email" autocomplete="email" required>' +
       '<label for="bxDevice">Screen you\'d use</label><select id="bxDevice" name="device">' +
-      '<option>Android tablet</option><option>Android phone</option><option>Laptop or desktop (Chrome / Edge)</option><option>Other</option></select>' +
+      '<option>Android tablet</option><option>Android phone</option><option>Laptop or desktop (Chrome / Edge)</option><option>iPhone or iPad</option><option>Other</option></select>' +
       '<label for="bxMsg">Anything else? (optional)</label><textarea id="bxMsg" name="message" placeholder="Firmware version, what you\'d like to test..."></textarea>' +
       '<input type="checkbox" name="botcheck" class="bx-hp" tabindex="-1" autocomplete="off">' +
       '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Send</button></div>' +
@@ -163,7 +163,11 @@
     });
     return modal;
   }
-  function openBeta() { betaModal().classList.add("bx-open"); setTimeout(function () { modal.querySelector("#bxName").focus(); }, 30); }
+  function openBeta(device) {
+    betaModal().classList.add("bx-open");
+    if (device) { var sel = modal.querySelector("#bxDevice"); Array.prototype.forEach.call(sel.options, function (o) { if (o.text === device) sel.value = o.value; }); }
+    setTimeout(function () { modal.querySelector("#bxName").focus(); }, 30);
+  }
 
   /* ---------------- Bribeluge download gate (Web3Forms, then the bin downloads) ---------------- */
   var dl, latest;
@@ -273,7 +277,7 @@
     });
     document.addEventListener("click", function (e) {
       var t = e.target.closest && e.target.closest("[data-bx-beta]");
-      if (t) { e.preventDefault(); openBeta(); }
+      if (t) { e.preventDefault(); openBeta(t.getAttribute("data-bx-beta")); }
       var d = e.target.closest && e.target.closest("[data-bx-download]");
       if (d) { e.preventDefault(); openDownload(); }
     });

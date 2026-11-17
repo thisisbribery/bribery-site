@@ -649,6 +649,48 @@ html[data-mode="classic"] .cx-hide{border-radius:0 0 8px 8px}
 .cx-hide .cx-l2{display:none}
 html.cx-collapsed .cx-hide .cx-l1{display:none}
 html.cx-collapsed .cx-hide .cx-l2{display:inline}
+
+/* connection steps under the intro: both modes, fold with the header */
+.cx-connect{background:var(--bg,#000);border-bottom:1px solid var(--line)}
+.cx-connect-in{max-width:1600px;margin:0 auto;padding:clamp(14px,2vw,22px) clamp(12px,2vw,28px) clamp(16px,2vw,24px);font-family:var(--sans)}
+.cx-connect-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 20px;margin-bottom:12px}
+.cx-connect h2{margin:0;font:900 clamp(18px,2vw,26px)/1 var(--sans);letter-spacing:-.02em;text-transform:uppercase;color:var(--ink)}
+.cx-tabs{display:flex;flex-wrap:wrap;gap:6px}
+.cx-tabs button{all:unset;cursor:pointer;padding:8px 13px;border:1.5px solid var(--line);color:var(--muted);font:700 11.5px var(--mono,ui-monospace,monospace);letter-spacing:.12em;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.cx-tabs button[aria-selected="true"]{background:var(--pink);border-color:var(--pink);color:#000}
+.cx-tabs button:hover{border-color:var(--pink);color:var(--pink)}
+.cx-tabs button[aria-selected="true"]:hover{color:#000}
+.cx-tabs .cx-ios{border-style:dashed;color:var(--ink)}
+.cx-tabs button:focus-visible{outline:2px solid var(--teal,#19ffe0);outline-offset:2px}
+html[data-mode="classic"] .cx-tabs button{border-radius:8px;border-width:1px}
+.cx-steps{list-style:none;margin:0;padding:0;counter-reset:cx;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));border-top:1px solid var(--line)}
+.cx-steps[hidden]{display:none}
+.cx-steps li{counter-increment:cx;position:relative;padding:12px 16px 12px 40px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);font-size:14.5px;line-height:1.45;color:var(--muted)}
+.cx-steps li::before{content:counter(cx,decimal-leading-zero);position:absolute;left:10px;top:12px;font:900 15px/1.3 var(--sans);color:var(--pink)}
+.cx-steps li b{color:var(--ink)}
+.cx-fwnote{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--muted);max-width:110ch}
+.cx-fwnote b{color:var(--ink)}
+.cx-fwnote a{color:var(--pink)}
+html.cx-collapsed .cx-connect{display:none!important}
+@media (display-mode:standalone),(display-mode:fullscreen){ .cx-connect{display:none!important} }
+@media (max-width:640px){
+  .cx-steps li{border-right:0;padding-left:36px}
+  .cx-tabs{width:100%}
+  .cx-tabs button{flex:1 1 auto;text-align:center;padding:8px 8px}
+}
+
+/* folded header: a small wordmark with a glitch wobble where the brand was */
+.cx-mini{display:none;position:relative;align-self:center;font:900 11px/1 var(--sans);letter-spacing:.06em;color:var(--pink);white-space:nowrap;
+  animation:cxwob 5s steps(1) infinite;flex:0 0 auto}
+html.cx-collapsed .cx-mini{display:inline-block}
+.cx-mini::before,.cx-mini::after{content:attr(data-text);position:absolute;left:0;top:0;overflow:hidden;pointer-events:none}
+.cx-mini::before{color:var(--teal,#19ffe0);animation:cxsl1 5s steps(1) infinite;clip-path:inset(100% 0 0 0)}
+.cx-mini::after{color:var(--ink,#fff);animation:cxsl2 5s steps(1) infinite;clip-path:inset(100% 0 0 0)}
+@keyframes cxwob{0%,84%,100%{transform:none}86%{transform:translate(1px,0) skewX(-8deg)}88%{transform:translate(-2px,0)}90%{transform:translate(1px,-1px) skewX(6deg)}92%{transform:none}}
+@keyframes cxsl1{0%,85%,100%{clip-path:inset(100% 0 0 0);transform:none}86%{clip-path:inset(10% 0 55% 0);transform:translate(-3px,0)}89%{clip-path:inset(60% 0 10% 0);transform:translate(2px,0)}92%{clip-path:inset(100% 0 0 0)}}
+@keyframes cxsl2{0%,87%,100%{clip-path:inset(100% 0 0 0);transform:none}88%{clip-path:inset(35% 0 40% 0);transform:translate(3px,0)}91%{clip-path:inset(0 0 75% 0);transform:translate(-2px,0)}93%{clip-path:inset(100% 0 0 0)}}
+@media (prefers-reduced-motion:reduce){.cx-mini,.cx-mini::before,.cx-mini::after{animation:none}}
+@media (max-width:640px){.cx-mini{font-size:10px}}
 html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .brand,html.cx-collapsed #bar .cx-fwlinks{display:none!important}
 </style>
 </head>
@@ -661,12 +703,47 @@ html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .br
     <div class="bx-ctas"><button type="button" class="bx-btn bx-solid" data-bx-beta>Become a beta tester</button><a class="bx-btn" href="/bribeluge/" target="_blank" rel="noopener">Get the firmware</a></div>
   </div>
 </section>
+<section class="cx-connect" id="cxConnect" aria-label="How to connect your Deluge">
+  <div class="cx-connect-in">
+    <div class="cx-connect-head">
+      <h2>Connect your Deluge</h2>
+      <div class="cx-tabs" role="tablist" aria-label="Your device">
+        <button type="button" role="tab" id="cxTabAndroid" aria-controls="cxAndroid" aria-selected="true">Android</button>
+        <button type="button" role="tab" id="cxTabWindows" aria-controls="cxWindows" aria-selected="false">Windows</button>
+        <button type="button" role="tab" id="cxTabMac" aria-controls="cxMac" aria-selected="false">Mac</button>
+        <button type="button" class="cx-ios" data-bx-beta="iPhone or iPad" title="iPhone and iPad support is on the way. Join the beta list to hear first.">iOS launching soon</button>
+      </div>
+    </div>
+    <ol class="cx-steps" id="cxAndroid" role="tabpanel" aria-labelledby="cxTabAndroid">
+      <li><b>Plug in.</b> Run a USB cable from the Deluge's USB port to your phone or tablet. Use a USB-C (or OTG) cable or adapter that carries data: some cables only charge.</li>
+      <li><b>Open in Chrome.</b> Open this page in Chrome. Other Android browsers may not support Web MIDI.</li>
+      <li><b>Tap Connect</b> in the bar below, then <b>Allow</b> when Chrome asks to control your MIDI devices.</li>
+      <li><b>You're live.</b> The Deluge port is picked for you and the light turns green. Any of the Deluge's ports works.</li>
+      <li><b>Optional: install it.</b> Chrome menu &#8942; &rarr; <b>Add to Home screen</b>. It then runs fullscreen, keeps the screen awake and reconnects on its own.</li>
+    </ol>
+    <ol class="cx-steps" id="cxWindows" role="tabpanel" aria-labelledby="cxTabWindows" hidden>
+      <li><b>Plug in.</b> Connect the Deluge's USB port to your computer with a data USB cable.</li>
+      <li><b>Free the port.</b> Close any other app using the Deluge's MIDI (a DAW, an editor): on Windows a MIDI port usually opens in one app at a time.</li>
+      <li><b>Open in Chrome or Edge.</b> Firefox and other browsers may not support Web MIDI with SysEx.</li>
+      <li><b>Click Connect</b> in the bar below, then <b>Allow</b> when the browser asks to control your MIDI devices.</li>
+      <li><b>You're live.</b> The Deluge port is picked for you and the light turns green. If not, choose it in the port list.</li>
+    </ol>
+    <ol class="cx-steps" id="cxMac" role="tabpanel" aria-labelledby="cxTabMac" hidden>
+      <li><b>Plug in.</b> Connect the Deluge's USB port to your Mac with a data USB cable (or a USB-C adapter).</li>
+      <li><b>Open in Chrome or Edge.</b> Safari doesn't support Web MIDI.</li>
+      <li><b>Click Connect</b> in the bar below, then <b>Allow</b> when the browser asks to control your MIDI devices.</li>
+      <li><b>You're live.</b> The Deluge port is picked for you and the light turns green. Your DAW can keep using the Deluge at the same time.</li>
+    </ol>
+    <p class="cx-fwnote"><b>Firmware:</b> everything works with <a href="/bribeluge/" target="_blank" rel="noopener">Bribeluge</a> v1.32 or later. Plain community firmware 1.3 works in <b>STOCK</b> mode after a one-time MIDI Follow setup, listed in the app once you pick STOCK. The STOCK / BRIBELUGE switch picks itself when the Deluge answers.</p>
+  </div>
+</section>
 <div id="bar"><div class="barin">
   <div class="row1">
     <a class="brand" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener" title="Mods by Bribery">
       <span class="coin" aria-hidden="true"><span class="coin-inner"><img src="/assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="/assets/coin-back.png" alt=""></span></span>
       <b>Bribeluge <span>Companion</span></b>
     </a>
+    <span class="cx-mini" aria-hidden="true" data-text="BRIBELUGE COMPANION">BRIBELUGE COMPANION</span>
     <div class="fwbox">
       <div class="fw" role="group" aria-label="Firmware on the Deluge">
         <button id="fwStock" title="Stock community firmware 1.3: screen mirror, MIDI Follow knobs, learned commands">STOCK</button>
@@ -708,6 +785,22 @@ html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar .br
     </div>
   </div>
 </div><button type="button" class="cx-hide" id="cxHide" aria-expanded="true" title="Fold away the site header for more room. The Deluge controls stay."><span class="cx-l1">Hide header &#9650;</span><span class="cx-l2">Show header &#9660;</span></button></div>
+<script>
+// Connection steps: tabs, opening on the visitor's own platform.
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.cx-tabs [role="tab"]'));
+  function pick(t) {
+    tabs.forEach(function (b) {
+      var on = b === t; b.setAttribute("aria-selected", String(on));
+      document.getElementById(b.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+  tabs.forEach(function (b) { b.addEventListener("click", function () { pick(b); }); });
+  var ua = navigator.userAgent, id = /Android/i.test(ua) ? "cxTabAndroid" : /Windows/i.test(ua) ? "cxTabWindows" :
+    (/Macintosh/i.test(ua) && !("ontouchend" in document)) ? "cxTabMac" : null;
+  if (id) pick(document.getElementById(id));
+})();
+</script>
 <script>
 // Fold away the site's own pieces above the app (site header, intro, brand, firmware and beta links); every
 // Deluge control in the app bar stays. Folds by itself when a Deluge connects. A manual choice is remembered
