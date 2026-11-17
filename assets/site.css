@@ -108,7 +108,8 @@ html[data-mode="new"] .bx-classic-only,html:not([data-mode]) .bx-classic-only{di
 .bx-close:hover{color:var(--bx-pink)}
 .bx-status{margin-top:14px;font:600 13.5px var(--bx-mono);min-height:1em}
 .bx-status.bx-ok{color:var(--bx-teal)} .bx-status.bx-bad{color:#ff8787}
-.bx-dl-note{margin:16px 0 0!important;font-size:13px!important;color:var(--bx-orange)!important}
+.bx-dl-promise{margin:16px 0 0!important;font-size:13px!important}
+.bx-dl-note{margin:6px 0 0!important;font-size:13px!important;color:var(--bx-orange)!important}
 .bx-status a{color:var(--bx-pink)}
 .bx-btn:disabled{opacity:.6;cursor:wait}
 .bx-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}

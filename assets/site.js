@@ -193,6 +193,7 @@
       '<label for="bxDlArtist">Artist name (optional)</label><input id="bxDlArtist" name="artist_name" autocomplete="off">' +
       '<label for="bxDlMusic">Link to your music (optional, so I can check it out)</label><input id="bxDlMusic" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram...">' +
       '<input type="checkbox" name="botcheck" class="bx-hp" tabindex="-1" autocomplete="off">' +
+      '<p class="bx-dl-promise">I\'ll only ever contact you about updates to Bribeluge and other creative projects or tech builds.</p>' +
       '<p class="bx-dl-note">Unofficial firmware: use it at your own risk and back up your SD card first.</p>' +
       '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Download <span class="bx-dl-ver"></span></button></div>' +
       '<div class="bx-status" role="status"></div></form>');
