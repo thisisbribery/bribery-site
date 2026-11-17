@@ -53,3 +53,7 @@ The firmware downloads from the site through a gate on `/bribeluge/` (pink Downl
 ## KALI SMASH download
 
 `kali/download/` holds a zip (firmware, Daisy bootloader + MIT licence, `flash-kali.sh`, INSTALL.txt) and `latest.json`, built by `scripts/kali_zip.py` from `~/dev/kaliv1/release`. Run it on every KALI SMASH release, then push. The page's Download buttons use the same gate as Bribeluge (`data-bx-download="kali"`). Device render: `scripts/renders` (`python3 render.py kali --final`).
+
+## Sign-up form (every page)
+
+One form in `assets/site.js` (`openGate`) asks name, email, optional artist name and music link, and which firmware mods they want (any number), and sends them to Web3Forms with the subject "Firmware sign-up: <mods> (<name>)". Entry points: `data-bx-download="<mod>"` (form, then that mod's file downloads), `data-bx-gate="<mod>"` on a flasher's final button or the BRIBESTAGES update audio (form once per device, then it goes ahead; `data-bx-gate-again` asks for a second tap where the browser needs one, like USB flashing), and `data-bx-signup="<mod>"` (form only). The Seal Eggs and Stolperbeats source pages carry the same `data-bx-gate` attributes, so rebuilding a sub-page keeps them. `bribestages/firmware/latest.json` lists the update .wavs.

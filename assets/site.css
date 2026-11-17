@@ -129,3 +129,19 @@ html[data-mode="new"] .bx-classic-only,html:not([data-mode]) .bx-classic-only{di
 }
 /* The Companion app has its own New/Classic switch in its footer */
 body[data-bx-page="companion"] .bx-mode-float{display:none!important}
+
+/* firmware sign-up form: mod picker and the "what you got" list */
+.bx-mods{border:0;margin:16px 0 0;padding:0}
+.bx-mods legend{font:600 11.5px var(--bx-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--bx-muted);margin-bottom:8px;padding:0}
+.bx-mod-opt{display:flex!important;align-items:center;gap:10px;margin:0!important;padding:9px 10px;border:1.5px solid var(--bx-line);border-top-width:0;cursor:pointer;
+  font:15px var(--bx-sans)!important;letter-spacing:0!important;text-transform:none!important;color:var(--bx-ink)!important}
+.bx-mod-opt:first-of-type{border-top-width:1.5px}
+.bx-mod-opt input{width:18px!important;height:18px;margin:0;padding:0;accent-color:var(--bx-pink);flex:0 0 auto}
+.bx-mod-opt b{font-weight:800}
+.bx-mod-opt small{display:block;color:var(--bx-muted);font:12px var(--bx-mono)}
+.bx-mod-opt:has(input:checked){border-color:var(--bx-pink);background:rgba(255,31,214,.08)}
+.bx-mod-opt:has(input:checked)+.bx-mod-opt{border-top-color:var(--bx-pink)}
+.bx-got{list-style:none;margin:10px 0 0;padding:0;font:13px/1.6 var(--bx-sans);color:var(--bx-ink)}
+.bx-got li{padding:7px 0;border-top:1px solid var(--bx-line)}
+.bx-got b{margin-right:6px}
+.bx-got a{color:var(--bx-pink)}

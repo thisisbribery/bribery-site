@@ -1,0 +1,7 @@
+{
+  "version": "1.0",
+  "files": [
+    { "label": "normal", "file": "/bribestages/firmware/qiemem-bribery-edition-v1.0.wav", "name": "qiemem-bribery-edition-v1.0.wav" },
+    { "label": "flipped", "file": "/bribestages/firmware/qiemem-bribery-edition-v1.0-flipped.wav", "name": "qiemem-bribery-edition-v1.0-flipped.wav" }
+  ]
+}

@@ -170,71 +170,98 @@
     setTimeout(function () { modal.querySelector("#bxName").focus(); }, 30);
   }
 
-  /* ---------------- firmware download gate (Web3Forms, then the file downloads) ----------------
-     <a data-bx-download="kali">  opens the gate for that product (no value = bribeluge). Each product's
-     latest.json says which file is current; scripts/bribeluge_bin.py and scripts/kali_zip.py write them. */
+  /* ---------------- firmware sign-up form (Web3Forms), shared by every page ----------------
+     One form asks name, email, optional artist and music link, and which firmware mods they want
+     (any number). Entry points:
+       [data-bx-download="kali"]   download buttons: after the form, that product's file downloads
+       [data-bx-gate="sealeggs"]   a flasher's final button: form once per device, then the click goes ahead
+       audio[data-bx-gate]         update audio: form once per device, then it plays
+       [data-bx-signup="companion"] just the form, with that mod ticked (no value: nothing ticked)
+     Each product's latest.json says which file is current (scripts/bribeluge_bin.py, scripts/kali_zip.py). */
   var PRODUCTS = {
-    bribeluge: { name: "Bribeluge", json: "/bribeluge/download/latest.json", install: "/bribeluge/#install",
-      ver: function (i) { return "v" + i.version; }, note: "Unofficial firmware: use it at your own risk and back up your SD card first." },
-    kali: { name: "KALI SMASH", json: "/kali/download/latest.json", install: "/kali/#install",
-      ver: function (i) { return i.version; }, note: "Unofficial firmware: use it at your own risk. Back to stock any time with Kali's own v2.22 image." }
+    bribeluge: { name: "Bribeluge", dev: "Synthstrom Deluge", json: "/bribeluge/download/latest.json", page: "/bribeluge/", install: "/bribeluge/#install",
+      ver: function (i) { return "v" + i.version; } },
+    companion: { name: "Bribeluge Companion", dev: "Phone or tablet + Deluge", page: "/companion/", open: "Open the app" },
+    sealeggs: { name: "Seal Eggs", dev: "Sealegs", page: "/sealeggs/", open: "Open the flasher" },
+    stolperbeats: { name: "Stolperbeats Ultra", dev: "Stolperbeats", page: "/stolperbeats/", open: "Open the flasher" },
+    stages: { name: "BRIBESTAGES", dev: "Mutable Instruments Stages", json: "/bribestages/firmware/latest.json", page: "/bribestages/", install: "/bribestages/#update",
+      ver: function (i) { return "v" + i.version; } },
+    kali: { name: "Kali Smash", dev: "dsp.coffee Kali", json: "/kali/download/latest.json", page: "/kali/", install: "/kali/#install",
+      ver: function (i) { return i.version; } }
   };
-  var dls = {}, latests = {};
-  var DL_SAVED = "bribery-download-details";
+  var ORDER = ["bribeluge", "companion", "sealeggs", "stolperbeats", "stages", "kali"];
+  var latests = {}, gate = null, gateCtx = null;
+  var DL_SAVED = "bribery-download-details", REGISTERED = "bribery-registered";
+  function registered() { try { return !!localStorage.getItem(REGISTERED); } catch (e) { return false; } }
   function product(key) { return PRODUCTS[key] ? key : "bribeluge"; }
   function getLatest(key) {
     key = product(key);
+    if (!PRODUCTS[key].json) return Promise.reject(new Error("no file"));
     if (!latests[key]) latests[key] = fetch(PRODUCTS[key].json, { cache: "no-cache" }).then(function (r) { return r.json(); });
     return latests[key];
   }
-  function startDownload(info) {
+  function filesOf(info) { return info.files || [{ label: "", file: info.file, name: info.name }]; }
+  function startDownload(f) {
     var a = document.createElement("a");
-    a.href = info.file; a.download = info.name; a.rel = "noopener";
+    a.href = f.file; a.download = f.name || f.file.split("/").pop(); a.rel = "noopener";
     document.body.appendChild(a); a.click(); a.remove();
   }
-  function downloadModal(key) {
-    key = product(key);
-    if (dls[key]) return dls[key];
-    var P = PRODUCTS[key], id = "bxDl" + key;
-    var dl = dls[key] = el("div", { "class": "bx-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": id + "Title" },
+  function esc2(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function buildGate() {
+    if (gate) return gate;
+    var checks = ORDER.map(function (k) {
+      return '<label class="bx-mod-opt"><input type="checkbox" name="mods" value="' + k + '"><span><b>' + PRODUCTS[k].name + '</b><small>' + PRODUCTS[k].dev + '</small></span></label>';
+    }).join("");
+    gate = el("div", { "class": "bx-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "bxGateTitle" },
       '<form class="bx-dialog" novalidate>' +
       '<button type="button" class="bx-close" aria-label="Close">&times;</button>' +
-      '<h3 id="' + id + 'Title">Download ' + P.name + '</h3>' +
-      '<p>Free. Tell me who you are and the download starts straight after.</p>' +
-      '<label for="' + id + 'Name">Name</label><input id="' + id + 'Name" name="name" autocomplete="name" required>' +
-      '<label for="' + id + 'Email">Email</label><input id="' + id + 'Email" name="email" type="email" autocomplete="email" required>' +
-      '<label for="' + id + 'Artist">Artist name (optional)</label><input id="' + id + 'Artist" name="artist_name" autocomplete="off">' +
-      '<label for="' + id + 'Music">Link to your music (optional, so I can check it out)</label><input id="' + id + 'Music" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram...">' +
+      '<h3 id="bxGateTitle">Get the firmware</h3>' +
+      '<p class="bx-gate-lede">Free. Tell me who you are and which mods you\'re after.</p>' +
+      '<label for="bxGName">Name</label><input id="bxGName" name="name" autocomplete="name" required>' +
+      '<label for="bxGEmail">Email</label><input id="bxGEmail" name="email" type="email" autocomplete="email" required>' +
+      '<label for="bxGArtist">Artist name (optional)</label><input id="bxGArtist" name="artist_name" autocomplete="off">' +
+      '<label for="bxGMusic">Link to your music (optional, so I can check it out)</label><input id="bxGMusic" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram...">' +
+      '<fieldset class="bx-mods"><legend>Which firmware mods do you want? Pick as many as you like</legend>' + checks + '</fieldset>' +
       '<input type="checkbox" name="botcheck" class="bx-hp" tabindex="-1" autocomplete="off">' +
-      '<p class="bx-dl-promise">I\'ll only ever contact you about updates to ' + P.name + ' and other creative projects or tech builds.</p>' +
-      '<p class="bx-dl-note">' + P.note + '</p>' +
-      '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Download <span class="bx-dl-ver"></span></button></div>' +
+      '<p class="bx-dl-promise">I\'ll only ever contact you about updates to these mods and other creative projects or tech builds.</p>' +
+      '<p class="bx-dl-note">Unofficial firmware: use it at your own risk and back up first.</p>' +
+      '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Continue</button></div>' +
       '<div class="bx-status" role="status"></div></form>');
-    dl.setAttribute("data-product", key);
-    document.body.appendChild(dl);
-    var form = dl.querySelector("form"), status = dl.querySelector(".bx-status"), go = form.querySelector("button[type=submit]");
-    function close() { dl.classList.remove("bx-open"); }
-    dl.querySelector(".bx-close").addEventListener("click", close);
-    dl.addEventListener("click", function (e) { if (e.target === dl) close(); });
+    document.body.appendChild(gate);
+    var form = gate.querySelector("form"), status = gate.querySelector(".bx-status"), go = form.querySelector("button[type=submit]");
+    function close() { gate.classList.remove("bx-open"); }
+    gate.querySelector(".bx-close").addEventListener("click", close);
+    gate.addEventListener("click", function (e) { if (e.target === gate) close(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
-    try {
-      var saved = JSON.parse(localStorage.getItem(DL_SAVED) || "null");
-      if (saved) ["name", "email", "artist_name", "music_link"].forEach(function (k) { if (saved[k]) form[k].value = saved[k]; });
-    } catch (e) {}
-    getLatest(key).then(function (info) { dl.querySelector(".bx-dl-ver").textContent = P.ver(info); }).catch(function () {});
 
-    function done(info, sent) {
+    function chosen() { return Array.prototype.filter.call(form.querySelectorAll("input[name=mods]"), function (c) { return c.checked; }).map(function (c) { return c.value; }); }
+    function done(sent, mods) {
+      var ctx = gateCtx || {};
       status.className = "bx-status bx-ok";
-      status.innerHTML = (sent ? "Thanks! " : "") + "Your download of " + P.name + " " + P.ver(info) + " is starting. " +
-        '<a href="' + info.file + '" download="' + info.name + '">Didn\'t start? Download it here.</a>' +
-        '<br><a href="' + P.install + '">How to install &rarr;</a>';
+      var rows = mods.map(function (k) {
+        var P = PRODUCTS[k], id = "bxGot-" + k;
+        return '<li id="' + id + '"><b>' + P.name + '</b> <span class="bx-got-act">' +
+          (P.json ? "&hellip;" : (location.pathname.indexOf(P.page) === 0 ? "you're on its page" : '<a href="' + P.page + '">' + P.open + ' &rarr;</a>')) + '</span></li>';
+      }).join("");
+      status.innerHTML = (sent ? "Thanks, you're on the list!" : "You're in.") + (ctx.message ? " " + ctx.message : "") + '<ul class="bx-got">' + rows + '</ul>';
+      mods.forEach(function (k) {
+        var P = PRODUCTS[k]; if (!P.json) return;
+        getLatest(k).then(function (info) {
+          var links = filesOf(info).map(function (f) {
+            return '<a href="' + esc2(f.file) + '" download="' + esc2(f.name || "") + '">Download ' + esc2(f.label ? f.label + " " : "") + P.ver(info) + '</a>';
+          }).join(" &middot; ");
+          var span = gate.querySelector("#bxGot-" + k + " .bx-got-act");
+          if (span) span.innerHTML = links + ' &middot; <a href="' + P.install + '">Install &rarr;</a>';
+        }).catch(function () {});
+      });
       go.disabled = false;
-      startDownload(info);
+      if (ctx.onDone) { try { ctx.onDone(); } catch (e) {} }
     }
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       status.className = "bx-status";
-      var music = form.music_link.value.trim();
+      var music = form.music_link.value.trim(), mods = chosen();
       if (music && !/^https?:\/\//i.test(music)) { music = "https://" + music; form.music_link.value = music; }
       if (!form.name.value.trim() || !/^\S+@\S+\.\S+$/.test(form.email.value.trim())) {
         status.className = "bx-status bx-bad"; status.textContent = "Add your name and a valid email."; return;
@@ -242,31 +269,55 @@
       if (music && !/^https?:\/\/\S+\.\S+/.test(music)) {
         status.className = "bx-status bx-bad"; status.textContent = "That music link doesn't look right. Fix it or leave it blank."; return;
       }
-      try { localStorage.setItem(DL_SAVED, JSON.stringify({ name: form.name.value.trim(), email: form.email.value.trim(),
-        artist_name: form.artist_name.value.trim(), music_link: music })); } catch (e2) {}
+      if (!mods.length) { status.className = "bx-status bx-bad"; status.textContent = "Pick at least one firmware mod."; return; }
+      try {
+        localStorage.setItem(DL_SAVED, JSON.stringify({ name: form.name.value.trim(), email: form.email.value.trim(),
+          artist_name: form.artist_name.value.trim(), music_link: music, mods: mods }));
+        localStorage.setItem(REGISTERED, String(Date.now()));
+      } catch (e2) {}
+      if (!CONFIG.web3formsKey) return done(false, mods);
       go.disabled = true; status.textContent = "Sending...";
-      getLatest(key).then(function (info) {
-        if (!CONFIG.web3formsKey) return done(info, false);
-        var data = new FormData(form);
-        data.append("access_key", CONFIG.web3formsKey);
-        data.append("subject", P.name + " download " + P.ver(info) + ": " + (form.artist_name.value.trim() || form.name.value.trim()));
-        data.append("from_name", "thisisbribery.com");
-        data.append("firmware", P.name + " " + P.ver(info));
-        return fetch("https://api.web3forms.com/submit", { method: "POST", body: data })
-          .then(function (r) { return r.json(); })
-          .then(function (j) { done(info, !!(j && j.success)); })
-          // never hold the firmware back because the form service hiccuped
-          .catch(function () { done(info, false); });
-      }).catch(function () {
-        go.disabled = false; status.className = "bx-status bx-bad"; status.textContent = "Couldn't find the download. Try again in a minute.";
-      });
+      var names = mods.map(function (k) { return PRODUCTS[k].name; });
+      var data = new FormData(form);
+      data.delete("mods");
+      data.append("firmware_mods", names.join(", "));
+      data.append("page", location.pathname);
+      data.append("access_key", CONFIG.web3formsKey);
+      data.append("subject", "Firmware sign-up: " + names.join(" + ") + " (" + (form.artist_name.value.trim() || form.name.value.trim()) + ")");
+      data.append("from_name", "thisisbribery.com");
+      fetch("https://api.web3forms.com/submit", { method: "POST", body: data })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { done(!!(j && j.success), mods); })
+        // never hold the firmware back because the form service hiccuped
+        .catch(function () { done(false, mods); });
     });
-    return dl;
+    return gate;
   }
-  function openDownload(key) {
-    var dl = downloadModal(key);
-    dl.classList.add("bx-open");
-    setTimeout(function () { dl.querySelector("input[name=name]").focus(); }, 30);
+  // ctx: { product, onDone, message, lede }
+  function openGate(ctx) {
+    buildGate(); gateCtx = ctx || {};
+    var form = gate.querySelector("form"), saved = null;
+    try { saved = JSON.parse(localStorage.getItem(DL_SAVED) || "null"); } catch (e) {}
+    if (saved) ["name", "email", "artist_name", "music_link"].forEach(function (k) { if (saved[k]) form[k].value = saved[k]; });
+    var pre = (saved && saved.mods) || [];
+    Array.prototype.forEach.call(form.querySelectorAll("input[name=mods]"), function (c) {
+      c.checked = c.value === gateCtx.product || pre.indexOf(c.value) >= 0;
+    });
+    gate.querySelector(".bx-gate-lede").textContent = gateCtx.lede || "Free. Tell me who you are and which mods you're after.";
+    var st = gate.querySelector(".bx-status"); st.className = "bx-status"; st.textContent = "";
+    gate.classList.add("bx-open");
+    setTimeout(function () { form.querySelector("input[name=name]").focus(); }, 30);
+  }
+  // download buttons: the form, then that product's file (or the file the button points at)
+  function openDownload(key, el) {
+    key = product(key);
+    var href = el && el.getAttribute("href");
+    var direct = href && /\.(bin|zip|wav)$/i.test(href) ? { file: href, name: el.getAttribute("download") || href.split("/").pop() } : null;
+    openGate({ product: key, lede: "Free. Tell me who you are and which mods you're after. Your download starts straight after.",
+      onDone: function () {
+        if (direct) return startDownload(direct);
+        getLatest(key).then(function (info) { startDownload(filesOf(info)[0]); }).catch(function () {});
+      } });
   }
 
   /* ---------------- fit .bx-fit text to its .bx-mega container ---------------- */
@@ -298,11 +349,34 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-bx-support-block]"), function (b) {
       if (!CONFIG.supportUrl) b.style.display = "none";
     });
+    // a flasher's final button: the form once per device, then the click goes ahead
+    document.addEventListener("click", function (e) {
+      var g = e.target.closest && e.target.closest("[data-bx-gate]");
+      if (!g || g.tagName === "AUDIO" || g.disabled || g.__bxPass || registered()) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      var again = g.getAttribute("data-bx-gate-again");
+      openGate({ product: g.getAttribute("data-bx-gate"),
+        lede: "Free. Tell me who you are and which mods you're after. " + (again ? "Then flash away." : "Your firmware downloads straight after."),
+        message: again ? "Now tap " + again + " again." : "",
+        onDone: again ? null : function () { g.__bxPass = true; try { g.click(); } finally { g.__bxPass = false; } } });
+    }, true);
+    // update audio (BRIBESTAGES): the form once per device, then it plays
+    Array.prototype.forEach.call(document.querySelectorAll("audio[data-bx-gate]"), function (a) {
+      a.setAttribute("controlsList", "nodownload");
+      a.addEventListener("play", function () {
+        if (registered()) return;
+        a.pause();
+        openGate({ product: a.getAttribute("data-bx-gate"), lede: "Free. Tell me who you are and which mods you're after. The update audio plays straight after.",
+          onDone: function () { var p = a.play(); if (p && p.catch) p.catch(function () {}); } });
+      });
+    });
     document.addEventListener("click", function (e) {
       var t = e.target.closest && e.target.closest("[data-bx-beta]");
       if (t) { e.preventDefault(); openBeta(t.getAttribute("data-bx-beta")); }
       var d = e.target.closest && e.target.closest("[data-bx-download]");
-      if (d) { e.preventDefault(); openDownload(d.getAttribute("data-bx-download")); }
+      if (d) { e.preventDefault(); openDownload(d.getAttribute("data-bx-download"), d); }
+      var su = e.target.closest && e.target.closest("[data-bx-signup]");
+      if (su) { e.preventDefault(); openGate({ product: su.getAttribute("data-bx-signup") }); }
     });
     setMode(root.getAttribute("data-mode"), false);
     fitAll();
@@ -316,5 +390,5 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
 
-  window.BRIBERY = { config: CONFIG, setMode: function (m) { setMode(m, true); }, openBeta: openBeta, openDownload: openDownload, fit: fitAll };
+  window.BRIBERY = { config: CONFIG, setMode: function (m) { setMode(m, true); }, openBeta: openBeta, openDownload: openDownload, openGate: openGate, fit: fitAll };
 })();
