@@ -9,7 +9,7 @@
     // Web3Forms access key for the beta tester form (web3forms.com, sent to thisisbribery@gmail.com).
     web3formsKey: "4e024aad-8c40-4732-9a2e-40663e62af45",
     // Buy Me a Coffee / Ko-fi page. Leave empty to hide every Support button.
-    supportUrl: "",
+    supportUrl: "https://ko-fi.com/thisisbribery",
     links: {
       instagram: "https://www.instagram.com/thisisbribery/",
       youtube: "https://www.youtube.com/@briberysproductionhouse",
