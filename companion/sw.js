@@ -1,9 +1,10 @@
 // Offline copy of the app. The page itself comes from the network when it's reachable (so an update shows straight
 // away), falling back to the saved copy offline; other files are served from the saved copy and refreshed behind.
 // Lives at /companion/ on the BRIBERY site (scope /companion/). The site shell it uses comes from /assets/.
-var CACHE = "bribes-companion-v19";
+var CACHE = "bribes-companion-v20";
 var FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png",
-  "/assets/site.css", "/assets/site.js", "/assets/coin-front.png", "/assets/coin-back.png"];
+  "/assets/site.css", "/assets/site.js", "/assets/coin-front.png", "/assets/coin-back.png",
+  "/assets/favicon-32.png", "/assets/favicon-64.png", "/assets/apple-touch-icon.png"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(FILES); }));

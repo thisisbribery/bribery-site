@@ -7,8 +7,10 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="description" content="Bribeluge Companion: a second screen for the Synthstrom Deluge running Bribeluge firmware, over USB in Chrome.">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<script>try{if(localStorage.getItem("bribeluge-top-collapsed")==="1")document.documentElement.classList.add("cx-collapsed")}catch(e){}</script>
 <style data-bx="classic">
 :root{
   --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
@@ -636,6 +638,24 @@ html[data-mode="classic"] main{padding-bottom:72px}
   .cx-intro .bx-btn{flex:1 1 auto;justify-content:center;padding:10px 12px}
   .cx-intro-foot p small{display:none}
 }
+
+/* collapsible top: one tab folds the site header, intro and the app's top bar into a slim strip */
+#bar{position:sticky}
+.cx-hide{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);z-index:11;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 12px;
+  border:1px solid var(--line);border-top:0;background:var(--bg,#000);color:var(--muted);font:700 10.5px var(--mono,ui-monospace,monospace);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html[data-mode="classic"] .cx-hide{border-radius:0 0 8px 8px}
+.cx-hide:hover,.cx-hide:focus-visible{color:var(--pink);outline:none}
+.cx-strip{display:none;position:sticky;top:0;z-index:10;align-items:center;gap:10px;height:34px;padding:0 10px 0 14px;background:var(--bg,#000);border-bottom:1px solid var(--line);font-family:var(--sans)}
+.cx-strip .dot{margin:0}
+.cx-strip-text{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13.5px;color:var(--ink)}
+.cx-strip-text small{color:var(--muted);margin-left:8px;font-size:12px}
+.cx-show{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border:1.5px solid var(--pink);color:var(--pink);
+  font:700 10.5px var(--mono,ui-monospace,monospace);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+html[data-mode="classic"] .cx-show{border-radius:8px;border-width:1px}
+.cx-show:hover,.cx-show:focus-visible{background:var(--pink);color:#000}
+html.cx-collapsed .bx-top,html.cx-collapsed .cx-intro,html.cx-collapsed #bar{display:none!important}
+html.cx-collapsed .cx-strip{display:flex}
+html.cx-collapsed main{padding-top:10px}
 </style>
 </head>
 <body data-bx-page="companion" data-bx-foot>
@@ -693,7 +713,37 @@ html[data-mode="classic"] main{padding-bottom:72px}
       <div id="statusText">Not connected</div>
     </div>
   </div>
-</div></div>
+</div><button type="button" class="cx-hide" id="cxHide" aria-controls="bar" aria-expanded="true" title="Fold the top bar away for more room">Hide bar &#9650;</button></div>
+<div class="cx-strip" id="cxStrip" role="region" aria-label="Folded top bar">
+  <span class="dot" id="cxDot"></span>
+  <span class="cx-strip-text"><span id="cxText">-</span><small id="cxStatus"></small></span>
+  <button type="button" class="cx-show" id="cxShow" aria-controls="bar" aria-expanded="false">Top bar &#9660;</button>
+</div>
+<script>
+// Fold the whole top (site header, intro and the app's top bar) into a slim strip that still shows
+// what the Deluge says and the connection state. Remembered on this device.
+(function () {
+  var root = document.documentElement, KEY = "bribeluge-top-collapsed";
+  var hide = document.getElementById("cxHide"), show = document.getElementById("cxShow");
+  function set(on, save) {
+    root.classList.toggle("cx-collapsed", on);
+    hide.setAttribute("aria-expanded", String(!on)); show.setAttribute("aria-expanded", String(on));
+    if (save) { try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {} }
+    if (!on && window.BRIBERY) setTimeout(window.BRIBERY.fit, 0);
+  }
+  hide.addEventListener("click", function () { set(true, true); scrollTo(0, 0); });
+  show.addEventListener("click", function () { set(false, true); });
+  // mirror the app's own display text, status and connection dot into the strip
+  var full = document.getElementById("fullText"), status = document.getElementById("statusText"), dot = document.getElementById("dot");
+  var cxText = document.getElementById("cxText"), cxStatus = document.getElementById("cxStatus"), cxDot = document.getElementById("cxDot");
+  function mirror() { cxText.textContent = full.textContent; cxStatus.textContent = status.textContent; cxDot.className = dot.className; }
+  var mo = new MutationObserver(mirror);
+  [full, status].forEach(function (n) { mo.observe(n, { childList: true, characterData: true, subtree: true }); });
+  mo.observe(dot, { attributes: true, attributeFilter: ["class"] });
+  mirror();
+  set(root.classList.contains("cx-collapsed"), false);
+})();
+</script>
 
 <main>
   <div class="stage">
