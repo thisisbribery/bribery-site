@@ -112,3 +112,11 @@ code.bx-code{font:600 .9em var(--bx-mono);color:var(--bx-teal);word-break:break-
   .bx-steps li{grid-template-columns:44px minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){.bx-panel-body{animation:none}}
+
+/* download band: the whole heading is a target, plus a big button */
+.bx-dl-hit{display:block;text-decoration:none;color:inherit;cursor:pointer}
+.bx-dl-hit:hover h2,.bx-dl-hit:focus-visible h2{text-decoration:underline;text-decoration-thickness:6px;text-underline-offset:10px}
+.bx-dl-hit:focus-visible{outline:2px solid var(--bx-black);outline-offset:6px}
+.bx-dl-big{font-size:clamp(15px,1.6vw,19px);padding:18px 26px}
+.bx-dl-small{margin:clamp(20px,3vw,32px) 0 0;font-size:14px;color:var(--bx-black)}
+.bx-dl-small a{color:var(--bx-black);font-weight:700}

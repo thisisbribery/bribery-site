@@ -61,6 +61,8 @@ html[data-mode="new"] .bx-classic-only,html:not([data-mode]) .bx-classic-only{di
 .bx-kicker span{color:var(--bx-muted)}
 .bx-mega{position:relative;margin:0;font-weight:900;line-height:.8;letter-spacing:-.045em;color:var(--bx-pink);white-space:nowrap;text-shadow:0 0 40px var(--bx-pink-glow);text-transform:uppercase}
 .bx-mega .bx-fit{display:inline-block}
+/* giant titles are decorative and their glyph boxes overhang: never let them swallow clicks meant for buttons below */
+.bx-mega{pointer-events:none}
 .bx-glitch::before,.bx-glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;pointer-events:none;text-shadow:none}
 .bx-glitch::before{color:var(--bx-teal);mix-blend-mode:screen;animation:bxslice1 4.2s steps(1) infinite}
 .bx-glitch::after{color:var(--bx-ink);mix-blend-mode:difference;animation:bxslice2 4.2s steps(1) infinite}
@@ -106,6 +108,9 @@ html[data-mode="new"] .bx-classic-only,html:not([data-mode]) .bx-classic-only{di
 .bx-close:hover{color:var(--bx-pink)}
 .bx-status{margin-top:14px;font:600 13.5px var(--bx-mono);min-height:1em}
 .bx-status.bx-ok{color:var(--bx-teal)} .bx-status.bx-bad{color:#ff8787}
+.bx-dl-note{margin:16px 0 0!important;font-size:13px!important;color:var(--bx-orange)!important}
+.bx-status a{color:var(--bx-pink)}
+.bx-btn:disabled{opacity:.6;cursor:wait}
 .bx-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 
 @media (max-width:860px){

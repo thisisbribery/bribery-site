@@ -44,3 +44,7 @@ The old GitHub Pages tools (SealEggs_v1, stolperbeats-ultra-v1, stolperbeats_v1,
 ## Bribeluge manual
 
 `bribeluge/manual/index.html` is generated from the firmware README by `scripts/manual/build.py` (layout in `scripts/manual/template.html`), using GitHub's Markdown renderer via `gh api markdown`, so it reads exactly like the README and keeps GitHub's heading anchors (`#6-drum-synth` and so on). After every README change: `python3 scripts/manual/build.py ~/research/deluge-bribes-v1/README.md`, then push. Don't edit the generated page by hand.
+
+## Bribeluge download
+
+The firmware downloads from the site through a gate on `/bribeluge/` (pink Download band, hero and install buttons, and the manual's Download button): name, email, optional artist name and a music link go to Web3Forms, then the bin downloads. The file lives in `bribeluge/download/` with `latest.json`, written by `scripts/bribeluge_bin.py`, which refuses a bin whose sha256 isn't in the firmware README. On every release run it (or `scripts/sync-tools.sh`) and push. If Web3Forms fails, the download still goes ahead.

@@ -165,6 +165,84 @@
   }
   function openBeta() { betaModal().classList.add("bx-open"); setTimeout(function () { modal.querySelector("#bxName").focus(); }, 30); }
 
+  /* ---------------- Bribeluge download gate (Web3Forms, then the bin downloads) ---------------- */
+  var dl, latest;
+  var DL_SAVED = "bribery-download-details";
+  function getLatest() {
+    if (!latest) latest = fetch("/bribeluge/download/latest.json", { cache: "no-cache" }).then(function (r) { return r.json(); });
+    return latest;
+  }
+  function startDownload(info) {
+    var a = document.createElement("a");
+    a.href = info.file; a.download = info.name; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function downloadModal() {
+    if (dl) return dl;
+    dl = el("div", { "class": "bx-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "bxDlTitle" },
+      '<form class="bx-dialog" novalidate>' +
+      '<button type="button" class="bx-close" aria-label="Close">&times;</button>' +
+      '<h3 id="bxDlTitle">Download Bribeluge</h3>' +
+      '<p>Free. Tell me who you are and drop a link to your music so I can check it out. The download starts straight after.</p>' +
+      '<label for="bxDlName">Name</label><input id="bxDlName" name="name" autocomplete="name" required>' +
+      '<label for="bxDlEmail">Email</label><input id="bxDlEmail" name="email" type="email" autocomplete="email" required>' +
+      '<label for="bxDlArtist">Artist name (optional)</label><input id="bxDlArtist" name="artist_name" autocomplete="off">' +
+      '<label for="bxDlMusic">Link to your music</label><input id="bxDlMusic" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram..." required>' +
+      '<input type="checkbox" name="botcheck" class="bx-hp" tabindex="-1" autocomplete="off">' +
+      '<p class="bx-dl-note">Unofficial firmware: use it at your own risk and back up your SD card first.</p>' +
+      '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Download <span class="bx-dl-ver"></span></button></div>' +
+      '<div class="bx-status" role="status"></div></form>');
+    document.body.appendChild(dl);
+    var form = dl.querySelector("form"), status = dl.querySelector(".bx-status"), go = form.querySelector("button[type=submit]");
+    function close() { dl.classList.remove("bx-open"); }
+    dl.querySelector(".bx-close").addEventListener("click", close);
+    dl.addEventListener("click", function (e) { if (e.target === dl) close(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+    try {
+      var saved = JSON.parse(localStorage.getItem(DL_SAVED) || "null");
+      if (saved) ["name", "email", "artist_name", "music_link"].forEach(function (k) { if (saved[k]) form[k].value = saved[k]; });
+    } catch (e) {}
+    getLatest().then(function (info) { dl.querySelector(".bx-dl-ver").textContent = "v" + info.version; }).catch(function () {});
+
+    function done(info, sent) {
+      status.className = "bx-status bx-ok";
+      status.innerHTML = (sent ? "Thanks! " : "") + "Your download of v" + info.version + " is starting. " +
+        '<a href="' + info.file + '" download="' + info.name + '">Didn\'t start? Download it here.</a>' +
+        '<br><a href="/bribeluge/#install">How to install &rarr;</a>';
+      go.disabled = false;
+      startDownload(info);
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      status.className = "bx-status";
+      var music = form.music_link.value.trim();
+      if (music && !/^https?:\/\//i.test(music)) { music = "https://" + music; form.music_link.value = music; }
+      if (!form.name.value.trim() || !/^\S+@\S+\.\S+$/.test(form.email.value.trim()) || !/^https?:\/\/\S+\.\S+/.test(music)) {
+        status.className = "bx-status bx-bad"; status.textContent = "Add your name, a valid email and a link to your music."; return;
+      }
+      try { localStorage.setItem(DL_SAVED, JSON.stringify({ name: form.name.value.trim(), email: form.email.value.trim(),
+        artist_name: form.artist_name.value.trim(), music_link: music })); } catch (e2) {}
+      go.disabled = true; status.textContent = "Sending...";
+      getLatest().then(function (info) {
+        if (!CONFIG.web3formsKey) return done(info, false);
+        var data = new FormData(form);
+        data.append("access_key", CONFIG.web3formsKey);
+        data.append("subject", "Bribeluge download v" + info.version + ": " + (form.artist_name.value.trim() || form.name.value.trim()));
+        data.append("from_name", "thisisbribery.com");
+        data.append("firmware", "Bribeluge v" + info.version);
+        return fetch("https://api.web3forms.com/submit", { method: "POST", body: data })
+          .then(function (r) { return r.json(); })
+          .then(function (j) { done(info, !!(j && j.success)); })
+          // never hold the firmware back because the form service hiccuped
+          .catch(function () { done(info, false); });
+      }).catch(function () {
+        go.disabled = false; status.className = "bx-status bx-bad"; status.textContent = "Couldn't find the download. Try again in a minute.";
+      });
+    });
+    return dl;
+  }
+  function openDownload() { downloadModal().classList.add("bx-open"); setTimeout(function () { dl.querySelector("#bxDlName").focus(); }, 30); }
+
   /* ---------------- fit .bx-fit text to its .bx-mega container ---------------- */
   function fitAll() {
     Array.prototype.forEach.call(document.querySelectorAll(".bx-mega[data-fit]"), function (h) {
@@ -187,12 +265,17 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-bx-support]"), function (a) {
       if (CONFIG.supportUrl) a.href = CONFIG.supportUrl; else a.style.display = "none";
     });
+    if (document.querySelector("[data-bx-bin-version]")) getLatest().then(function (info) {
+      Array.prototype.forEach.call(document.querySelectorAll("[data-bx-bin-version]"), function (v) { v.textContent = "v" + info.version; });
+    }).catch(function () {});
     Array.prototype.forEach.call(document.querySelectorAll("[data-bx-support-block]"), function (b) {
       if (!CONFIG.supportUrl) b.style.display = "none";
     });
     document.addEventListener("click", function (e) {
       var t = e.target.closest && e.target.closest("[data-bx-beta]");
       if (t) { e.preventDefault(); openBeta(); }
+      var d = e.target.closest && e.target.closest("[data-bx-download]");
+      if (d) { e.preventDefault(); openDownload(); }
     });
     setMode(root.getAttribute("data-mode"), false);
     fitAll();
@@ -206,5 +289,5 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
 
-  window.BRIBERY = { config: CONFIG, setMode: function (m) { setMode(m, true); }, openBeta: openBeta, fit: fitAll };
+  window.BRIBERY = { config: CONFIG, setMode: function (m) { setMode(m, true); }, openBeta: openBeta, openDownload: openDownload, fit: fitAll };
 })();
