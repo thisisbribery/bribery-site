@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seal Eggs Firmware Flasher</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="description" content="Build a modded Sealegs 1.3.5.0 firmware in your browser from your own copy of the official firmware.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="Seal Eggs Firmware Flasher">
+<meta property="og:description" content="Build a modded Sealegs 1.3.5.0 firmware in your browser from your own copy of the official firmware.">
+<meta property="og:image" content="/assets/apple-touch-icon.png">
+<!-- Ported from github.com/thisisbribery/SealEggs_v1. Classic style = that page's CSS, verbatim. -->
+<link rel="stylesheet" href="/assets/site.css">
+<style data-bx="classic">
+:root{
+  --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1f22; --muted:#62666d; --line:#dedad1; --soft:#efece4;
+  --accent:var(--pink); --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
+  --used:#c9c4b8;
+  --pink:#ff1fd6;
+  --teal:#00e0c0; --teal-glow:rgba(0,255,214,.55); --teal-ink:#00796d;
+  --orange:#ff8a1f; --orange-glow:rgba(255,138,31,.55); --orange-ink:#b04f00;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --teal:#19ffe0; --teal-ink:#19ffe0;
+    --orange:#ff9a3c; --orange-ink:#ffab5c;
+    --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+    --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+    --used:#3d434b;
+  }
+}
+:root[data-theme="dark"]{
+  --teal:#19ffe0; --teal-ink:#19ffe0;
+  --orange:#ff9a3c; --orange-ink:#ffab5c;
+  --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+  --accent:var(--pink); --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+  --used:#3d434b;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;gap:18px;align-items:center;margin-bottom:22px}
+.logo{flex:0 0 auto;width:56px;height:56px}
+h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:4px 0 0}
+.privacy{display:inline-flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.privacy b{color:var(--ink);font-weight:600}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+.step h2{font-size:18px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--panel);font:600 14px var(--sans)}
+.hint{color:var(--muted);margin:0 0 14px;font-size:14.5px}
+.drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--soft)}
+.drop strong{display:block;font-size:16px}
+.drop span{color:var(--muted);font-size:14px}
+.status{margin-top:14px;border-radius:10px;padding:12px 14px;font-size:14.5px;display:none}
+.status.show{display:block}
+.status.ok{background:color-mix(in srgb,var(--ok) 12%,transparent);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent)}
+.status.bad{background:color-mix(in srgb,var(--bad) 12%,transparent);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
+.kv{font-family:var(--mono);font-size:12.5px;word-break:break-all;color:var(--muted);margin-top:6px}
+.mods{display:grid;gap:12px}
+.mod{display:grid;grid-template-columns:auto auto 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
+.mod:hover{border-color:color-mix(in srgb,var(--mc) 55%,var(--line))}
+.mod.on{border-color:var(--mc);box-shadow:inset 4px 0 0 var(--mc)}
+.mod input{position:absolute;opacity:0;pointer-events:none}
+.ico{width:40px;height:40px;color:var(--pink);fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.tog{width:42px;height:24px;border-radius:999px;background:var(--used);position:relative;margin-top:2px;transition:background .15s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--panel);transition:left .15s}
+.mod.on .tog{background:var(--mc)}
+.mod.on .tog::after{left:21px}
+.mod.locked .tog{opacity:.55}
+.mod.locked{cursor:default}
+.lockmsg{display:none;margin-top:6px;font-size:13px;font-weight:600;color:var(--mc)}
+.mod.locked .lockmsg{display:block}
+.mod input:focus-visible + .tog{outline:2px solid var(--accent);outline-offset:2px}
+.mod h3{margin:0;font-size:16.5px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.tag{font:500 11.5px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.tag.extra{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.mod p{margin:4px 0 0;font-size:14.5px}
+.ctl{margin-top:8px;font-size:14px;background:var(--soft);border-radius:8px;padding:8px 10px}
+.ctl b{font-weight:600}
+.note{margin-top:6px;font-size:13.5px;color:var(--muted)}
+.build{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+button{font:600 15px var(--sans);border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--accent);color:var(--panel)}
+button.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.result{margin-top:14px;display:none}
+.result.show{display:block}
+.fname{font:600 14px var(--mono);word-break:break-all}
+.warnbox{border-left:3px solid var(--warn);padding:2px 0 2px 12px;margin:10px 0;font-size:14px}
+footer{color:var(--muted);font-size:13.5px;margin-top:28px}
+footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
+footer p{margin:4px 0}
+footer a{color:var(--accent)}
+dialog.risk{max-width:440px;width:calc(100% - 32px);border:0;border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+dialog.risk::backdrop{background:rgba(0,0,0,.55)}
+.risk-msg{background:#b3261e;color:#fff;font-size:15px;line-height:1.5;padding:18px 20px}
+.risk-msg b{display:block;font-size:17px;font-weight:700;margin-bottom:6px}
+.risk-actions{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px}
+.byline{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;line-height:1.25}
+.coinlink:hover{border-color:var(--pink)}
+.coinlink b{font-weight:700}
+.coinlink small{display:block;white-space:nowrap;color:var(--muted);font-size:12.5px}
+.coin{display:block;width:40px;height:40px;perspective:220px;flex:0 0 auto}
+.coin-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinspin 4s steps(24) infinite}
+.coinlink:hover .coin-inner{animation-duration:2s}
+.coin img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.coin img{transform:translateZ(2.5px)}
+.coin .back{transform:rotateY(180deg) translateZ(2.5px)}
+.coin .edge{display:block;position:absolute;left:50%;top:8%;width:5px;height:84%;margin-left:-2.5px;background:linear-gradient(#9a9a9a,#6f6f6f 50%,#4a4a4a);transform:rotateY(90deg)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion:reduce){.coin-inner{animation:none}}
+.more{margin-top:10px}
+.more summary{color:var(--mc);font-weight:600;font-size:14px;list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"\25B8";display:inline-block;transition:transform .15s}
+.more[open] summary::before{transform:rotate(90deg)}
+.more dl{margin:8px 0 0;font-size:14.5px}
+.more dt{font-weight:600}
+.more dd{margin:0 0 10px}
+/* Seal Beads: deliberately off the pink scheme, neon teal with a soft pulsing glow */
+.mod.sb{--mc:var(--teal);border-color:var(--teal);animation:sbglow 3s ease-in-out infinite}
+.mod.sb .ico{color:var(--teal)}
+.mod.sb:hover{border-color:var(--teal)}
+.mod.sb.on{box-shadow:inset 4px 0 0 var(--teal),0 0 14px var(--teal-glow)}
+@keyframes sbglow{0%,100%{box-shadow:0 0 4px rgba(0,255,214,.25)}50%{box-shadow:0 0 18px var(--teal-glow),0 0 2px var(--teal)}}
+.mod.sb.on{animation-name:sbglowon}
+@keyframes sbglowon{0%,100%{box-shadow:inset 4px 0 0 var(--teal),0 0 5px rgba(0,255,214,.3)}50%{box-shadow:inset 4px 0 0 var(--teal),0 0 20px var(--teal-glow),0 0 2px var(--teal)}}
+.newtag{font:700 11px var(--mono);letter-spacing:.06em;color:#04211d;background:var(--teal);border-radius:6px;padding:2px 7px;box-shadow:0 0 10px var(--teal-glow)}
+.mod.sb .tag{color:var(--teal-ink);border-color:color-mix(in srgb,var(--teal) 55%,var(--line))}
+/* Seal Microloops: orange, the colour TAP breathes while it is on */
+.mod.sm{--mc:var(--orange);border-color:var(--orange);animation:smglow 3s ease-in-out infinite}
+.mod.sm .ico{color:var(--orange)}
+.mod.sm:hover{border-color:var(--orange)}
+@keyframes smglow{0%,100%{box-shadow:0 0 4px rgba(255,138,31,.25)}50%{box-shadow:0 0 18px var(--orange-glow),0 0 2px var(--orange)}}
+.mod.sm.on{animation-name:smglowon}
+@keyframes smglowon{0%,100%{box-shadow:inset 4px 0 0 var(--orange),0 0 5px rgba(255,138,31,.3)}50%{box-shadow:inset 4px 0 0 var(--orange),0 0 20px var(--orange-glow),0 0 2px var(--orange)}}
+.mod.sm .newtag{color:#2a1300;background:var(--orange);box-shadow:0 0 10px var(--orange-glow)}
+.mod.sm .tag{color:var(--orange-ink);border-color:color-mix(in srgb,var(--orange) 55%,var(--line))}
+.mod.sm .more summary{color:var(--orange-ink)}
+.more h4{margin:14px 0 4px;font-size:14px}
+.more .lead{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.ctltable{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px}
+.ctltable th,.ctltable td{text-align:left;vertical-align:top;padding:6px 8px;border-top:1px solid var(--line)}
+.ctltable th{font-weight:600;color:var(--muted);font-size:12.5px;border-top:0}
+.ctltable td:first-child{font-weight:600;white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.mod>div{min-width:0}
+.mod.sb .more summary{color:var(--teal-ink)}
+@media (max-width:640px){
+  .ctltable thead{display:none}
+  .ctltable tr{display:block;border-top:1px solid var(--line);padding:6px 0}
+  .ctltable td{display:block;border:0;padding:2px 0}
+  .ctltable td:first-child{white-space:normal}
+  .ctltable td[data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-weight:600}
+}
+@media (prefers-reduced-motion:reduce){.mod.sb,.mod.sb.on,.mod.sm,.mod.sm.on{animation:none}}
+.themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
+@media (max-width:640px){
+  h1{font-size:24px}
+  .logo{width:44px;height:44px}
+  .step{padding:16px}
+  .mod{padding:12px;gap:8px 12px;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr}
+  .ico{width:32px;height:32px;grid-column:1;grid-row:2;justify-self:center}
+  .mod>div{grid-column:2;grid-row:1/span 2}
+  header{flex-wrap:wrap}
+  .themebtn{margin-left:0}
+}
+</style>
+<style data-bx="new">
+/* Seal Eggs in the BRIBERY style. Everything is scoped under .wrap (the original page container)
+   so none of it reaches the site shell (.bx-top, .bx-foot). Full width, no cards, sharp corners. */
+:root{
+  color-scheme:dark;
+  --pink:#ff1fd6; --pink-glow:rgba(255,31,214,.45);
+  --teal:#19ffe0; --teal-glow:rgba(25,255,224,.5);
+  --orange:#ff8a1f; --orange-glow:rgba(255,138,31,.5);
+  --ink:#f4f1ec; --body:#d8d1d5; --muted:#9a9097; --line:#2a2228; --line2:#4a3a45; --soft:#0d0a0c;
+  --bg:#000; --panel:#000; --accent:var(--pink); --used:#2a2228;
+  --ok:var(--teal); --bad:#ff4d5e; --red:#e3121d;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --g:var(--bx-gutter,clamp(16px,4vw,56px));
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{scroll-behavior:smooth}
+body{background:#000;color:var(--ink);font:17px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--pink);color:#000}
+.wrap{max-width:none;margin:0;padding:0}
+.wrap a{color:var(--pink)}
+.wrap code{font:.9em var(--mono);color:var(--ink);background:#1a1317;padding:1px 6px}
+
+/* the site top bar replaces the coin byline and the Theme button */
+.byline{display:none}
+
+/* ---------- hero ---------- */
+.wrap>header{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:center;
+  padding:clamp(28px,6vw,72px) var(--g) clamp(40px,6vw,84px)}
+.wrap>header>.bx-kicker,.wrap>header>.bx-mega{grid-column:1/-1}
+.wrap>header>.bx-mega{margin:0 0 clamp(10px,2.4vw,34px)}
+.logo{width:clamp(76px,9vw,116px);height:clamp(76px,9vw,116px);filter:drop-shadow(0 0 22px var(--pink-glow));align-self:start}
+.wrap h1{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sub{margin:0;font-size:clamp(20px,2.3vw,31px);line-height:1.25;font-weight:600;max-width:40ch;color:var(--ink)}
+.privacy{display:flex;gap:10px;align-items:baseline;margin-top:clamp(16px,2vw,24px);padding-top:14px;border-top:1px solid var(--line);
+  font:600 12.5px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);max-width:none}
+.privacy b{color:var(--pink);font-weight:700}
+.se-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(20px,2.6vw,30px)}
+.wrap .se-ctas .bx-btn{color:var(--pink)}
+.wrap .se-ctas .bx-btn:hover,.wrap .se-ctas .bx-btn.bx-solid{color:#000}
+.wrap .se-ctas .bx-btn.bx-solid:hover{color:var(--pink)}
+
+/* ---------- pink marquee ---------- */
+.se-marquee{background:var(--pink);color:#000;overflow:hidden;user-select:none}
+.se-marquee-track{display:flex;width:max-content;animation:semarquee 34s linear infinite}
+.se-marquee span{font:900 clamp(22px,3.4vw,44px)/1 var(--sans);letter-spacing:-.02em;text-transform:uppercase;padding:14px 0;white-space:nowrap}
+.se-marquee i{font-style:normal;padding:0 .5em;opacity:.5}
+@keyframes semarquee{to{transform:translateX(-50%)}}
+
+/* ---------- steps: numbered full-width sections ---------- */
+.step{margin:0;padding:clamp(48px,6.5vw,96px) var(--g) clamp(44px,5.5vw,84px);background:none;border:0;border-top:2px solid var(--pink);border-radius:0}
+.se-marquee+.step{border-top:0}
+.step-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,36ch);gap:16px clamp(24px,5vw,80px);align-items:end;
+  padding-bottom:clamp(18px,2.4vw,28px);border-bottom:1px solid var(--line);margin-bottom:clamp(26px,3.4vw,44px)}
+.step h2{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:end;column-gap:clamp(14px,2.4vw,34px);margin:0;
+  font:900 clamp(30px,4.8vw,76px)/.86 var(--sans);letter-spacing:-.035em;text-transform:uppercase;color:var(--ink)}
+.step .num{display:block;width:auto;height:auto;border-radius:0;background:none;color:var(--pink);
+  font:900 clamp(72px,11.5vw,176px)/.74 var(--sans);letter-spacing:-.06em;text-shadow:0 0 40px var(--pink-glow)}
+.step .num::before{content:"0"}
+.step-head .hint{margin:0;color:var(--muted);font-size:clamp(15px,1.25vw,17px);line-height:1.5}
+
+/* drop zone */
+.drop{display:grid;gap:12px;justify-items:start;position:relative;text-align:left;border:2px dashed var(--line2);border-radius:0;
+  padding:clamp(30px,5vw,68px) clamp(84px,10vw,170px) clamp(30px,5vw,68px) clamp(18px,3vw,44px);cursor:pointer;
+  transition:border-color .15s,background .15s}
+.drop strong{display:block;font:900 clamp(26px,3.8vw,58px)/.92 var(--sans);letter-spacing:-.03em;text-transform:uppercase;color:var(--ink);transition:color .15s}
+.drop span{font:600 12.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.drop::after{content:"\2193";position:absolute;right:clamp(18px,3vw,44px);top:50%;transform:translateY(-50%);
+  font:900 clamp(48px,7vw,108px)/1 var(--sans);color:var(--pink);transition:transform .15s}
+.drop:hover,.drop.over{border-color:var(--pink);border-style:solid;background:rgba(255,31,214,.06)}
+.drop:hover strong,.drop.over strong{color:var(--pink)}
+.drop:hover::after,.drop.over::after{transform:translateY(-38%)}
+.drop:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+/* status lines */
+.status{display:none;margin-top:20px;padding:14px 18px;border:0;border-left:4px solid var(--line2);border-radius:0;font-size:15.5px;color:var(--body)}
+.status.show{display:block}
+.status.ok{border-left-color:var(--ok);background:rgba(25,255,224,.06)}
+.status.bad{border-left-color:var(--bad);background:rgba(255,77,94,.08)}
+.status.ok>b:first-child{color:var(--ok)}
+.status.bad>b:first-child{color:var(--bad)}
+.kv{font:12.5px/1.6 var(--mono);word-break:break-all;color:var(--muted);margin-top:8px}
+
+/* ---------- mods: full-width rows ---------- */
+.mods{display:block;margin:0 calc(-1 * var(--g));border-top:1px solid var(--line)}
+.mod{--glow:var(--pink-glow);display:grid;grid-template-columns:48px 52px minmax(0,1fr);gap:0 clamp(16px,2.4vw,34px);
+  padding:clamp(24px,3vw,38px) var(--g);border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;
+  cursor:pointer;position:relative;isolation:isolate;transition:background .15s}
+.mod:hover{background:var(--soft)}
+.mod.on{background:color-mix(in srgb,var(--mc) 6%,#000);box-shadow:inset 4px 0 0 var(--mc)}
+.mod input{position:absolute;opacity:0;pointer-events:none}
+.tog{width:48px;height:24px;margin-top:5px;border:2px solid var(--line2);border-radius:0;background:transparent;position:relative;transition:background .15s,border-color .15s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:0;background:var(--muted);transition:left .15s,background .15s}
+.mod:hover .tog{border-color:var(--mc)}
+.mod.on .tog{background:var(--mc);border-color:var(--mc)}
+.mod.on .tog::after{left:27px;background:#000}
+.mod input:focus-visible+.tog{outline:2px solid var(--ink);outline-offset:3px}
+.mod.locked{cursor:default}
+.mod.locked .tog{opacity:.5}
+.ico{width:52px;height:52px;color:var(--mc);fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+
+.mod>div{min-width:0;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:clamp(24px,4.4vw,72px);align-content:start}
+.mod h3{grid-column:1/-1;grid-row:1;margin:0 0 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;
+  font:900 clamp(25px,2.9vw,42px)/.95 var(--sans);letter-spacing:-.025em;text-transform:uppercase;color:var(--ink)}
+.tag{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);border-radius:0;padding:5px 7px;text-shadow:none}
+.tag.extra{color:var(--ink);border-style:dashed;border-color:var(--muted)}
+.newtag{font:800 11px/1 var(--mono);letter-spacing:.14em;color:#000;background:var(--mc);border-radius:0;padding:5px 8px;box-shadow:0 0 14px var(--glow);text-shadow:none}
+.mod>div>p{grid-column:1;grid-row:2/span 3;margin:0;font-size:clamp(15.5px,1.2vw,17px);color:var(--body)}
+.mod>div>p b{color:var(--ink)}
+.ctl{grid-column:2;grid-row:2;margin:0;padding:2px 0 2px 16px;border-left:2px solid var(--mc);border-radius:0;background:none;font-size:15px;color:var(--body)}
+.ctl b{color:var(--ink);font-weight:700}
+.note{grid-column:2;grid-row:3;margin-top:14px;font-size:14px;color:var(--muted)}
+.note b{color:var(--body)}
+.lockmsg{grid-column:2;grid-row:4;display:none;margin-top:14px;font:700 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mc)}
+.mod.locked .lockmsg{display:block}
+.mod.locked .lockmsg::before{content:"\25A0  "}
+
+/* more info */
+.more{grid-column:1/-1;grid-row:5;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.more summary{display:inline-flex;align-items:center;gap:10px;list-style:none;cursor:pointer;color:var(--mc);
+  font:700 12.5px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"\25B8";display:inline-block;transition:transform .15s}
+.more[open] summary::before{transform:rotate(90deg)}
+.more summary:hover{color:var(--ink)}
+.more dl{margin:14px 0 0;font-size:15px;display:grid;grid-template-columns:minmax(0,14em) minmax(0,1fr);gap:0 28px}
+.more dt{font:900 15px/1.3 var(--sans);text-transform:uppercase;letter-spacing:-.005em;color:var(--ink);padding:12px 0;border-top:1px solid var(--line)}
+.more dd{margin:0;color:var(--body);padding:12px 0;border-top:1px solid var(--line)}
+.more h4{margin:24px 0 6px;font:700 12px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--mc)}
+.more .lead{margin:12px 0 0;font-size:15px;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.ctltable{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;color:var(--body)}
+.ctltable th,.ctltable td{text-align:left;vertical-align:top;padding:10px 12px 10px 0;border-top:1px solid var(--line)}
+.ctltable th{font:700 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-top:0;padding-bottom:8px}
+.ctltable td:first-child{font-weight:800;color:var(--ink);white-space:nowrap;text-transform:uppercase;font-size:13px;letter-spacing:.02em}
+.ctltable small{color:var(--muted);font:600 10.5px var(--mono);letter-spacing:.1em}
+.ctltable b{color:var(--ink)}
+
+/* Seal Beads (teal) and Seal Microloops (orange): their own colour and a slow breathing glow */
+.mod.sb{--mc:var(--teal);--glow:var(--teal-glow)}
+.mod.sm{--mc:var(--orange);--glow:var(--orange-glow)}
+.mod.sb,.mod.sm{box-shadow:inset 4px 0 0 var(--mc),inset 0 1px 0 color-mix(in srgb,var(--mc) 30%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--mc) 30%,transparent)}
+.mod.sb::before,.mod.sm::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--mc) 20%,transparent),color-mix(in srgb,var(--mc) 3%,transparent) 55%,transparent);
+  animation:seglow 3s ease-in-out infinite}
+@keyframes seglow{0%,100%{opacity:.25}50%{opacity:1}}
+.mod.sb.on,.mod.sm.on{background:color-mix(in srgb,var(--mc) 5%,#000)}
+.mod.sb.on::before,.mod.sm.on::before{background:linear-gradient(90deg,color-mix(in srgb,var(--mc) 30%,transparent),color-mix(in srgb,var(--mc) 8%,transparent) 65%,color-mix(in srgb,var(--mc) 3%,transparent));
+  animation-name:seglowon}
+@keyframes seglowon{0%,100%{opacity:.55}50%{opacity:1}}
+.mod.sb h3,.mod.sm h3{color:var(--mc);text-shadow:0 0 22px var(--glow)}
+.mod.sb .tag,.mod.sm .tag{color:var(--mc);border-color:color-mix(in srgb,var(--mc) 50%,var(--line))}
+.mod.sb .ico,.mod.sm .ico{filter:drop-shadow(0 0 8px var(--glow))}
+.mod.sb.on .tog,.mod.sm.on .tog{box-shadow:0 0 16px var(--glow)}
+
+/* ---------- build ---------- */
+.build{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center}
+.build .hint{margin:0;font:600 12.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.wrap button{display:inline-flex;align-items:center;gap:10px;font:700 14px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:16px 22px;border:2px solid var(--pink);border-radius:0;background:var(--pink);color:#000;cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+.wrap button:hover:not(:disabled){background:#000;color:var(--pink)}
+.wrap button.secondary{background:transparent;color:var(--pink)}
+.wrap button.secondary:hover:not(:disabled){background:var(--pink);color:#000}
+.wrap button:disabled{opacity:.32;cursor:not-allowed}
+.wrap button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+#buildBtn{font-size:clamp(15px,1.4vw,18px);padding:clamp(18px,2vw,24px) clamp(22px,2.6vw,34px);box-shadow:0 0 34px var(--pink-glow)}
+#buildBtn:disabled{box-shadow:none}
+#buildBtn::after{content:"\2192";font-size:1.2em;line-height:.8}
+.result{display:none;margin-top:30px}
+.result.show{display:block}
+.result>.build{margin-top:20px!important}
+.fname{font:700 15px var(--mono);word-break:break-all;color:var(--ink)}
+.warnbox{margin:14px 0;padding:4px 0 4px 16px;border-left:2px solid var(--pink);font-size:14.5px;color:var(--body)}
+
+/* ---------- risk dialog: stays clearly red ---------- */
+dialog.risk{max-width:540px;width:calc(100% - 32px);padding:0;border:2px solid var(--red);border-radius:0;background:#000;color:var(--ink);
+  box-shadow:0 0 80px rgba(227,18,29,.5)}
+dialog.risk::backdrop{background:rgba(0,0,0,.82)}
+.risk-msg{background:var(--red);color:#fff;font-size:16px;line-height:1.5;padding:22px 24px 24px}
+.risk-msg::before{content:"Warning / read this first";display:block;margin-bottom:12px;font:700 11.5px var(--mono);letter-spacing:.2em;text-transform:uppercase;opacity:.85}
+.risk-msg b{display:block;margin-bottom:12px;font:900 clamp(28px,6vw,40px)/.9 var(--sans);letter-spacing:-.03em;text-transform:uppercase}
+.risk-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:10px;padding:18px 24px 22px;background:#000}
+.wrap #riskCancel{background:transparent;border-color:var(--line2);color:var(--ink)}
+.wrap #riskCancel:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.wrap #riskAccept{background:var(--red);border-color:var(--red);color:#fff}
+.wrap #riskAccept:hover{background:#000;color:#ff4d55;border-color:#ff4d55}
+
+/* ---------- notes (the original page footer) ---------- */
+.wrap>footer{margin:0;padding:clamp(52px,7.5vw,112px) var(--g) clamp(40px,5vw,72px);border-top:2px solid var(--pink);color:var(--body);font-size:15.5px}
+.se-notes-head{margin:0 0 clamp(8px,1.4vw,16px);padding-bottom:18px;border-bottom:2px solid var(--pink);
+  font:900 clamp(46px,9vw,140px)/.85 var(--sans);letter-spacing:-.04em;text-transform:uppercase;color:var(--ink)}
+.fgrp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:0 clamp(24px,5vw,80px);padding:clamp(24px,3vw,40px) 0;border-bottom:1px solid var(--line)}
+.fgrp h3{grid-column:1;grid-row:1/span 9;margin:0;font:700 12.5px/1.5 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pink)}
+.fgrp p{grid-column:2;margin:0 0 14px;max-width:72ch}
+.fgrp p:last-child{margin-bottom:0}
+
+/* ---------- phones and small tablets ---------- */
+@media (max-width:860px){
+  .step-head{grid-template-columns:minmax(0,1fr)}
+  .fgrp{grid-template-columns:minmax(0,1fr)}
+  .fgrp h3{grid-row:auto;margin-bottom:12px}
+  .fgrp p{grid-column:1}
+  .mod{grid-template-columns:48px minmax(0,1fr);column-gap:16px}
+  .mod>div{display:contents}
+  .tog{grid-column:1;grid-row:1}
+  .ico{grid-column:1;grid-row:2;width:40px;height:40px;margin-top:10px}
+  .mod h3{grid-column:2;grid-row:1/span 2;align-self:start}
+  .mod>div>p,.ctl,.note,.lockmsg,.more{grid-column:1/-1;grid-row:auto}
+  .ctl{margin-top:16px}
+  .more dl{grid-template-columns:minmax(0,1fr)}
+  .more dd{border-top:0;padding-top:0}
+}
+@media (max-width:640px){
+  .wrap>header{grid-template-columns:minmax(0,1fr)}
+  .logo{display:none}
+  .privacy{letter-spacing:.08em}
+  .drop{padding-right:clamp(64px,18vw,84px)}
+  .ctltable thead{display:none}
+  .ctltable tr{display:block;border-top:1px solid var(--line);padding:10px 0}
+  .ctltable td{display:block;border:0;padding:2px 0}
+  .ctltable td:first-child{white-space:normal}
+  .ctltable td[data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-weight:600}
+  .risk-actions{justify-content:stretch}
+  .risk-actions button{flex:1 1 auto;justify-content:center}
+  .build button{flex:1 1 auto;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .se-marquee-track,.mod.sb::before,.mod.sm::before{animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+<script src="/assets/site.js"></script>
+</head>
+<body data-bx-page="sealeggs" data-bx-foot>
+<div class="wrap">
+<div class="byline">
+  <a class="coinlink" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">
+    <span class="coin" aria-hidden="true"><span class="coin-inner"><img src="/assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="/assets/coin-back.png" alt=""></span></span>
+    <span>Mods by <b>Bribery</b><small>@thisisbribery on Instagram &#8599;</small></span>
+  </a>
+  <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle colour theme">Theme</button>
+</div>
+<header>
+  <p class="bx-kicker bx-new-only">Sealegs delay <span>/</span> Firmware 1.3.5.0 <span>/</span> Browser flasher</p>
+  <div class="bx-mega bx-glitch bx-new-only" data-fit data-text="SEAL EGGS" aria-hidden="true"><span class="bx-fit">SEAL EGGS</span></div>
+  <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+    <ellipse cx="32" cy="36" rx="20" ry="24" fill="var(--soft)" stroke="var(--accent)" stroke-width="3"/>
+    <path d="M14 38c6-4 10 4 18 0s12-4 18 0" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M17 47c6-4 9 4 15 0s10-4 15 0" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+    <circle cx="25" cy="25" r="2.6" fill="var(--accent)"/>
+  </svg>
+  <div>
+    <h1>Seal Eggs firmware flasher</h1>
+    <p class="sub">Add community mods to your own copy of the official Sealegs 1.3.5.0 firmware.</p>
+    <div class="privacy">&#128274; <span><b>Runs entirely in your browser.</b> Your firmware is never uploaded, and this site hosts none.</span></div>
+    <div class="se-ctas bx-new-only"><a class="bx-btn bx-solid" href="#step1">Start</a><a class="bx-btn" href="#notes">Read before you flash</a></div>
+  </div>
+</header>
+
+<div class="se-marquee bx-new-only" aria-hidden="true"><div class="se-marquee-track"><span>Live reverse<i>/</i>Digi doppler<i>/</i>Tape grunge<i>/</i>BBD chip decay<i>/</i>Data corruption<i>/</i>Seal Beads<i>/</i>Seal Microloops<i>/</i></span><span>Live reverse<i>/</i>Digi doppler<i>/</i>Tape grunge<i>/</i>BBD chip decay<i>/</i>Data corruption<i>/</i>Seal Beads<i>/</i>Seal Microloops<i>/</i></span></div></div>
+
+<section class="step" id="step1">
+  <div class="step-head">
+    <h2><span class="num">1</span>Load your official firmware</h2>
+    <p class="hint">Use the unmodified <code>Sealegs.1.3.5.0.bin</code> from the manufacturer. Other versions are refused, because every patch targets exact addresses.</p>
+  </div>
+  <label class="drop" id="drop" tabindex="0">
+    <strong>Drop the .bin here or click to choose</strong>
+    <span>Checked against the known SHA-256 of 1.3.5.0</span>
+    <input type="file" id="file" accept=".bin,application/octet-stream" hidden>
+  </label>
+  <div class="status" id="status"></div>
+</section>
+
+<section class="step" id="step2">
+  <div class="step-head">
+    <h2><span class="num">2</span>Choose your mods</h2>
+    <p class="hint">Mods can be mixed freely, with three rules: Live reverse needs Digi doppler, Seal Beads needs Live reverse, and Seal Microloops needs Seal Beads, so picking one turns the others on. Reverse, character and doppler share one engine, which is added once.</p>
+  </div>
+  <div class="mods" id="mods"></div>
+</section>
+
+<section class="step" id="step3">
+  <div class="step-head">
+    <h2><span class="num">3</span>Build and download</h2>
+    <p class="hint">Generates a modified image the same size as the original. Install it with the same update procedure you use for official firmware.</p>
+  </div>
+  <div class="build">
+    <button id="buildBtn" type="button" disabled>Build modded firmware</button>
+    <span class="hint" id="buildHint" style="margin:0">Load the official firmware first.</span>
+  </div>
+  <dialog class="risk" id="riskDlg" aria-labelledby="riskTitle">
+    <div class="risk-msg"><b id="riskTitle">Unofficial, modified firmware</b>Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost settings or warranty issues that may result.</div>
+    <div class="risk-actions">
+      <button id="riskCancel" type="button" class="secondary">Cancel</button>
+      <button id="riskAccept" type="button">Accept</button>
+    </div>
+  </dialog>
+  <div class="result" id="result">
+    <div class="status show" id="resultStatus"></div>
+    <div class="build" style="margin-top:12px">
+      <button id="dlBtn" type="button">Download firmware</button>
+      <button id="notesBtn" type="button" class="secondary">Download build notes</button>
+    </div>
+  </div>
+</section>
+
+<footer id="notes">
+  <h2 class="se-notes-head bx-new-only">Read this</h2>
+  <div class="fgrp">
+    <h3>Before you flash</h3>
+    <p>Sealegs is designed and made by Intellijel. Seal Eggs is an unofficial, community-made modification for education and preservation. It isn't affiliated with, endorsed by or supported by Intellijel.</p>
+    <p>Please don't contact Intellijel for help with modified firmware. If you need support, flash the official firmware first. Flashing modified firmware is entirely at your own risk and may affect your warranty.</p>
+    <p>Keep your original <code>Sealegs.1.3.5.0.bin</code>. To go back to stock, flash it again with the official update procedure.</p>
+  </div>
+  <div class="fgrp">
+    <h3>How it works</h3>
+    <p>The page holds only the added code and a handful of changed constants: no part of the official firmware is included. After your file passes the version check, the patches are written into a copy in memory. The result is then checked against the expected SHA-256 for your exact mod combination.</p>
+    <p>The patches were verified in an ARM Cortex-M7 emulator running the firmware's own DSP code. Reverse, character and the stability fixes were also tested on hardware. Newer combinations (reverse without character, character or doppler on their own, character with stock Digi) have so far only been verified in emulation.</p>
+    <p>Seal Beads was developed on hardware with the full reverse + character build, and V2 has been played on hardware. It was verified in the emulator (clock handling, controls, levels, CPU load, and Tape, BBD and Digi unchanged while it is off) for every combination it can be built with.</p>
+    <p>Seal Microloops was developed on hardware with the full build plus Seal Beads. Its latest version (a fix for Shuffle stalling while TIME or WIDTH moved) has been verified in the emulator: the three modes and their variations, levels, CPU load, a stress test of fast control moves, Seal Beads unchanged, and Tape, BBD and Digi unchanged while it is off, for every combination it can be built with.</p>
+  </div>
+  <div class="fgrp">
+    <h3>Credits</h3>
+    <p>Seal Beads contains code from Mutable Instruments Beads and stmlib by Emilie Gillet, used under the MIT licence (<a href="LICENSE-beads.txt">licence text</a>). It is an independent, heavily modified derivative and isn't affiliated with or endorsed by Mutable Instruments.</p>
+    <p>Seal Microloops is original code, an homage to a style of effect. It contains no code or data from any commercial product and isn't affiliated with or endorsed by any pedal maker.</p>
+  </div>
+</footer>
+</div>
+
+<!-- mods.js is copied unchanged from the SealEggs_v1 repo (github.com/thisisbribery/SealEggs_v1).
+     Re-copy it (and this page's flasher script) whenever the flasher is updated there. -->
+<script src="mods.js"></script>
+<script>
+(function(){
+"use strict";
+const D = window.SEAL_EGGS;
+const BASE = 0x08000000, CELL = 256;
+const MODS = [
+  {key:'seal_micro', title:'Seal Microloops', tag:'Micro-loop mode behind BBD', isNew:true, cls:'sm',
+   text:'A micro-looper hiding behind BBD. A few short loops of what you just played repeat, change speed, get rearranged into new rhythms or hold into drones, so you still hear your playing, rebuilt into intervals and patterns. It runs in the same shell as Seal Beads, so DRIVE, MIX, FOG, FEEDBACK, the filters, stereo and the clock behave the same. Three modes, four variations each.',
+   ctl:'With MODEL on BBD, <b>hold FREEZE (ALT) + DELAY SYNC for about 1 s</b> to enter or leave Seal Microloops. <b>TAP glows orange</b> while it is on. Moving MODEL off BBD also leaves it.',
+   note:'Requires Seal Beads (they share one engine shell). <b>With DELAY SYNC on, Shuffle and Drone make no sound until a clock is present.</b> Tape, BBD and Digi are unchanged whenever it is off. Original code: an homage to boutique micro-loop pedals, not a port of any of them.',
+   moreTitle:'Seal Microloops modes and controls', more:`<p class="lead">TIME RANGE picks the mode. MOD RATE picks one of four variations (four zones, bottom to top). MOD DEPTH sets how much each variation does.</p>
+<h4>The three modes</h4>
+<div class="tablewrap"><table class="ctltable"><thead><tr><th>Mode</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Octaves<br><small>TIME RANGE LONG</small></td><td data-l="What it does">Up to four loops of different lengths (1&times;, 2&times;, &frac12;&times; and 1.5&times; TIME), each at an octave speed. The lengths never line up, so the loops drift against each other instead of locking into a bar. MOD DEPTH brings in loops 2 to 4.</td></tr>
+<tr><td>Shuffle<br><small>TIME RANGE MED</small></td><td data-l="What it does">The last few seconds are cut into slices and replayed as a shuffled 8-step pattern. Best on drums with DELAY SYNC on, so the steps land on the clock. WIDTH sets how many times a pattern plays before it takes fresh audio and reshuffles.</td></tr>
+<tr><td>Drone<br><small>TIME RANGE SHORT</small></td><td data-l="What it does">Two loops repeat a short sample until it sustains. Short TIME turns it into a tone, long TIME keeps it a smeared phrase. Stop playing and the drone rings on, fading over a time set by WIDTH (never at the top). Play again and it takes the new sound. New samples are only taken near the peaks of your playing, never from a gap between hits.</td></tr>
+</tbody></table></div>
+<h4>The four variations (MOD RATE)</h4>
+<div class="tablewrap"><table class="ctltable"><thead><tr><th>Mode</th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead><tbody>
+<tr><td>Octaves</td><td data-l="A">Normal + an octave up</td><td data-l="B">Normal + an octave down</td><td data-l="C">Everything an octave up</td><td data-l="D">An octave down to two octaves up (&frac12;, 1, 2, 4&times;)</td></tr>
+<tr><td>Shuffle</td><td data-l="A">A random low-pass per step. MOD DEPTH: how deep</td><td data-l="B">Some steps drop to half speed, an octave down. MOD DEPTH: how many. At the very top a soft pad joins underneath</td><td data-l="C">Up to three overlapping layers, each step a resonant filter sweep. MOD DEPTH brings in the layers</td><td data-l="D">A double-time layer, then near the top a bit-crushed sub-octave layer. MOD DEPTH: layers and crush</td></tr>
+<tr><td>Drone</td><td data-l="A">The loop length breathes, down to a quarter and back over 10 s (16 pulses when clocked). Changes the rhythm and buzz, not the pitch</td><td data-l="B">A sub-octave drone under a resonant low-pass sweeping from 8 kHz down to 125 Hz and back over 16 s (32 pulses)</td><td data-l="C">Each sample rings through a resonant band (300 Hz to 2.4 kHz), a new band with every new sample. MOD DEPTH: plain drone to singing bands</td><td data-l="D">The loop length follows your playing: hit harder and it tightens, play softly and it opens back out</td></tr>
+</tbody></table></div>
+<h4>Controls</h4>
+<div class="tablewrap"><table class="ctltable"><thead><tr><th>Control</th><th>Seal Microloops</th></tr></thead><tbody>
+<tr><td>Enter / exit</td><td data-l="Seal Microloops">With MODEL on BBD, hold <b>FREEZE (ALT) + DELAY SYNC</b> for about 1 s. TAP glows orange while it is on. The same gesture, or moving MODEL off BBD, returns to BBD exactly as you left it. (The same gesture on DIGI is Seal Beads.)</td></tr>
+<tr><td>TIME RANGE</td><td data-l="Seal Microloops">Mode: LONG = Octaves, MED = Shuffle, SHORT = Drone</td></tr>
+<tr><td>MOD RATE</td><td data-l="Seal Microloops">Variation A, B, C or D (four zones, bottom to top)</td></tr>
+<tr><td>MOD DEPTH</td><td data-l="Seal Microloops">Activity: how much the variation does (loops, layers, filter depth, crush, breathing, sweep)</td></tr>
+<tr><td>TIME</td><td data-l="Seal Microloops">Loop or step length: 25 ms to 2 s. With DELAY SYNC on: 1/16 to 2 pulses</td></tr>
+<tr><td>WIDTH</td><td data-l="Seal Microloops">Repeats: how many times a loop plays before it grabs fresh audio (1 to 64). Low follows your playing closely, high holds on to a moment. In Drone it also sets how long the drone rings on after you stop: about 0.4 s at the bottom to 20 s, forever at the very top</td></tr>
+<tr><td>COLOR</td><td data-l="Seal Microloops">Shape of each loop: top = hard edges (stutter), noon = a bell, bottom = extra round</td></tr>
+<tr><td>MOD knob</td><td data-l="Seal Microloops">Overlap: how much each pass crossfades into the next. 0 = hard restarts (choppy, or a buzzing drone), full = seamless</td></tr>
+<tr><td>NOISE</td><td data-l="Seal Microloops">Scatter: loops grab audio from further back at random. In Shuffle it adds rests, doubled steps and reversed steps instead</td></tr>
+<tr><td>FREEZE</td><td data-l="Seal Microloops">Tap: loops play reversed. ALT + MOD SYNC: hold, which stops recording so the loops keep cycling what you held while you play over it</td></tr>
+<tr><td>FEEDBACK</td><td data-l="Seal Microloops">The loops are recorded back in, so Octaves climbs in cascades. ALT + DELAY SYNC swaps left and right in the loop</td></tr>
+<tr><td>HPF / LPF</td><td data-l="Seal Microloops">Filters on the loops and their feedback. The slider ends bypass them</td></tr>
+<tr><td>FOG</td><td data-l="Seal Microloops">Reverb, as in Seal Beads. ALT + FOG sets decay. IN smears the audio before it is looped, DLY puts it on the loops only, MIX on everything</td></tr>
+<tr><td>DRIVE / MIX</td><td data-l="Seal Microloops">Matched to the stock Sealegs drive, input trim, drive position and equal-power MIX</td></tr>
+<tr><td>DELAY SYNC</td><td data-l="Seal Microloops">Lock loop lengths, Shuffle steps and the Drone breathing and sweep to CLK IN or tap tempo. Hold 1 s to clear the loop memory. Shuffle and Drone stay silent while DELAY SYNC is on until a clock is present</td></tr>
+<tr><td>MOD SYNC</td><td data-l="Seal Microloops">Triplets: lengths and steps &times; 2/3</td></tr>
+<tr><td>TAP</td><td data-l="Seal Microloops">Tap tempo when no clock is running. Breathes orange while Seal Microloops is on</td></tr>
+<tr><td>STEREO CONFIG</td><td data-l="Seal Microloops">PONG and T:W spread the loops across the stereo field. L/R keeps them in place</td></tr>
+<tr><td>ALT held</td><td data-l="Seal Microloops">FREEZE light shows CPU load: green, yellow, orange, red. Under sustained overload, loops are thinned first</td></tr>
+</tbody></table></div>`},
+  {key:'seal_beads', title:'Seal Beads V2', tag:'Granular mode in the Digi slot', isNew:true, cls:'sb', lock:'Included with Seal Microloops',
+   text:'A granular processor inspired by Mutable Instruments Beads, living in the Digi slot. This is a <b>heavily modified Beads, not a 1-to-1 port</b>. It deliberately departs from the original to fit the Sealegs architecture and panel, and it has been tuned by ear to work for both rhythmic and melodic material: from clocked drum chops and reshuffled slices to long, buttery, overlapping clouds. <b>New in V2:</b> a softer COLOR (shape) with a new buttery end, smoother Overlap, and Scatter is now Spray.',
+   ctl:'With MODEL on DIGI, <b>hold FREEZE (ALT) + DELAY SYNC for about 1 s</b> to enter or leave Seal Beads. <b>TAP glows teal</b> while it is on. Moving MODEL off DIGI also leaves it.',
+   note:'Requires Live reverse. Tape, BBD and Digi are unchanged whenever Seal Beads is off. Beads code by Emilie Gillet (MIT licence).',
+   moreTitle:'Seal Beads controls', more:`<div class="tablewrap"><table class="ctltable"><thead><tr><th>Control</th><th>Free running</th><th>DELAY SYNC on (clocked)</th></tr></thead><tbody>
+<tr><td>Enter / exit</td><td colspan="2">With MODEL on DIGI, hold <b>FREEZE (ALT) + DELAY SYNC</b> for about 1 s. TAP glows teal while Seal Beads is on. The same gesture, or moving MODEL off DIGI, returns to Digi exactly as you left it.</td></tr>
+<tr><td>MOD DEPTH</td><td data-l="Free running">Density: how often grains start. Bottom = none, up to about 40 per second</td><td data-l="Clocked">Grains per pulse: off, 1/8, 1/4, 1/2, 1, 2, 3, 4, 6, 8</td></tr>
+<tr><td>WIDTH</td><td data-l="Free running">Grain size: 20 ms to 8 s</td><td data-l="Clocked">1/16 to 16 pulses</td></tr>
+<tr><td>MOD knob</td><td data-l="Free running">Overlap: each grain runs on into the next ones (up to 3 more), so grains blend smoothly while the onsets keep their timing</td><td data-l="Clocked">Same, on the grid</td></tr>
+<tr><td>COLOR</td><td data-l="Free running">Grain shape. Top = hard square gates, noon = Beads-style bell, a quarter up = very round, bottom = buttery: soft-edged grains that melt into one smooth cloud</td><td data-l="Clocked">Same</td></tr>
+<tr><td>NOISE</td><td data-l="Free running">Spray: each grain starts from a random spot around TIME, reaching the whole TIME RANGE at full, and grain starts wobble in time without leaving gaps. Grains stay centred in the stereo field</td><td data-l="Clocked">Spray on the grid: grains read from other slices, and the timing stays locked to the clock</td></tr>
+<tr><td>TIME</td><td data-l="Free running">How far back grains read: 0 to 1, 4 or 16 s (TIME RANGE). Squared, so the lower half covers the first quarter</td><td data-l="Clocked">0 to 1, 4 or 16 pulses</td></tr>
+<tr><td>MOD RATE</td><td colspan="2">Grain pitch, two octaves either way, lingering on musical intervals</td></tr>
+<tr><td>FEEDBACK</td><td colspan="2">Feedback through the grain buffer. ALT + DELAY SYNC swaps left and right in the loop</td></tr>
+<tr><td>HPF / LPF</td><td colspan="2">Filters on the grains and their feedback. The slider ends bypass them</td></tr>
+<tr><td>FOG</td><td colspan="2">Reverb amount. ALT + FOG sets decay. The FOG/DRIVE switch places it: IN (before the grains), DLY (grains only) or MIX (everything)</td></tr>
+<tr><td>DRIVE / MIX</td><td colspan="2">Matched to the stock Sealegs drive, input trim (ALT + DRIVE), drive position and equal-power MIX</td></tr>
+<tr><td>FREEZE</td><td colspan="2">Tap: reverse grains (FREEZE lights magenta). ALT + MOD SYNC: freeze the grain buffer (blue). The Seal Eggs FREEZE swap also swaps these two</td></tr>
+<tr><td>TAP</td><td colspan="2">Tap tempo when no clock is running. Breathes teal while Seal Beads is on; hold ALT to see the usual AUX CV destination blink</td></tr>
+<tr><td>DELAY SYNC</td><td colspan="2">Lock grains to CLK IN or tap tempo. The tempo is measured from the clock itself and kept if the clock stops, so grains never stall. Hold 1 s to clear the grain buffer</td></tr>
+<tr><td>MOD SYNC</td><td colspan="2">Triplet grid (1.5 times the grains per pulse) when clocked</td></tr>
+<tr><td>STEREO CONFIG</td><td colspan="2">PONG: inputs summed into the grains, wide spread. T:W: stereo with random panning. L/R: stereo, no random panning</td></tr>
+<tr><td>ALT held</td><td colspan="2">FREEZE light shows CPU load: green, yellow, orange, red. Under sustained overload, grains are thinned first and FOG is dropped before the panel can lock up</td></tr>
+<tr><td>MOD OUT, MOD lights</td><td colspan="2">Still the stock LFO</td></tr>
+</tbody></table></div>`},
+  {key:'reverse', title:'Live reverse delay', tag:'Tape · BBD · Digi', lock:'Included with Seal Beads',
+   text:'Reverse playback in all three models. Recording and feedback keep running while reversed, so new audio keeps entering successive backward slices.',
+   ctl:'<b>Tap FREEZE</b> to turn reverse on or off. <b>Hold FREEZE (ALT) and hold TAP for about 1 s</b> to swap the FREEZE button between reverse and the original Freeze. Each power-up starts with FREEZE set to reverse, and reverse off.',
+   note:'Includes the click and overload fixes (join-search copy, sync-off fast path). New TIME settings apply at the next slice. ALT+TAP (AUX CV destination) now fires when TAP is released.'},
+  {key:'char', title:'Secondary character on NOISE', tag:'Tape grunge · BBD chip decay · Digi data corruption',
+   text:'Turns the NOISE knob into a second character control for each model: tape grunge, a dying-BBD stutter and sputter, or digital buffer corruption.',
+   ctl:'<b>Hold FREEZE (ALT) and hold MOD SYNC for about 1 s</b> to switch NOISE between normal noise and secondary character. The choice is remembered across power cycles.',
+   note:'BBD can still reach full runaway feedback with the character up.',
+   more:`<dl><dt>Tape grunge</dt><dd>Adds distortion, grit and a mid bump, like a dirty old 7\u2033 reel-to-reel or a nasty cassette. Combine it with the DRIVE controls and filtering to get even nastier.</dd>
+     <dt>BBD chip decay</dt><dd>Imagines BBD chips on the brink of overload and destruction: spluttering and farting out, dropping audio and getting noisy.</dd>
+     <dt>Digi data corruption</dt><dd>Bends and warps the audio like a corrupted hard drive, or a pirated MP3 from the early 2000s that glitched partway through downloading. Octave stutters (up and down) and reverse loops increase in intensity.</dd></dl>`},
+  {key:'digi_doppler', title:'Digi doppler', tag:'Digi',
+   text:'When you move TIME, Digi glides to the new delay time with a pitch bend, like tape, instead of the stock crossfade between overlapping delay lines. Bigger jumps bend in semitone steps, up to two octaves either way.',
+   ctl:'Always on once installed. No controls.',
+   note:'Adds about 1 ms (one audio block) to Digi’s delay time. Required by Live reverse, because Digi reverse follows TIME through this engine.',
+   lock:'Included with Live reverse'},
+  {key:'tape_pickup', title:'Tape pickup speed', tag:'Tape',
+   text:'Tape follows TIME changes about 5× faster, so there’s less lag when you adjust the delay time.',
+   ctl:'Always on once installed. No controls.', note:'Changes the Tape time smoothing from 0.0015 / 0.015 to 0.0075 / 0.075.'},
+  {key:'bbd_light', title:'BBD light mode', tag:'BBD',
+   text:'Raises the BBD model’s internal filter cap from 4.2 kHz to 12 kHz for a brighter BBD. You can still darken it with the LPF.',
+   ctl:'Always on once installed. No controls.', note:'Very long BBD delays still darken naturally from the slower BBD clock.'},
+  {key:'tape_bright', title:'Tape bright', tag:'Tape', extra:true,
+   text:'Removes two built-in Tape tone shelves for a brighter tape repeat: about +3 to +5.5 dB from 1 kHz up.',
+   ctl:'Always on once installed. No controls.', note:'Optional extra. The original reverse builds included it.'}
+];
+const ICON = {
+  reverse:'<circle cx="14" cy="26" r="8"/><circle cx="34" cy="26" r="8"/><circle cx="14" cy="26" r="2"/><circle cx="34" cy="26" r="2"/><path d="M14 34h20M38 10H12m5-5-5 5 5 5"/>',
+  char:'<path d="M4 24h14l2.5-5 3 11 3-13 3 14 2.5-10 3 7 2-5 2 3 2-2M43.5 18.5l1.5 1.5M44 29l1.5-1"/>',
+  digi_doppler:'<path d="M4 24Q9 4 14 24Q18 44 22 24Q25 4 28 24Q30.5 44 33 24Q35 4 37 24Q38.5 44 40 24Q41.5 4 43 24"/>',
+  tape_pickup:'<circle cx="30" cy="24" r="13"/><circle cx="30" cy="24" r="3"/><path d="M30 11v6M30 31v6M17 24h6M37 24h6M4 17h8M2 24h9M4 31h8"/>',
+  bbd_light:'<path d="M4 18h22c8 0 10 6 14 20M28 9h14m-4-4 4 4-4 4"/><path d="M4 38h40" opacity=".35"/>',
+  tape_bright:'<path d="M4 32h14c6 0 8-14 14-14h12M38 5v8M34 9h8"/><path d="M4 38h40" opacity=".35"/>',
+  seal_micro:'<circle cx="11" cy="29" r="6"/><circle cx="25" cy="23" r="9"/><circle cx="39" cy="29" r="5"/><path d="M25 14l4-3M25 14l4 3"/><path d="M4 41h40" opacity=".45"/>',
+  seal_beads:'<circle cx="8" cy="30" r="3"/><circle cx="18" cy="22" r="5"/><circle cx="30" cy="27" r="4"/><circle cx="40" cy="17" r="5"/><path d="M4 40c8-6 14 2 22-3s12-6 18-1" opacity=".45"/>'
+};
+const sel = {reverse:true, char:true, digi_doppler:true, tape_pickup:true, bbd_light:true, tape_bright:false, seal_beads:false, seal_micro:false};
+let stock = null, built = null, builtName = '', builtHash = '';
+
+/* ---------- SHA-256 (WebCrypto, with a small fallback for file:// in older browsers) ---------- */
+async function sha256(buf){
+  if (window.crypto && crypto.subtle) {
+    try { return hex(new Uint8Array(await crypto.subtle.digest('SHA-256', buf))); } catch(e) {}
+  }
+  return sha256js(buf);
+}
+function hex(u8){ return Array.from(u8, b => b.toString(16).padStart(2,'0')).join(''); }
+function sha256js(u8){
+  const K=new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const H=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);
+  const l=u8.length, n=((l+9+63)>>6)<<6, m=new Uint8Array(n); m.set(u8); m[l]=0x80;
+  const dv=new DataView(m.buffer); dv.setUint32(n-4,(l*8)>>>0); dv.setUint32(n-8,Math.floor(l/0x20000000));
+  const w=new Uint32Array(64), r=(x,c)=>(x>>>c)|(x<<(32-c));
+  for(let o=0;o<n;o+=64){
+    for(let i=0;i<16;i++) w[i]=dv.getUint32(o+i*4);
+    for(let i=16;i<64;i++){ const a=w[i-15],b=w[i-2]; w[i]=(w[i-16]+(r(a,7)^r(a,18)^(a>>>3))+w[i-7]+(r(b,17)^r(b,19)^(b>>>10)))>>>0; }
+    let [a,b,c,d,e,f,g,h]=H;
+    for(let i=0;i<64;i++){
+      const t1=(h+(r(e,6)^r(e,11)^r(e,25))+((e&f)^(~e&g))+K[i]+w[i])>>>0, t2=((r(a,2)^r(a,13)^r(a,22))+((a&b)^(a&c)^(b&c)))>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H[0]+=a;H[1]+=b;H[2]+=c;H[3]+=d;H[4]+=e;H[5]+=f;H[6]+=g;H[7]+=h;
+  }
+  return Array.from(H,x=>x.toString(16).padStart(8,'0')).join('');
+}
+
+/* ---------- patches ---------- */
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const P = {};
+for (const [k,list] of Object.entries(D.patches)) P[k] = list.map(([a,d,label]) => ({addr:parseInt(a,16), data:b64(d), label}));
+function plan(s){
+  const steps = [];
+  if (s.reverse || s.char || s.digi_doppler) {
+    steps.push('core');
+    if (s.char) steps.push('char_save'); else steps.push('no_char_gesture');
+    if (!s.reverse) steps.push('native_freeze_only');
+    if (s.digi_doppler) steps.push('digi_doppler');
+  }
+  for (const k of ['tape_pickup','bbd_light','tape_bright']) if (s[k]) steps.push(k);
+  if (s.seal_beads) steps.push('seal_beads');          // also sets the RAM zero-init extent
+  if (s.seal_micro) steps.push('seal_micro');          // last: builds on the Seal Beads shell
+  return steps;
+}
+const OWNER = {core:'core', digi_doppler:'digi_doppler', char_save:'char', no_char_gesture:'reverse', native_freeze_only:'char', tape_pickup:'tape_pickup', bbd_light:'bbd_light', tape_bright:'tape_bright', seal_beads:'seal_beads', seal_micro:'seal_micro'};
+function writes(s){
+  const out = [];
+  for (const step of plan(s)) for (const p of P[step]) out.push({...p, mod:OWNER[step], step});
+  return out;
+}
+function comboKey(s){ return D.keys.map(k => s[k] ? '1':'0').join(''); }
+function apply(src, s){
+  const b = new Uint8Array(src);
+  for (const w of writes(s)) b.set(w.data, w.addr - BASE);
+  return b;
+}
+
+/* ---------- UI: mods ---------- */
+const modsEl = document.getElementById('mods'), cards = {};
+for (const m of MODS) {
+  const el = document.createElement('div');
+  el.className = 'mod' + (m.cls ? ' ' + m.cls : ''); if (!m.cls) el.style.setProperty('--mc', 'var(--pink)');
+  el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
+    <svg class="ico" viewBox="0 0 48 48" aria-hidden="true">${ICON[m.key]}</svg>
+    <div><h3>${m.title} ${m.isNew ? '<span class="newtag">NEW</span>' : ''}<span class="tag${m.extra?' extra':''}">${m.extra?'Extra · ':''}${m.tag}</span></h3>
+    <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
+    ${m.lock ? `<div class="lockmsg">${m.lock}</div>` : ''}
+    ${m.more ? `<details class="more"><summary>${m.moreTitle || 'About the three characters'}</summary>${m.more}</details>` : ''}</div>`;
+  const cb = el.querySelector('input'); cb.checked = sel[m.key];
+  el.addEventListener('click', e => { if (e.target.closest('details') || e.target === cb || cb.disabled) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
+  cb.addEventListener('change', () => { sel[m.key] = cb.checked; syncMods(); invalidate(); render(); });
+  modsEl.appendChild(el); cards[m.key] = {el, cb};
+}
+function syncMods(){
+  if (sel.seal_micro) sel.seal_beads = true;          // Seal Microloops shares the Seal Beads shell
+  if (sel.seal_beads) sel.reverse = true;              // Seal Beads is built on the reverse engine
+  if (sel.reverse) sel.digi_doppler = true;            // Digi reverse is built on the doppler engine
+  for (const [k, {el, cb}] of Object.entries(cards)) {
+    cb.checked = !!sel[k]; el.classList.toggle('on', cb.checked);
+    const locked = (k === 'digi_doppler' && sel.reverse) || (k === 'reverse' && sel.seal_beads) || (k === 'seal_beads' && sel.seal_micro);
+    el.classList.toggle('locked', locked); cb.disabled = locked;
+  }
+}
+syncMods();
+
+/* ---------- UI: file ---------- */
+const drop = document.getElementById('drop'), fileIn = document.getElementById('file'), statusEl = document.getElementById('status');
+drop.addEventListener('click', e => { if (e.target !== fileIn) fileIn.click(); });
+drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) load(f); });
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) load(fileIn.files[0]); });
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+async function load(f){
+  const buf = new Uint8Array(await f.arrayBuffer());
+  const h = await sha256(buf);
+  stock = null; invalidate();
+  statusEl.className = 'status show';
+  if (h === D.sha256 && buf.length === D.size) {
+    const bad = D.zero_regions.filter(([a,n]) => { const o = parseInt(a,16)-BASE; for (let i=0;i<n;i++) if (buf[o+i]) return true; return false; });
+    if (bad.length) { statusEl.classList.add('bad'); statusEl.innerHTML = '<b>Unexpected contents.</b> The hash matched but the free regions aren’t empty. Please report this.'; render(); return; }
+    stock = buf; statusEl.classList.add('ok');
+    statusEl.innerHTML = `<b>&#10003; Official Sealegs 1.3.5.0 confirmed.</b> ${esc(f.name)}, ${buf.length.toLocaleString()} bytes.<div class="kv">SHA-256 ${h}</div>`;
+  } else {
+    statusEl.classList.add('bad');
+    statusEl.innerHTML = `<b>&#10007; This isn’t the official Sealegs 1.3.5.0 image.</b> ${esc(f.name)}, ${buf.length.toLocaleString()} bytes. Load the unmodified file from the manufacturer. Already-modded files and other versions can’t be patched.<div class="kv">SHA-256 ${h}<br>expected ${D.sha256}</div>`;
+  }
+  render();
+}
+
+/* ---------- build state ---------- */
+function render(){
+  const any = MODS.some(m => sel[m.key]);
+  const bb = document.getElementById('buildBtn'), hint = document.getElementById('buildHint');
+  bb.disabled = !stock || !any;
+  hint.textContent = !stock ? 'Load the official firmware first.' : (!any ? 'Select at least one mod.' : 'Ready.');
+}
+function invalidate(){ built = null; document.getElementById('result').classList.remove('show'); }
+
+/* ---------- build ---------- */
+function tagName(s){
+  const t = {reverse:'reverse', char:'character', digi_doppler:'digi-doppler', tape_pickup:'tape-pickup', bbd_light:'bbd-light', tape_bright:'tape-bright', seal_beads:'seal-beads', seal_micro:'seal-microloops'};
+  return 'Sealegs.1.3.5.0.sealeggs.' + D.keys.filter(k => s[k]).map(k => t[k]).join('+') + '.bin';
+}
+const riskDlg = document.getElementById('riskDlg');
+document.getElementById('buildBtn').addEventListener('click', () => riskDlg.showModal());
+document.getElementById('riskCancel').addEventListener('click', () => riskDlg.close());
+document.getElementById('riskAccept').addEventListener('click', () => { riskDlg.close(); build(); });
+async function build(){
+  const b = apply(stock, sel), h = await sha256(b), want = D.refs[comboKey(sel)], rs = document.getElementById('resultStatus');
+  document.getElementById('result').classList.add('show');
+  if (h !== want || b.length !== D.size) {
+    built = null; rs.className = 'status show bad';
+    rs.innerHTML = `<b>Build check failed.</b> The output doesn’t match the reference for this combination, so the download is blocked.<div class="kv">got ${h}<br>expected ${want}</div>`;
+    document.getElementById('dlBtn').disabled = true; document.getElementById('notesBtn').disabled = true; return;
+  }
+  built = b; builtName = tagName(sel); builtHash = h;
+  rs.className = 'status show ok';
+  rs.innerHTML = `<b>&#10003; Built and verified.</b> Matches the reference build for this combination.<div class="fname" style="margin-top:6px">${builtName}</div><div class="kv">SHA-256 ${h}</div>` +
+    (sel.seal_micro ? `<div class="warnbox">Seal Microloops: with MODEL on BBD, hold FREEZE (ALT) + DELAY SYNC for about 1 s to enter it. TAP glows orange while it is on.</div>` : '') +
+    (sel.seal_beads ? `<div class="warnbox">Seal Beads: with MODEL on DIGI, hold FREEZE (ALT) + DELAY SYNC for about 1 s to enter it. TAP glows teal while it is on.</div>` : '') +
+    (sel.digi_doppler ? `<div class="warnbox">Digi doppler adds about 1 ms (one audio block) to Digi’s delay time. Everything else is identical to stock whenever reverse and character are switched off.</div>` : '');
+  document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
+}
+function save(name, data, type){
+  const url = URL.createObjectURL(new Blob([data], {type})), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+document.getElementById('dlBtn').addEventListener('click', () => { if (built) save(builtName, built, 'application/octet-stream'); });
+document.getElementById('notesBtn').addEventListener('click', () => {
+  if (!built) return;
+  const strip = h => h.replace(/<[^>]+>/g,'');
+  const lines = ['Seal Eggs firmware flasher: build notes','', 'Firmware: '+builtName, 'Base: official Sealegs 1.3.5.0 (SHA-256 '+D.sha256+')', 'Result SHA-256: '+builtHash, '', 'Mods:'];
+  for (const m of MODS) if (sel[m.key]) lines.push('', '* '+m.title, '  '+m.text, '  Controls: '+strip(m.ctl), '  Note: '+m.note);
+  lines.push('', 'Rollback: flash your original Sealegs.1.3.5.0.bin with the official update procedure.', 'Unofficial community modification by Bribery (@thisisbribery). Not affiliated with, endorsed by or supported by Intellijel. Use entirely at your own risk.');
+  save(builtName.replace(/\.bin$/, '.notes.txt'), lines.join('\n'), 'text/plain');
+});
+
+/* ---------- theme ---------- */
+const root = document.documentElement;
+try { const t = localStorage.getItem('sealeggs-theme'); if (t) root.setAttribute('data-theme', t); } catch(e) {}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.setAttribute('data-theme', dark ? 'light' : 'dark');
+  try { localStorage.setItem('sealeggs-theme', root.getAttribute('data-theme')); } catch(e) {}
+});
+
+window.__sealeggs = {apply, writes, sha256js, plan};
+render();
+})();
+</script>
+<script>
+// Site shell: refit the SEAL EGGS title when the page switches into the new style.
+addEventListener("bx-mode", function () { requestAnimationFrame(function () { if (window.BRIBERY) window.BRIBERY.fit(); }); });
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STAGES · Qiemem Bribery Edition · BRIBERY</title>
+<meta name="description" content="Qiemem Bribery Edition: custom firmware for Mutable Instruments Stages with segment linking from the buttons and envelope follower segments.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="Qiemem Bribery Edition for Stages">
+<meta property="og:description" content="Segment linking and Follow segments for Mutable Instruments Stages, on qiemem's bipolar firmware.">
+<meta property="og:image" content="https://thisisbribery.com/assets/devices/stages.webp">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/pages.css">
+<script src="/assets/site.js"></script>
+</head>
+<body class="bx" data-bx-page="stages" data-bx-foot>
+
+<main>
+  <section class="bx-hero">
+    <p class="bx-kicker">Mutable Instruments Stages <span>/</span> Qiemem Bribery Edition v1.0</p>
+    <h1 class="bx-mega bx-glitch" data-text="STAGES" data-fit><span class="bx-fit">STAGES</span></h1>
+    <div class="bx-hero-grid">
+      <div>
+        <p class="bx-lede">qiemem's bipolar multi-mode firmware v1.3.0 with two additions: <b>segment linking</b> from the buttons, and <b>Follow segments</b>, an envelope follower on any segment. Everything qiemem's firmware does still works.</p>
+        <div class="bx-ctas">
+          <a class="bx-btn bx-solid" href="#update">Update from this page</a>
+          <a class="bx-btn" href="#linking">Linking</a>
+          <a class="bx-btn" href="#follow">Follow</a>
+        </div>
+      </div>
+      <figure class="bx-shot">
+        <img src="/assets/devices/stages.webp" width="1600" height="1000" alt="A six-column Eurorack segment generator lit in pink on a black studio background">
+      </figure>
+    </div>
+  </section>
+
+  <section class="bx-section" id="why" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Why</h2>
+      <p>Built for playing live.</p>
+    </div>
+    <div class="bx-split">
+      <div>
+        <h3>Groups that stay put</h3>
+        <p class="bx-prose">On stock Stages, the gate jacks decide how segments group together. Playing live, a cable going in or out in the middle of a set would split or merge envelopes without warning. Linking sets the groups with the buttons, so the patch can change without the envelopes changing.</p>
+      </div>
+      <div>
+        <h3>A follower in the case</h3>
+        <p class="bx-prose">Stages segments can already read audio through their CV jacks, so any segment can now be an envelope follower, without giving up a module for one.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bx-section" id="linking" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Linking</h2>
+      <p>In the Stages, Advanced and Slow LFO modes, with a single module. Links are stored.</p>
+    </div>
+    <dl class="bx-rows">
+      <div><dt>Hold A, tap B</dt><dd>Links every segment from A to B. Triple green flash. Works right to left too. If they're already linked, sets a loop from A to B, same as stock.</dd></div>
+      <div><dt>Hold A, hold B for 2 s</dt><dd>Unlinks: every segment from A to B stands alone. Triple red flash. Unlinking the middle of a group splits it in two.</dd></div>
+      <div><dt>Short press</dt><dd>Changes segment type. The link stays.</dd></div>
+      <div><dt>Hold 0.5 s, release</dt><dd>Toggles loop (qiemem timing).</dd></div>
+      <div><dt>Hold 5 s, one button</dt><dd>Mode change, as in qiemem. With two buttons held, mode change is blocked, so a long link gesture can't switch modes by accident.</dd></div>
+      <div><dt>Hold + slider or pot</dt><dd>qiemem's property changes, unchanged.</dd></div>
+    </dl>
+    <div class="bx-split">
+      <div>
+        <h3>Gates and outputs</h3>
+        <ul class="bx-list">
+          <li>A group comes out of its <b>leftmost segment's output</b>.</li>
+          <li>The leftmost segment's gate fires the whole group.</li>
+          <li>Gates patched into the other segments of a group are ignored, so patching them doesn't split or restart it.</li>
+          <li>A segment that isn't linked follows its own gate.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Free-running groups</h3>
+        <ul class="bx-list">
+          <li>With no gate in the first segment, a <b>looped group runs by itself</b>, like a multi-stage LFO.</li>
+          <li>A group without a loop waits for a gate.</li>
+          <li>Linked segments do a quick triple yellow flash every 4 seconds, over their normal colours.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bx-section" id="follow" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Follow</h2>
+      <p>Patch audio into a segment's CV jack and its output becomes the envelope of that audio.</p>
+    </div>
+    <p class="bx-prose" style="margin-top:clamp(20px,3vw,32px)"><b>Making one:</b> tap the segment's button past the last type. Stages and Slow LFO modes: ramp, step, hold, <b>follow</b>. Advanced mode: ramp, step, hold, random, <b>follow</b>.</p>
+    <dl class="bx-rows">
+      <div><dt>CV jack</dt><dd>Audio in. DC is blocked, so an offset doesn't read as level.</dd></div>
+      <div><dt>Slider</dt><dd>Release, 5 ms at the bottom to 5 s at the top.</dd></div>
+      <div><dt>Pot</dt><dd>Attack, instant fully left to 250 ms fully right.</dd></div>
+      <div><dt>Hold button + slider</dt><dd>Input gain in four zones, bottom to top: x1, x2, x4, x8. At x1 a 5 V audio peak gives full output. Use x4 or x8 for line-level sources.</dd></div>
+      <div><dt>Hold button + pot</dt><dd>Invert: the envelope goes negative, 0 V down to -8 V.</dd></div>
+      <div><dt>Gate jack</dt><dd>High freezes the envelope where it is. Low lets it follow again.</dd></div>
+      <div><dt>Output</dt><dd>0 to 8 V, or 0 to -8 V when inverted.</dd></div>
+      <div><dt>Lights</dt><dd>The button light is a level meter: green, then yellow, then red as the input gets louder. With no sound it breathes dim yellow (dim red when inverted). The slider light follows the output.</dd></div>
+    </dl>
+    <p class="bx-note"><b>Good to know:</b> a Follow segment always stands alone; links into or out of it are kept and come back when you change its type. With a very short release, low notes ripple, so raise the release to smooth it.</p>
+  </section>
+
+  <section class="bx-section" id="update" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Update</h2>
+      <p>Stages updates from audio. Its updater is built in and can't be damaged by a failed attempt.</p>
+    </div>
+    <p class="bx-prose" style="margin-top:clamp(20px,3vw,32px)"><b>You need:</b> a computer or phone with a headphone jack (a wired USB headphone adapter works, Bluetooth doesn't) and a 3.5 mm patch cable. Play the file below from this page, or download it and play it in any player.</p>
+    <div style="border-top:1px solid var(--bx-line);margin-top:clamp(18px,3vw,30px)">
+      <div class="bx-player"><h4>Normal<small>Module mounted the right way up</small></h4>
+        <audio controls preload="none" src="/stages/firmware/qiemem-bribery-edition-v1.0.wav"></audio>
+        <a class="bx-btn" href="/stages/firmware/qiemem-bribery-edition-v1.0.wav" download>.wav</a></div>
+      <div class="bx-player"><h4>Flipped<small>Module mounted upside down</small></h4>
+        <audio controls preload="none" src="/stages/firmware/qiemem-bribery-edition-v1.0-flipped.wav"></audio>
+        <a class="bx-btn" href="/stages/firmware/qiemem-bribery-edition-v1.0-flipped.wav" download>.wav</a></div>
+    </div>
+    <ol class="bx-steps">
+      <li><div>Power the rack off. Unplug every cable from the Stages.</div></li>
+      <li><div>Patch the headphone out into the <b>CV input of the rightmost segment</b> (top row of jacks).</div></li>
+      <li><div>Set the <b>rightmost slider to the middle</b>. It sets the input gain.</div></li>
+      <li><div>Hold the <b>rightmost button</b> and power the rack on. The rightmost slider light blinks green: the module is waiting for audio.</div></li>
+      <li><div>Set the volume high. Turn off sound effects, EQ and notifications. Unplug speakers and headphones: the update sound is harsh.</div></li>
+      <li><div>Play the .wav from the start. The six button lights are a level meter: <b>3 or 4 lit is right</b>. Move the rightmost slider to get there.</div></li>
+      <li><div>Green slider lights run left to right while it loads. It takes about 80 seconds, then the module restarts on the new firmware.</div></li>
+    </ol>
+    <p class="bx-note"><b>All six button lights blink red?</b> The level was too low or the audio cut out. Press the rightmost button, raise the gain with the rightmost slider and play the file again from the start. Upside-down module: use the flipped file, with everything mirrored (leftmost segment, button and slider). Coming from qiemem v1.3.0, your segment types and mode are kept. To go back, flash <a href="https://github.com/qiemem/eurorack/releases" target="_blank" rel="noopener" style="color:var(--bx-pink)">qiemem's v1.3.0 release</a> the same way.</p>
+  </section>
+
+  <section class="bx-section bx-band">
+    <div class="bx-sec-head">
+      <h2>Source</h2>
+      <p>MIT licensed, with host tests that run the real firmware code.</p>
+    </div>
+    <div class="bx-band-body">
+      <p>The full source, build steps and the qiemem docs for everything else live on GitHub.</p>
+      <div class="bx-ctas">
+        <a class="bx-btn bx-ink bx-solid" href="https://github.com/thisisbribery/qiemem-bribery-edition" target="_blank" rel="noopener">View on GitHub &#8599;</a>
+        <a class="bx-btn bx-ink" data-bx-support href="#" target="_blank" rel="noopener">Support</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bx-section">
+    <p class="bx-fine">Stages and its code: Emilie Gillet, Mutable Instruments. Multi-mode firmware: joeSeggiola. Bipolar firmware: qiemem. Linking and Follow: Bribery. Unofficial firmware, not made or supported by Mutable Instruments.</p>
+  </section>
+</main>
+</body>
+</html>

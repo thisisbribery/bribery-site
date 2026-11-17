@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stolperbeats ULTRA Flasher</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="description" content="Build a modded Stolperbeats firmware in your browser from your own copy of the official firmware: alt swing tables, ratchets, MIDI pitch and fill mode.">
+<meta name="theme-color" content="#000000">
+<!-- builder.js and mods.js in this folder are copied unchanged from the stolperbeats-ultra-v1 repo
+     (github.com/thisisbribery/stolperbeats-ultra-v1). Re-copy them, and re-apply any page changes, whenever the flasher is updated. -->
+<link rel="stylesheet" href="/assets/site.css">
+<!-- Classic look: the original flasher CSS, verbatim. -->
+<style data-bx="classic">
+:root{
+  --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1f22; --muted:#62666d; --line:#dedad1; --soft:#efece4;
+  --accent:var(--pink); --ok:#2b8a3e; --bad:#c92a2a; --warn:#b35c00;
+  --used:#c9c4b8; --map-bg:#fbfaf7;
+  --pink:#ff1fd6;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+    --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+    --used:#3d434b; --map-bg:#16191c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+  --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+  --used:#3d434b; --map-bg:#16191c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.92em}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 64px}
+header{display:flex;gap:18px;align-items:center;margin-bottom:22px}
+.logo{flex:0 0 auto;width:56px;height:56px}
+h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
+h1 .ultra{color:var(--accent);letter-spacing:.04em}
+.sub{color:var(--muted);margin:4px 0 0}
+.privacy{display:inline-flex;gap:8px;align-items:center;margin-top:10px;font-size:13px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.privacy b{color:var(--ink);font-weight:600}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+.step h2{font-size:18px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.num{display:inline-grid;place-items:center;flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--panel);font:600 14px var(--sans)}
+.hint{color:var(--muted);margin:0 0 14px;font-size:14.5px}
+.drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:26px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--soft)}
+.drop strong{display:block;font-size:16px}
+.drop span{color:var(--muted);font-size:14px}
+.status{margin-top:14px;border-radius:10px;padding:12px 14px;font-size:14.5px;display:none}
+.status.show{display:block}
+.status.ok{background:color-mix(in srgb,var(--ok) 12%,transparent);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent)}
+.status.bad{background:color-mix(in srgb,var(--bad) 12%,transparent);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
+.status.info{background:var(--soft);border:1px solid var(--line)}
+.kv{font-family:var(--mono);font-size:12.5px;word-break:break-all;color:var(--muted);margin-top:6px}
+/* timing slots */
+.slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.slot{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start}
+.slot.changed{border-color:var(--pink);box-shadow:inset 4px 0 0 var(--pink)}
+.slot.badslot{border-color:var(--warn);box-shadow:inset 4px 0 0 var(--warn)}
+.slot .lbl{font:700 12px var(--mono);letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.slot .lbl b{color:var(--ink)}
+select{font:15px var(--sans);width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.slot svg{width:100%;height:auto;display:block;background:var(--map-bg);border:1px solid var(--line);border-radius:8px}
+.slot .meta{font-size:13px;color:var(--muted)}
+.slot .meta .bad{color:var(--warn);font-weight:600}
+.slot .meta .amber{color:var(--warn)}
+.tablebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+/* mods */
+.mods{display:grid;gap:12px}
+.mod{display:grid;grid-template-columns:auto auto 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
+.mod:hover{border-color:color-mix(in srgb,var(--mc) 55%,var(--line))}
+.mod.on{border-color:var(--mc);box-shadow:inset 4px 0 0 var(--mc)}
+.mod input{position:absolute;opacity:0;pointer-events:none}
+.ico{width:40px;height:40px;color:var(--pink);fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.tog{width:42px;height:24px;border-radius:999px;background:var(--used);position:relative;margin-top:2px;transition:background .15s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--panel);transition:left .15s}
+.mod.on .tog{background:var(--mc)}
+.mod.on .tog::after{left:21px}
+.mod.locked .tog{opacity:.45}
+.mod.locked{cursor:default;opacity:.8}
+.lockmsg{display:none;margin-top:6px;font-size:13px;font-weight:600;color:var(--warn)}
+.mod.locked .lockmsg{display:block}
+.mod input:focus-visible + .tog{outline:2px solid var(--accent);outline-offset:2px}
+.mod h3{margin:0;font-size:16.5px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.tag{font:500 11.5px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.mod p{margin:4px 0 0;font-size:14.5px}
+.ctl{margin-top:8px;font-size:14px;background:var(--soft);border-radius:8px;padding:8px 10px}
+.ctl b{font-weight:600}
+.ctl ul{margin:4px 0 0;padding-left:18px}
+.ctl li{margin:2px 0}
+.note{margin-top:6px;font-size:13.5px;color:var(--muted)}
+.glow{display:inline-flex;gap:4px;vertical-align:middle;margin:0 2px}
+.glow i{width:9px;height:9px;border-radius:50%;background:var(--pink);animation:breathe 3.2s ease-in-out infinite}
+.glow i:nth-child(2){animation-delay:.12s}.glow i:nth-child(3){animation-delay:.24s}.glow i:nth-child(4){animation-delay:.36s}
+@keyframes breathe{0%,100%{opacity:.18;box-shadow:none}50%{opacity:1;box-shadow:0 0 8px var(--pink)}}
+@media (prefers-reduced-motion:reduce){.glow i{animation:none;opacity:.7}}
+.levels{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px}
+.levels th,.levels td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.levels th{color:var(--muted);font-weight:500}
+details{margin-top:14px}
+summary{cursor:pointer;font-size:14.5px;color:var(--accent)}
+.build{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+button,.btn{font:600 15px var(--sans);border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--accent);color:var(--panel);text-decoration:none;display:inline-block}
+button.secondary,.btn.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+button.small,.btn.small{font-size:13.5px;padding:8px 12px;border-radius:8px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.result{margin-top:14px;display:none}
+.result.show{display:block}
+.fname{font:600 14px var(--mono);word-break:break-all}
+.warnbox{border-left:3px solid var(--warn);padding:2px 0 2px 12px;margin:10px 0;font-size:14px}
+.okc{color:var(--ok);font-weight:700}
+ol.how{margin:0 0 14px;padding-left:20px;font-size:14.5px}
+ol.how li{margin:3px 0}
+pre.cmd{font:12.5px/1.5 var(--mono);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:10px 0 0;white-space:pre}
+progress{width:100%;height:10px;margin-top:12px;accent-color:var(--accent)}
+footer{color:var(--muted);font-size:13.5px;margin-top:28px}
+footer h3{color:var(--ink);font-size:14.5px;margin:18px 0 4px}
+footer p{margin:4px 0}
+dialog.risk{max-width:440px;width:calc(100% - 32px);border:0;border-radius:14px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+dialog.risk::backdrop{background:rgba(0,0,0,.55)}
+.risk-msg{background:#b3261e;color:#fff;font-size:15px;line-height:1.5;padding:18px 20px}
+.risk-msg b{display:block;font-size:17px;font-weight:700;margin-bottom:6px}
+.risk-actions{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px}
+.byline{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.coinlink{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;font-size:14px;line-height:1.25}
+.coinlink:hover{border-color:var(--pink)}
+.coinlink b{font-weight:700}
+.coinlink small{display:block;white-space:nowrap;color:var(--muted);font-size:12.5px}
+.coin{display:block;width:40px;height:40px;perspective:220px;flex:0 0 auto}
+.coin-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinspin 4s steps(24) infinite}
+.coinlink:hover .coin-inner{animation-duration:2s}
+.coin img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.coin img{transform:translateZ(2.5px)}
+.coin .back{transform:rotateY(180deg) translateZ(2.5px)}
+.coin .edge{display:block;position:absolute;left:50%;top:8%;width:5px;height:84%;margin-left:-2.5px;background:linear-gradient(#9a9a9a,#6f6f6f 50%,#4a4a4a);transform:rotateY(90deg)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion:reduce){.coin-inner{animation:none}}
+.more{margin-top:10px}
+.more summary{color:var(--mc);font-weight:600;font-size:14px;list-style:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"\25B8";display:inline-block;transition:transform .15s}
+.more[open] summary::before{transform:rotate(90deg)}
+.more dl{margin:8px 0 0;font-size:14.5px}
+.more dt{font-weight:600}
+.more dd{margin:0 0 10px}
+.fold{margin:16px 0}
+.fold>summary{list-style:none;color:inherit;font-size:inherit}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary h2{margin:0}
+.fold[open]>summary h2{margin-bottom:4px}
+.chev{margin-left:auto;color:var(--accent);font-size:22px;line-height:1;transition:transform .15s}
+.fold[open] .chev{transform:rotate(90deg)}
+.themebtn{margin-left:auto;background:var(--soft);color:var(--ink);border:1px solid var(--line);padding:7px 11px;font-size:13px;border-radius:8px}
+@media (max-width:720px){
+  .slots{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  h1{font-size:24px}
+  .logo{width:44px;height:44px}
+  .step{padding:16px}
+  .mod{padding:12px;gap:8px 12px;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr}
+  .ico{width:32px;height:32px;grid-column:1;grid-row:2;justify-self:center}
+  .mod>div{grid-column:2;grid-row:1/span 2}
+  header{flex-wrap:wrap}
+  .themebtn{margin-left:0}
+}
+</style>
+<!-- New look (BRIBERY site style). -->
+<style data-bx="new">
+/* BRIBERY new look for the STOLPERBEATS ULTRA flasher. Only active in html[data-mode="new"].
+   Everything is scoped to .wrap so the shared top bar and footer are never touched. */
+:root{
+  --bg:#000; --panel:#000; --ink:#f4f1ec; --muted:#9a9097; --line:#2a2228; --soft:#0d0a0c;
+  --accent:#ff1fd6; --pink:#ff1fd6; --ok:#19ffe0; --bad:#ff5c7a; --warn:#ff8a1f;
+  --used:#2a2228; --map-bg:#070506;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --gutter:clamp(16px,4vw,56px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000}
+body{color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--pink);color:#000}
+
+.wrap{max-width:none;margin:0;padding:0;counter-reset:bxstep}
+.wrap a{color:var(--pink);text-underline-offset:3px}
+.wrap a:hover{color:var(--ink)}
+.wrap code{font-family:var(--mono);font-size:.9em;color:var(--ink);background:none}
+.wrap b{font-weight:700}
+/* the classic byline (coin + Theme) and the classic header live only in classic mode */
+.wrap>.byline,.wrap>header{display:none}
+
+/* ---------- hero ---------- */
+.bxs-hero{padding:clamp(28px,5vw,64px) var(--gutter) clamp(26px,3.4vw,44px)}
+.bxs-row>.bx-mega{align-self:start}
+.bxs-hero .bx-kicker{margin-bottom:clamp(14px,2.2vw,26px)}
+.bxs-title{margin:0;font-weight:900}
+.bxs-title .bx-mega{display:block;font-size:12vw}
+.bxs-title .bxs-l1{color:var(--ink);text-shadow:none}
+.bxs-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:end;margin-top:clamp(8px,1.4vw,20px)}
+.bxs-intro{padding-bottom:.4vw}
+.bxs-intro .bx-lede{font-size:clamp(18px,1.75vw,25px);max-width:34ch}
+.bxs-intro .bx-lede a{color:var(--pink);font-weight:800;text-decoration:none;border-bottom:2px solid var(--pink)}
+.bxs-intro .bx-lede a:hover{background:var(--pink);color:#000}
+.bxs-safe{display:flex;gap:12px;align-items:baseline;margin:clamp(28px,4vw,52px) 0 0;padding-top:16px;border-top:1px solid var(--line);
+  font:600 12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.bxs-safe::before{content:"";flex:0 0 auto;width:9px;height:9px;background:var(--ok);box-shadow:0 0 10px var(--ok);transform:translateY(-1px)}
+.bxs-safe b{color:var(--ink);font-weight:700}
+.bxs-intro .bx-ctas{margin-top:clamp(18px,2.4vw,28px)}
+.wrap .bx-btn{text-decoration:none}
+.wrap .bx-btn:hover{color:#000}
+.wrap .bx-btn.bx-solid{color:#000}
+.wrap .bx-btn.bx-solid:hover{color:var(--pink)}
+
+/* ---------- numbered steps: full width, no cards ---------- */
+.step{counter-increment:bxstep;margin:0;padding:clamp(48px,7vw,104px) var(--gutter) clamp(44px,6vw,88px);background:none;border:0;border-radius:0;border-top:1px solid var(--line)}
+.step>h2{display:flex;align-items:baseline;gap:clamp(14px,2.6vw,40px);margin:0 0 clamp(18px,2.4vw,30px);padding-bottom:clamp(14px,1.8vw,22px);
+  border-bottom:2px solid var(--pink);font:900 clamp(28px,4.8vw,76px)/.9 var(--sans);letter-spacing:-.035em;text-transform:uppercase;color:var(--ink)}
+.step>h2 .num{display:block;flex:0 0 auto;width:auto;height:auto;border-radius:0;background:none;font-size:0;line-height:0;color:var(--pink)}
+.step>h2 .num::before{content:counter(bxstep,decimal-leading-zero);display:block;font:900 clamp(64px,11.5vw,184px)/.78 var(--sans);letter-spacing:-.06em;
+  color:var(--pink);text-shadow:0 0 40px rgba(255,31,214,.45)}
+.step>h2 .bxs-h{min-width:0}
+.hint{color:var(--muted);margin:0 0 clamp(18px,2.4vw,28px);font-size:clamp(15px,1.25vw,17px);max-width:78ch}
+.hint b{color:var(--ink)}
+
+/* step 1: drop zone */
+.drop{display:grid;gap:10px;justify-items:start;padding:clamp(30px,5vw,64px) clamp(18px,3vw,40px);border:1.5px dashed #5a4654;border-radius:0;text-align:left;cursor:pointer;
+  background:repeating-linear-gradient(135deg,rgba(255,31,214,.035) 0 12px,transparent 12px 24px);transition:border-color .15s,background-color .15s}
+.drop strong{display:block;font:900 clamp(24px,4vw,58px)/.92 var(--sans);letter-spacing:-.03em;text-transform:uppercase;color:var(--ink)}
+.drop span{font:600 12px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.drop:hover,.drop.over{border-color:var(--pink);background-color:rgba(255,31,214,.07)}
+.drop:hover strong,.drop.over strong{color:var(--pink)}
+.drop:focus-visible{outline:2px solid #19ffe0;outline-offset:3px}
+
+/* status lines */
+.status{display:none;margin-top:18px;padding:14px 16px 14px 18px;border:0;border-left:3px solid var(--muted);border-radius:0;font-size:15px;
+  background:linear-gradient(90deg,rgba(255,255,255,.04),transparent 70%)}
+.status.show{display:block}
+.status.ok{border-left-color:var(--ok);background:linear-gradient(90deg,rgba(25,255,224,.08),transparent 70%)}
+.status.bad{border-left-color:var(--bad);background:linear-gradient(90deg,rgba(255,92,122,.1),transparent 70%)}
+.status.info{border-left-color:var(--muted)}
+.kv{font-family:var(--mono);font-size:12px;word-break:break-all;color:var(--muted);margin-top:8px}
+.okc{color:var(--ok);font-weight:700}
+
+/* step 2: Timing buttons as full-width rows */
+.tablebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 clamp(20px,2.6vw,32px)}
+.slots{display:block;border-top:1px solid var(--line)}
+.slot{position:relative;display:grid;grid-template-columns:minmax(150px,.5fr) minmax(0,1fr) minmax(0,1.25fr);
+  grid-template-rows:auto 1fr;grid-template-areas:"lbl sel pv" "lbl meta pv";column-gap:clamp(18px,3vw,48px);row-gap:12px;align-items:start;align-content:start;
+  padding:clamp(22px,2.8vw,34px) 0;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
+.slot.changed,.slot.badslot{border-color:var(--line);box-shadow:none}
+.slot::before{content:"";position:absolute;left:calc(-1 * var(--gutter));top:-1px;bottom:-1px;width:5px;background:transparent}
+.slot.changed::before{background:var(--pink)}
+.slot.badslot::before{background:var(--warn)}
+.slot .lbl{grid-area:lbl;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;font:600 11.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.slot .lbl>span:first-child{display:block}
+.slot .lbl b{display:block;margin-bottom:6px;font:900 clamp(36px,4.6vw,68px)/.82 var(--sans);letter-spacing:-.045em;color:var(--ink)}
+.slot .lbl>span:last-child{color:var(--muted)}
+.slot.changed .lbl b,.slot.changed .lbl>span:last-child{color:var(--pink)}
+.slot.badslot .lbl b,.slot.badslot .lbl>span:last-child{color:var(--warn)}
+.slot select{grid-area:sel}
+.slot .pv{grid-area:pv;--line:#3a2f37}
+.slot .meta{grid-area:meta;font:12.5px/1.65 var(--mono);color:var(--muted)}
+.slot .meta .bad{color:var(--warn);font-weight:700}
+.slot .meta .amber{color:var(--warn)}
+.slot svg{width:100%;height:auto;display:block;background:var(--map-bg);border:1px solid var(--line);border-radius:0}
+
+select{font:15px var(--sans);width:100%;padding:12px 40px 12px 14px;border-radius:0;border:1.5px solid var(--line);background-color:#000;color:var(--ink);
+  -webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23ff1fd6' stroke-width='2.4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center}
+select:hover{border-color:#5a4654}
+select:focus{outline:none;border-color:var(--pink)}
+select option,select optgroup{background:#0d0a0c;color:var(--ink)}
+
+/* step 3: mods as full-width rows */
+.mods{display:block;border-top:1px solid var(--line)}
+.mod{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(16px,3vw,44px);align-items:start;
+  padding:clamp(24px,3vw,38px) 0;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;cursor:pointer;transition:background-color .15s}
+.mod:hover,.mod.on{border-color:var(--line);box-shadow:none}
+.mod::before{content:"";position:absolute;left:calc(-1 * var(--gutter));top:-1px;bottom:-1px;width:5px;background:transparent;transition:background .15s}
+.mod.on::before{background:var(--pink)}
+.mod input{position:absolute;opacity:0;pointer-events:none}
+.mod .tog{grid-column:1;grid-row:1;width:56px;height:30px;margin-top:4px;border-radius:0;background:transparent;border:2px solid #5a4654;position:relative;transition:background .15s,border-color .15s}
+.mod .tog::after{content:"";position:absolute;top:4px;left:4px;width:18px;height:18px;border-radius:0;background:#5a4654;transition:left .15s,background .15s}
+.mod:hover .tog{border-color:var(--pink)}
+.mod.on .tog{background:var(--pink);border-color:var(--pink)}
+.mod.on .tog::after{left:30px;background:#000}
+.mod.locked{cursor:default;opacity:.55}
+.mod.locked .tog{opacity:1;border-style:dashed}
+.mod input:focus-visible + .tog{outline:2px solid #19ffe0;outline-offset:3px}
+.mod .ico{grid-column:3;grid-row:1;width:clamp(44px,6vw,88px);height:clamp(44px,6vw,88px);color:#5a4654;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:square;stroke-linejoin:miter;transition:color .15s}
+.mod.on .ico{color:var(--pink);filter:drop-shadow(0 0 14px rgba(255,31,214,.45))}
+.mod>div{grid-column:2;grid-row:1;min-width:0;max-width:86ch}
+.mod h3{margin:0;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;font:900 clamp(26px,3.4vw,48px)/.92 var(--sans);letter-spacing:-.035em;text-transform:uppercase;color:var(--muted);transition:color .15s}
+.mod.on h3,.mod:hover h3{color:var(--ink)}
+.mod.on h3{color:var(--ink)}
+.tag{font:600 11.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--pink);border:0;border-radius:0;padding:0}
+.mod p{margin:12px 0 0;font-size:16px}
+.ctl{margin-top:14px;padding:2px 0 2px 16px;border-left:2px solid var(--pink);background:none;border-radius:0;font-size:15px}
+.ctl b{font-weight:700;color:var(--ink)}
+.ctl ul{margin:2px 0 0;padding-left:18px}
+.ctl li{margin:4px 0}
+.ctl li::marker{color:var(--pink)}
+.note{margin-top:10px;font-size:14px;color:var(--muted)}
+.lockmsg{display:none;margin-top:10px;font:700 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--warn)}
+.mod.locked .lockmsg{display:block}
+.glow{display:inline-flex;gap:4px;vertical-align:middle;margin:0 2px}
+.glow i{width:9px;height:9px;border-radius:50%;background:var(--pink);animation:breathe 3.2s ease-in-out infinite}
+.glow i:nth-child(2){animation-delay:.12s}.glow i:nth-child(3){animation-delay:.24s}.glow i:nth-child(4){animation-delay:.36s}
+@keyframes breathe{0%,100%{opacity:.18;box-shadow:none}50%{opacity:1;box-shadow:0 0 8px var(--pink)}}
+.more{margin-top:14px}
+.more summary{list-style:none;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font:700 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"+";display:inline-block;width:1em;font-size:16px;line-height:1;transition:transform .15s}
+.more[open] summary::before{transform:rotate(45deg)}
+.more p{font-size:15px}
+.levels{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+.levels th,.levels td{text-align:left;padding:9px 10px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.levels th{font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom-color:var(--pink)}
+.levels td:first-child{font:700 14px var(--mono);color:var(--pink)}
+.levels td:nth-child(2){font-weight:800;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
+
+/* step 4 + 5: build, result, recipes, flash */
+.build{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+#buildHint{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.wrap button,.wrap .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 14px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:15px 22px;border:2px solid var(--pink);border-radius:0;background:var(--pink);color:#000;cursor:pointer;text-decoration:none;transition:background .12s,color .12s}
+.wrap button:hover:not(:disabled),.wrap .btn:hover{background:#000;color:var(--pink)}
+.wrap button.secondary,.wrap .btn.secondary{background:transparent;color:var(--pink);border-color:var(--pink)}
+.wrap button.secondary:hover:not(:disabled),.wrap .btn.secondary:hover{background:var(--pink);color:#000}
+.wrap button.small,.wrap .btn.small{font-size:12px;padding:11px 15px}
+.wrap button:disabled,.wrap button.secondary:disabled{background:transparent;border-color:#3a2f37;color:#5a4654;cursor:not-allowed}
+.wrap button:focus-visible,.wrap .btn:focus-visible{outline:2px solid #19ffe0;outline-offset:3px}
+.result{margin-top:18px;display:none}
+.result.show{display:block}
+.fname{font:700 14px var(--mono);word-break:break-all;color:var(--pink)}
+.warnbox{border-left:3px solid var(--warn);padding:2px 0 2px 14px;margin:12px 0 2px;font-size:14px;color:var(--ink)}
+.step details:not(.more){margin-top:clamp(26px,3vw,36px);padding-top:18px;border-top:1px solid var(--line)}
+.step details:not(.more)>summary{list-style:none;display:inline-flex;align-items:center;gap:10px;cursor:pointer;font:700 12.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.step details:not(.more)>summary::-webkit-details-marker{display:none}
+.step details:not(.more)>summary::before{content:"+";font-size:18px;line-height:1;transition:transform .15s}
+.step details:not(.more)[open]>summary::before{transform:rotate(45deg)}
+dialog.risk{max-width:540px;width:calc(100% - 32px);border:2px solid var(--pink);border-radius:0;padding:0;background:#000;color:var(--ink);box-shadow:0 0 70px rgba(255,31,214,.45)}
+dialog.risk::backdrop{background:rgba(0,0,0,.82)}
+.risk-msg{background:var(--pink);color:#000;font-size:15.5px;line-height:1.5;padding:24px 24px 22px}
+.risk-msg b{display:block;margin-bottom:12px;font:900 clamp(26px,5vw,38px)/.92 var(--sans);letter-spacing:-.035em;text-transform:uppercase}
+.risk-actions{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px 20px}
+ol.how{list-style:none;counter-reset:how;margin:0 0 clamp(22px,3vw,32px);padding:0;border-top:1px solid var(--line);max-width:90ch}
+ol.how li{counter-increment:how;position:relative;margin:0;padding:14px 0 14px 56px;border-bottom:1px solid var(--line);font-size:15.5px}
+ol.how li::before{content:counter(how,decimal-leading-zero);position:absolute;left:0;top:15px;font:700 13px var(--mono);letter-spacing:.1em;color:var(--pink)}
+pre.cmd{font:12.5px/1.5 var(--mono);background:#0d0a0c;color:var(--ink);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:0;padding:14px 16px;overflow-x:auto;margin:20px 0 0;white-space:pre}
+progress{width:100%;height:8px;margin-top:16px;accent-color:var(--pink)}
+
+/* fine print */
+.wrap>footer{margin:0;padding:clamp(48px,7vw,104px) var(--gutter);border-top:2px solid var(--pink);color:var(--muted);font-size:14.5px;
+  columns:2 360px;column-gap:clamp(28px,5vw,80px);column-rule:1px solid var(--line)}
+.wrap>footer h3{margin:30px 0 10px;font:600 12.5px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pink);break-after:avoid}
+.wrap>footer h3:first-child{margin-top:0}
+.wrap>footer p{margin:0 0 12px}
+.wrap>footer a{color:var(--ink)}
+.wrap>footer a:hover{color:var(--pink)}
+
+@media (max-width:860px){
+  .bxs-row{grid-template-columns:1fr}
+  .slot{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"lbl" "sel" "pv" "meta"}
+  .slot .lbl{flex-direction:row;align-items:baseline;justify-content:space-between;gap:12px}
+  .slot .lbl b{display:inline;margin:0 8px 0 0}
+  .mod{grid-template-columns:auto minmax(0,1fr);row-gap:16px}
+  .mod .ico{grid-column:2;grid-row:1;justify-self:end;width:44px;height:44px}
+  .mod>div{grid-column:1 / -1;grid-row:2}
+}
+@media (max-width:520px){
+  .wrap button,.wrap .btn{padding:13px 16px;font-size:13px}
+  .wrap button.small,.wrap .btn.small{font-size:11.5px;padding:10px 12px}
+  .bxs-safe{letter-spacing:.08em}
+}
+@media (prefers-reduced-motion:reduce){.glow i{animation:none;opacity:.7}}
+.bxs-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+</style>
+<script src="/assets/site.js"></script>
+</head>
+<body data-bx-page="stolperbeats" data-bx-foot>
+<div class="wrap">
+<div class="bxs-hero bx-new-only">
+  <p class="bx-kicker">Firmware 163 <span>/</span> Flasher <span>/</span> Making Sound Machines Stolperbeats</p>
+  <h1 class="bxs-title"><span class="bx-mega bxs-l1" data-fit><span class="bx-fit">STOLPERBEATS</span></span><span class="bxs-sr"> ULTRA flasher</span></h1>
+  <div class="bxs-row">
+    <div class="bx-mega bx-glitch" data-fit data-text="ULTRA" aria-hidden="true"><span class="bx-fit">ULTRA</span></div>
+    <div class="bxs-intro">
+      <p class="bx-lede">Alt swing tables, ratchets, MIDI pitch and fill mode, added to <b>your own copy</b> of the official Stolperbeats firmware. See, hear and make your own Timings first in the <a href="/stolperbeats/visualiser/" target="_blank" rel="noopener">Stolperbeats visualiser</a>.</p>
+      <div class="bx-ctas"><a class="bx-btn bx-solid" href="#step1">Load your firmware</a><a class="bx-btn" href="/stolperbeats/visualiser/" target="_blank" rel="noopener">Open the visualiser</a></div>
+    </div>
+  </div>
+  <p class="bxs-safe"><span><b>Runs entirely in your browser.</b> Your firmware is never uploaded, and this site hosts none.</span></p>
+</div>
+<div class="byline">
+  <a class="coinlink" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">
+    <span class="coin" aria-hidden="true"><span class="coin-inner"><img src="/assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="/assets/coin-back.png" alt=""></span></span>
+    <span>Mods by <b>Bribery</b><small>@thisisbribery on Instagram &#8599;</small></span>
+  </a>
+  <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle colour theme">Theme</button>
+</div>
+<header>
+  <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+    <rect x="4" y="4" width="56" height="56" rx="12" fill="var(--soft)" stroke="var(--accent)" stroke-width="3"/>
+    <rect x="12" y="36" width="6" height="16" rx="2" fill="var(--accent)"/>
+    <rect x="22" y="28" width="6" height="24" rx="2" fill="var(--accent)" opacity=".75"/>
+    <rect x="35" y="20" width="6" height="32" rx="2" fill="var(--accent)"/>
+    <rect x="46" y="12" width="6" height="40" rx="2" fill="var(--accent)" opacity=".75"/>
+    <path d="M12 30 L20 22 L31 18 L44 9" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 5"/>
+  </svg>
+  <div>
+    <h1>Stolperbeats <span class="ultra">ULTRA</span> flasher</h1>
+    <p class="sub">Alt swing tables, ratchets, MIDI pitch and fill mode, added to your own copy of the official Stolperbeats firmware. See, hear and make your own Timings first in the <a href="/stolperbeats/visualiser/" target="_blank" rel="noopener" style="color:inherit">STOLPERBEATS VISUALISER</a>.</p>
+    <div class="privacy">&#128274; <span><b>Runs entirely in your browser.</b> Your firmware is never uploaded, and this site hosts none.</span></div>
+  </div>
+</header>
+
+<section class="step" id="step1">
+  <h2><span class="num">1</span><span class="bxs-h">Load your official firmware</span></h2>
+  <p class="hint">Use the unmodified <code>_MSM_stolperbeats_hw_rev4-163.bin</code> from <a href="https://makingsoundmachines.com/firmware/" target="_blank" rel="noopener">Making Sound Machines</a>. Other versions and already-modded files (including Firmware lab builds) are refused, because every patch targets exact addresses.</p>
+  <label class="drop" id="drop" tabindex="0">
+    <strong>Drop the .bin here or click to choose</strong>
+    <span>Checked against the known SHA-256 of firmware 163</span>
+    <input type="file" id="file" accept=".bin,application/octet-stream" hidden>
+  </label>
+  <div class="status" id="status"></div>
+</section>
+
+<section class="step" id="step2">
+  <h2><span class="num">2</span><span class="bxs-h">Swing tables on the Timing buttons</span></h2>
+  <p class="hint">Put any table on any of the four Timing buttons: the factory ones, the alt tables from the visualiser, your own Timings from the <a href="/stolperbeats/visualiser/" target="_blank" rel="noopener">visualiser's CREATOR</a>, or a <code>.timing.json</code> you upload. Each button keeps its other behaviour (accents, Rolls). The picture shows where the 8 steps of a half bar land at Shuffle 1 to 6.</p>
+  <div class="tablebar">
+    <button class="secondary small" id="uploadBtn" type="button">Upload custom (.timing.json)</button>
+    <input type="file" id="timingFile" accept=".json,application/json" multiple hidden>
+    <a class="btn secondary small" href="/stolperbeats/visualiser/" target="_blank" rel="noopener">Make your own in the visualiser &#8599;</a>
+    <button class="secondary small" id="resetTables" type="button">All factory</button>
+  </div>
+  <div class="slots" id="slots"></div>
+  <div class="status" id="tableStatus"></div>
+</section>
+
+<section class="step" id="step3">
+  <h2><span class="num">3</span><span class="bxs-h">Choose your mods</span></h2>
+  <p class="hint">Mix them freely. Fill CV needs Fill mode. All four share one engine that is added once; switching a mod off leaves its controls exactly as stock.</p>
+  <div class="mods" id="mods"></div>
+</section>
+
+<section class="step" id="step4">
+  <h2><span class="num">4</span><span class="bxs-h">Build and download</span></h2>
+  <p class="hint">The code mods are checked against the expected SHA-256 for your exact combination before anything is written. Then your tables go on top.</p>
+  <div class="build">
+    <button id="buildBtn" type="button" disabled>Build ULTRA firmware</button>
+    <span class="hint" id="buildHint" style="margin:0">Load the official firmware first.</span>
+  </div>
+  <dialog class="risk" id="riskDlg" aria-labelledby="riskTitle">
+    <div class="risk-msg"><b id="riskTitle">Unofficial, modified firmware</b>Use it entirely at your own risk. The author accepts no responsibility for any damage, malfunction, lost patterns or settings, or warranty issues that may result.</div>
+    <div class="risk-actions">
+      <button id="riskCancel" type="button" class="secondary">Cancel</button>
+      <button id="riskAccept" type="button">Accept</button>
+    </div>
+  </dialog>
+  <div class="result" id="result">
+    <div class="status show" id="resultStatus"></div>
+    <div class="build" style="margin-top:12px">
+      <button id="dlBtn" type="button">Download firmware</button>
+      <button id="notesBtn" type="button" class="secondary">Download build notes</button>
+      <button id="recipeBtn" type="button" class="secondary">Save recipe</button>
+    </div>
+  </div>
+  <details>
+    <summary>Recipes: share your picks, never the firmware</summary>
+    <p class="hint" style="margin-top:8px">A recipe is a small <code>.json</code> with your table picks, the rows of any custom tables, and your mods. Anyone can open it here with their own official file and build the same firmware. The visualiser's Firmware lab recipes open here too.</p>
+    <div class="build"><button class="secondary small" id="recipeOpen" type="button">Open a recipe</button><input type="file" id="recipeFile" accept=".json,application/json" hidden></div>
+  </details>
+</section>
+
+<section class="step" id="step5">
+  <h2><span class="num">5</span><span class="bxs-h">Flash it over USB</span></h2>
+  <p class="hint">Chrome or Edge on a computer can flash the module straight from this page (WebUSB). Anywhere else, use <code>dfu-util</code> the way the manual describes.</p>
+  <ol class="how">
+    <li>Connect the module to your computer with USB, rack powered.</li>
+    <li>Hold <b>BOOT</b>, press and release <b>RESET</b>, then let go of <b>BOOT</b>. The module is now in its bootloader.</li>
+    <li>Click <b>Connect</b> and pick <b>STM32 BOOTLOADER</b> (or <b>DFU in FS Mode</b>).</li>
+    <li>Click <b>Flash my build</b>. The page erases only the sectors it needs, writes, reads everything back to check it byte for byte, then restarts the module.</li>
+  </ol>
+  <div class="build">
+    <button id="connectBtn" type="button" class="secondary">Connect</button>
+    <button id="flashBtn" type="button" disabled>Flash my build</button>
+    <button id="restoreBtn" type="button" class="secondary" disabled>Flash official file</button>
+  </div>
+  <progress id="prog" value="0" max="1" hidden></progress>
+  <div class="status" id="flashStatus"></div>
+  <pre class="cmd" id="dfuCmd">sudo dfu-util -a 0 -s 0x08000000 -D your-build.bin</pre>
+  <p class="hint" style="margin-top:10px">The STM32 bootloader lives in the chip's ROM, so a bad flash can always be undone: do BOOT and RESET again and flash the official file.</p>
+</section>
+
+<footer>
+  <h3>Before you flash</h3>
+  <p>Stolperbeats is designed and made by <a href="https://makingsoundmachines.com/stolperbeats/" target="_blank" rel="noopener">Making Sound Machines</a>, and all rights in the module, its firmware and its documentation remain theirs. STOLPERBEATS ULTRA is an unofficial, community-made modification for education. It isn't affiliated with, endorsed by or supported by Making Sound Machines.</p>
+  <p>Please don't contact Making Sound Machines for help with modified firmware. If you need support, flash the official firmware first. Flashing modified firmware is entirely at your own risk and may affect your warranty.</p>
+  <p>Keep your original <code>_MSM_stolperbeats_hw_rev4-163.bin</code>. To go back to stock, flash it again. Back up your SD card before you try the new features: ratchets and pitch are saved in new side files next to your pattern banks.</p>
+  <h3>How it works</h3>
+  <p>The page holds only the added code, the places where the firmware calls into it, a few switches inside it, and the timing-table values the visualiser shows. No part of the official firmware is included. After your file passes the version check, the mods are written into a copy in memory and checked against the expected SHA-256 for your exact combination, then your tables are written on top.</p>
+  <h3>What's been tested</h3>
+  <p>Everything on this page has been tested on my own Stolperbeats: all five alt tables, ratchets, pitch, fill mode and the fill CV gate. With all four mods on, the code is byte for byte the build that runs on my module, and with Push = DEEP and Clave = SQEZ the whole file is identical to it.</p>
+  <p>The only thing not tried on hardware is picking and choosing: a build with only some of the mods. Those builds use the same tested code, with nothing new added. Leaving a mod out puts the firmware's own original call back where the mod would hook in, or flips a small switch in the engine that skips that mod's part. Every combination was checked by running the module's own code in a Cortex-M7 emulator: ratchet hits, MIDI notes, Fill on and off, the CV 6 gate, and fills that play the same in every build.</p>
+  <h3>Known differences when mods are installed</h3>
+  <p>With Ratchets: the Shuffle encoder sets ratchets in Pattern Edit instead of changing the shuffle. With Pitch: Tap in Pattern Edit shows the step's pitch instead of tapping the tempo. With Fill: Linear + Tap switches Fill mode, and while Fill mode is on, tap tempo is off (the tempo encoder still works). Everything else plays exactly like the firmware it was built on.</p>
+</footer>
+</div>
+
+<script src="mods.js"></script>
+<script src="builder.js"></script>
+<script>
+(function(){
+"use strict";
+const U = window.ULTRA, B = window.UltraBuilder, BASE = U.base;
+const VIS = "/stolperbeats/visualiser/";
+
+const MODS = [
+  {key:'ratchets', title:'Ratchets', tag:'per step · all six tracks',
+   text:'Each step can fire 1, 2, 3 or 4 hits. The extra hits land on whole ticks inside the step, so they swing with the Timing. They play on the trigger outs and on MIDI.',
+   ctl:'<b>In Pattern Edit, turn Shuffle</b> to set the ratchet on the step under the cursor. The cursor step flashes once per hit. Ratchets follow Pattern Edit’s keep and discard: release on the slow blink to keep them, on the fast blink to throw them away.',
+   note:'Saved on the SD card in <code>PatternExtNNN.txt</code> next to each <code>PatternBankNNN.txt</code> when the module saves its banks (on Stop), and loaded at power on. Your PatternBank files stay in the module’s own format. Hihat 2 ratchets rest while the Rolls Feel is on.',
+   more:`<p style="margin:8px 0 0;font-size:14.5px">You can program ratchets in the <a href="${VIS}" target="_blank" rel="noopener">visualiser</a> too: pick <b>RATCHET</b> above the grid, then download the bank. It zips the PatternBank file and its PatternExt side file, ready for the card.</p>`,
+   moreTitle:'Program them in the visualiser'},
+  {key:'pitch', title:'Pitch mode', tag:'MIDI out only',
+   text:'Give any step its own MIDI note, up to two octaves either way. Melodic hats, tuned percs, kick slides. The trigger outs have no pitch, so this only changes the MIDI note.',
+   ctl:'<b>In Pattern Edit, hold Tap and turn a track’s encoder</b> to set the pitch of the step under the cursor, −24 to +24 semitones. The number shows on the bottom rows of LEDs. Tap on its own shows the step’s pitch. Keep and discard work like ratchets.',
+   note:'Saved in the same <code>PatternExtNNN.txt</code> side file as ratchets.',
+   more:`<p style="margin:8px 0 0;font-size:14.5px">In the <a href="${VIS}" target="_blank" rel="noopener">visualiser</a>, pick <b>PITCH</b> above the grid and drag a hit up or down. The side file uses one signed number per step, for example <code>HIHAT1 &gt; PTN0 PITCH: 0 0 +12 0 …</code></p>`,
+   moreTitle:'Program it in the visualiser'},
+  {key:'fill', title:'Fill mode', tag:'Kick · Snare · Hihat 1',
+   text:'A fill on demand. It plays variations on top of your pattern, from the next step to the end of the bar. Nothing is stored: your pattern is untouched and every fill comes out different.',
+   ctl:`<ul>
+     <li><b>Fill mode on or off: hold Linear and press Tap.</b> Linear itself doesn’t change. While Fill mode is on, the Shuffle LEDs glow and breathe slowly <span class="glow" aria-hidden="true"><i></i><i></i><i></i><i></i></span> so you always know it’s armed.</li>
+     <li><b>Fire a fill: press Tap.</b> Hold Tap to keep it going into the next bars.</li>
+     <li><b>Pick the level: hold Tap and turn Shuffle</b>, 1 to 5. The number shows on the bottom rows. You can change it while a fill plays.</li></ul>`,
+   note:'Tap tempo is off while Fill mode is on; the tempo encoder still works. Fill mode and the level are saved in <code>MachineState.txt</code> and come back at power on (needs <code>WRITE_MACHINE_STATE</code> on in <code>MachineConfig.txt</code>). With Fill mode off, the module plays exactly as without the mod.',
+   more:`<table class="levels"><thead><tr><th>Level</th><th>Name</th><th>What it does</th></tr></thead><tbody>
+     <tr><td>1</td><td>Ghost</td><td>Soft snare and hat hits on the “e” and “a”, at 25 to 45% of the track’s MIDI velocity. Kick untouched.</td></tr>
+     <tr><td>2</td><td>Push</td><td>Hats on every 16th, snare in groups of 3 through the second half of the bar, and a pickup kick on step 16 (sometimes 15).</td></tr>
+     <tr><td>3</td><td>Burst</td><td>Random hits, busier toward the end of the bar and on the “e” and “a”, with some 2 or 3 hit ratchets.</td></tr>
+     <tr><td>4</td><td>Build</td><td>Hits, ratchets and velocity climb to the downbeat, with 4-hit ratchets near the end. The snare’s MIDI note steps up 0, +3, +5, +7 semitones per beat, like toms.</td></tr>
+     <tr><td>5</td><td>Chaos</td><td>Stutter: plays the first beat of the fill, then repeats its first two steps, then hammers its first step. Adds gaps, extra hits, 2 to 4 hit ratchets and octave jumps on MIDI.</td></tr></tbody></table>
+     <p style="margin:8px 0 0;font-size:14px">Your own Kick, Snare and Hihat 1 hits always play, except where Chaos drops one for a gap. Muted tracks stay silent. Fills bring their own ratchets and MIDI pitch, so they work without the Ratchets and Pitch mods.</p>`,
+   moreTitle:'The five fill levels'},
+  {key:'fillcv', title:'Fill CV gate', tag:'Pattern CV 6', needs:'fill',
+   text:'Fire fills from a gate or clock. While Fill mode is on, Pattern CV 6 (Perc 2’s pattern input) becomes a Fill gate.',
+   ctl:'A <b>rising gate fires a fill</b> and a <b>gate held high keeps it going</b>. It switches on above about 1.5 V and off below about 1 V. With Fill mode off, CV 6 picks Perc 2’s pattern as normal.',
+   note:'While Fill mode is on, CV 6 no longer picks Perc 2’s pattern. Leave this mod off to keep CV 6 as a pattern input all the time.',
+   lock:'Needs Fill mode'}
+];
+const ICON = {
+  ratchets:'<path d="M4 40h40"/><path d="M9 40V8M19 40V20M27 40V20M35 40V20"/><path d="M15 8l4 4M41 14l3-3" opacity=".5"/>',
+  pitch:'<path d="M17 34V9l15-4v25"/><circle cx="12.5" cy="34.5" r="4.5"/><circle cx="27.5" cy="30.5" r="4.5"/><path d="M38 15l4-5 4 5M38 33l4 5 4-5"/>',
+  fill:'<path d="M5 41v-5M13 41v-9M21 41V26M29 41V19M37 41V11"/><path d="M42 5v8M38 9h8"/>',
+  fillcv:'<path d="M3 36h7V14h12v22h6"/><circle cx="38" cy="25" r="7"/><circle cx="38" cy="25" r="2.2"/>'
+};
+const sel = {ratchets:true, pitch:true, fill:true, fillcv:true};
+const picks = {Trip:'Factory', Shake:'Factory', Push:'Factory', Clave:'Factory'};
+let uploaded = {}, mine = {}, stock = null, stockName = '', built = null, builtName = '', builtHash = '', builtCodeHash = '';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hx = n => '0x' + n.toString(16).toUpperCase().padStart(8,'0');
+
+/* ---------- SHA-256 (WebCrypto, with a small fallback) ---------- */
+async function sha256(buf){
+  if (window.crypto && crypto.subtle) { try { return toHex(new Uint8Array(await crypto.subtle.digest('SHA-256', buf))); } catch(e) {} }
+  return sha256js(buf);
+}
+function toHex(u8){ return Array.from(u8, b => b.toString(16).padStart(2,'0')).join(''); }
+function sha256js(u8){
+  const K=new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const H=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);
+  const l=u8.length, n=((l+9+63)>>6)<<6, m=new Uint8Array(n); m.set(u8); m[l]=0x80;
+  const dv=new DataView(m.buffer); dv.setUint32(n-4,(l*8)>>>0); dv.setUint32(n-8,Math.floor(l/0x20000000));
+  const w=new Uint32Array(64), r=(x,c)=>(x>>>c)|(x<<(32-c));
+  for(let o=0;o<n;o+=64){
+    for(let i=0;i<16;i++) w[i]=dv.getUint32(o+i*4);
+    for(let i=16;i<64;i++){ const a=w[i-15],b=w[i-2]; w[i]=(w[i-16]+(r(a,7)^r(a,18)^(a>>>3))+w[i-7]+(r(b,17)^r(b,19)^(b>>>10)))>>>0; }
+    let [a,b,c,d,e,f,g,h]=H;
+    for(let i=0;i<64;i++){
+      const t1=(h+(r(e,6)^r(e,11)^r(e,25))+((e&f)^(~e&g))+K[i]+w[i])>>>0, t2=((r(a,2)^r(a,13)^r(a,22))+((a&b)^(a&c)^(b&c)))>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H[0]+=a;H[1]+=b;H[2]+=c;H[3]+=d;H[4]+=e;H[5]+=f;H[6]+=g;H[7]+=h;
+  }
+  return Array.from(H,x=>x.toString(16).padStart(8,'0')).join('');
+}
+
+/* ---------- custom tables: your visualiser Timings (same site, same browser) and uploads ---------- */
+const RESERVED = new Set(['TRIP','SHAKE','PUSH','CLAVE','HOPP','DEEP','SQEZ','CLSTR','FOLD','FACTO','DRAFT','STRAI','UNTIT']);
+const validLevel = L => !!L && B.GRIDS.includes(L.N) && Array.isArray(L.pos) && L.pos.length === 8 && L.pos[0] === 0 &&
+  L.pos.every((p,k) => Number.isInteger(p) && (k === 0 || p > L.pos[k-1])) && L.pos[7] < 2*L.N;
+function loadMine(){
+  mine = {};
+  try {
+    const a = JSON.parse(localStorage.getItem('stolperbeats-shuffle-map:mine'));
+    if (Array.isArray(a)) for (const t of a) if (t && /^[A-Z0-9]{1,5}$/.test(t.key) && !RESERVED.has(t.key) && Array.isArray(t.levels) && t.levels.length === 6 && t.levels.every(validLevel))
+      mine[t.key] = B.rowsFromLevels(t.levels);
+  } catch(e) {}
+}
+function loadUploaded(){ try { const o = JSON.parse(localStorage.getItem('stolperbeats-ultra:uploaded')) || {}; for (const [k,rows] of Object.entries(o)) if (!B.rowsProblems(rows).length) uploaded[k] = rows; } catch(e) {} }
+function saveUploaded(){ try { localStorage.setItem('stolperbeats-ultra:uploaded', JSON.stringify(uploaded)); } catch(e) {} }
+loadMine(); loadUploaded();
+const customs = () => Object.assign({}, mine, uploaded);   // uploads win on a name clash
+function freeName(nm){ let n = B.cleanName(nm) || 'MINE'; if (RESERVED.has(n)) n = ('U' + n).slice(0,5); return n; }
+
+/* ---------- timing slots ---------- */
+const slotsEl = document.getElementById('slots'), tableStatus = document.getElementById('tableStatus');
+function tmsg(html, cls){ tableStatus.className = 'status show ' + (cls || 'info'); tableStatus.innerHTML = html; }
+function rowsOf(slot){ return B.rowsFor(picks[slot], slot, customs()); }
+function sourceOf(choice){ if (choice === 'Factory' || choice.startsWith('Factory ')) return 'factory'; if (B.MODULE[choice]) return 'alt'; if (uploaded[choice]) return 'uploaded'; return 'mine'; }
+function previewSVG(rows){
+  const W = 300, rowH = 13, top = 6, H = top + rowH*6 + 4, x0 = 34, w = W - x0 - 8;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Step positions at Shuffle 1 to 6">`;
+  s += `<line x1="${x0 + w/2}" y1="2" x2="${x0 + w/2}" y2="${H-2}" stroke="var(--line)" stroke-dasharray="2 3"/>`;
+  for (let L = 1; L <= 6; L++) {
+    const r = rows[L], y = top + (L-1)*rowH + rowH/2, N2 = 2*r.ticksPerBeat;
+    s += `<text x="4" y="${y+4}" font-size="10" font-family="ui-monospace,Menlo,monospace" fill="var(--muted)">${L}</text>`;
+    s += `<line x1="${x0}" y1="${y}" x2="${x0+w}" y2="${y}" stroke="var(--line)"/>`;
+    let p = 0;
+    for (let k = 0; k < 8; k++) {
+      const x = x0 + w * p / N2, beat = k === 0 || k === 4;
+      s += `<circle cx="${x.toFixed(1)}" cy="${y}" r="${beat ? 3.6 : 2.8}" fill="${beat ? 'var(--ink)' : 'var(--accent)'}"/>`;
+      p += r.stepLengths[k];
+    }
+    s += `<text x="${W-4}" y="${y+4}" font-size="9" text-anchor="end" font-family="ui-monospace,Menlo,monospace" fill="var(--muted)">${r.ticksPerBeat}</text>`;
+  }
+  return s + '</svg>';
+}
+function slotProblems(slot){ try { return B.rowsProblems(rowsOf(slot)); } catch(e) { return [e.message]; } }
+function drawSlots(){
+  slotsEl.innerHTML = '';
+  const cs = customs(), mineK = Object.keys(mine).filter(k => !uploaded[k]), upK = Object.keys(uploaded);
+  for (const slot of B.SLOTS) {
+    if (!(picks[slot] === 'Factory' || picks[slot].startsWith('Factory ') || B.MODULE[picks[slot]] || cs[picks[slot]])) picks[slot] = 'Factory';
+    const ch = picks[slot], bad = slotProblems(slot), d = document.createElement('div');
+    d.className = 'slot' + (bad.length ? ' badslot' : ch === 'Factory' ? '' : ' changed');
+    const opt = (v, l) => `<option value="${esc(v)}"${v === ch ? ' selected' : ''}>${esc(l)}</option>`;
+    d.innerHTML = `<div class="lbl"><span><b>${slot.toUpperCase()}</b> BUTTON</span><span>${ch === 'Factory' ? 'factory' : sourceOf(ch) === 'factory' ? 'factory table' : sourceOf(ch)}</span></div>
+      <select aria-label="${slot} button plays">${opt('Factory', 'Factory ' + slot)}
+        <optgroup label="Other factory tables">${B.SLOTS.filter(x => x !== slot).map(x => opt('Factory ' + x, 'Factory ' + x)).join('')}</optgroup>
+        <optgroup label="Alt tables (visualiser)">${B.STYLES.map(s => opt(s.key, `${s.key}: ${s.blurb}`)).join('')}</optgroup>
+        ${mineK.length ? `<optgroup label="Yours, from the visualiser's creator">${mineK.map(k => opt(k, k)).join('')}</optgroup>` : ''}
+        ${upK.length ? `<optgroup label="Uploaded">${upK.map(k => opt(k, k)).join('')}</optgroup>` : ''}
+      </select><div class="pv"></div><div class="meta"></div>`;
+    let rows = null; try { rows = rowsOf(slot); } catch(e) {}
+    if (rows && !bad.length) d.querySelector('.pv').innerHTML = previewSVG(rows);
+    const notes = rows && !bad.length ? B.rowsNotes(rows) : [];
+    d.querySelector('.meta').innerHTML = bad.length ? `<span class="bad">Can't build: ${esc(bad[0])}.</span>` :
+      `Ticks per beat, Shuffle 0 to 6: <span style="font-family:var(--mono)">${rows.map(r => r.ticksPerBeat).join(' ')}</span>` + (notes.length ? `<br><span class="amber">${esc(notes.join('; '))}</span>` : '') +
+      '';
+    d.querySelector('select').addEventListener('change', e => { picks[slot] = e.target.value; invalidate(); render(); });
+    slotsEl.appendChild(d);
+  }
+  if (!Object.keys(mine).length && !tableStatus.classList.contains('show'))
+    tmsg(`Timings you save in the <a href="${VIS}" target="_blank" rel="noopener">visualiser's CREATOR</a> (in this browser) show up here under <b>Yours</b>. Or export one there as <code>.timing.json</code> and upload it.`, 'info');
+}
+document.getElementById('uploadBtn').addEventListener('click', () => document.getElementById('timingFile').click());
+document.getElementById('timingFile').addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = ''; const ok = [], bad = [];
+  for (const f of files) {
+    try {
+      const obj = JSON.parse(await f.text());
+      if (obj && (obj.stolperbeatsUltraRecipe || obj.stolperbeatsFirmwareRecipe)) { openRecipe(obj); continue; }
+      const t = B.parseTimingFile(obj, f.name.replace(/\.timing\.json$|\.json$/i, ''));
+      const nm = freeName(t.name); uploaded[nm] = t.rows; ok.push(nm);
+    } catch(err) { bad.push(`${esc(f.name)}: ${esc(err.message || 'not a timing file')}`); }
+  }
+  saveUploaded();
+  if (ok.length) { const free = B.SLOTS.find(s => picks[s] === 'Factory'); tmsg(`<span class="okc">&#10003;</span> Added ${ok.map(esc).join(', ')} under <b>Uploaded</b>. Pick ${ok.length > 1 ? 'them' : 'it'} on any Timing button below.` + (bad.length ? `<br><span style="color:var(--bad)">${bad.join('<br>')}</span>` : ''), 'ok'); }
+  else if (bad.length) tmsg(`Couldn't use that file. ${bad.join('<br>')}`, 'bad');
+  invalidate(); render();
+});
+document.getElementById('resetTables').addEventListener('click', () => { for (const s of B.SLOTS) picks[s] = 'Factory'; invalidate(); render(); });
+window.addEventListener('storage', e => { if (e.key === 'stolperbeats-shuffle-map:mine') { loadMine(); render(); } });
+window.addEventListener('focus', () => { const before = JSON.stringify(Object.keys(mine)); loadMine(); if (JSON.stringify(Object.keys(mine)) !== before) render(); });
+
+/* ---------- mods ---------- */
+const modsEl = document.getElementById('mods'), cards = {};
+for (const m of MODS) {
+  const el = document.createElement('div');
+  el.className = 'mod'; el.style.setProperty('--mc', 'var(--pink)');
+  el.innerHTML = `<input type="checkbox" data-k="${m.key}" aria-label="${m.title}"><span class="tog"></span>
+    <svg class="ico" viewBox="0 0 48 48" aria-hidden="true">${ICON[m.key]}</svg>
+    <div><h3>${m.title} <span class="tag">${m.tag}</span></h3>
+    <p>${m.text}</p><div class="ctl">${m.ctl}</div><div class="note">${m.note}</div>
+    ${m.lock ? `<div class="lockmsg">${m.lock}</div>` : ''}
+    ${m.more ? `<details class="more"><summary>${m.moreTitle}</summary>${m.more}</details>` : ''}</div>`;
+  const cb = el.querySelector('input'); cb.checked = sel[m.key];
+  el.addEventListener('click', e => { if (e.target.closest('details') || e.target.closest('a') || e.target === cb || cb.disabled) return; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); });
+  cb.addEventListener('change', () => { sel[m.key] = cb.checked; syncMods(); invalidate(); render(); });
+  modsEl.appendChild(el); cards[m.key] = {el, cb};
+}
+function syncMods(){
+  for (const [k, {el, cb}] of Object.entries(cards)) {
+    const locked = k === 'fillcv' && !sel.fill;
+    cb.checked = !!sel[k] && !locked; el.classList.toggle('on', cb.checked);
+    el.classList.toggle('locked', locked); cb.disabled = locked;
+  }
+}
+const effSel = () => ({ratchets:sel.ratchets, pitch:sel.pitch, fill:sel.fill, fillcv:sel.fill && sel.fillcv});
+syncMods();
+
+/* ---------- file ---------- */
+const drop = document.getElementById('drop'), fileIn = document.getElementById('file'), statusEl = document.getElementById('status');
+drop.addEventListener('click', e => { if (e.target !== fileIn) fileIn.click(); });
+drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) load(f); });
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) load(fileIn.files[0]); fileIn.value = ''; });
+async function load(f){
+  const buf = new Uint8Array(await f.arrayBuffer()), h = await sha256(buf);
+  stock = null; invalidate(); statusEl.className = 'status show';
+  if (h === U.sha256 && buf.length === U.size && B.checkFactoryTables(buf)) {
+    stock = buf; stockName = f.name; statusEl.classList.add('ok');
+    statusEl.innerHTML = `<b>&#10003; Official Stolperbeats firmware 163 confirmed.</b> ${esc(f.name)}, ${buf.length.toLocaleString()} bytes. Found the four factory Timing tables at ${hx(B.STEP_TABLE)} and the ticks-per-beat table at ${hx(B.N_TABLE)}.<div class="kv">SHA-256 ${h}</div>`;
+  } else {
+    statusEl.classList.add('bad');
+    const known = {'ca9d723fe8d08699e574479d5b379c9a8f744857231d91d3650672dc81bfaee9':'test build 164','a06e99b25edf1b5a8af465b2d644166685b9d54856cb5ac5555bcd74e0f7755f':'test build 165','c9a4cb13ad51b2215f484efef4105a410292e340861bf48438a8304bf78295a9':'test build 166','88484f674571b17ef57b4d0c6a55be3b1b4ab6dc4ff891e22307d91149b72afb':'the ratchet, pitch and fill test build'}[h];
+    statusEl.innerHTML = `<b>&#10007; This isn’t the official Stolperbeats firmware 163.</b> ${esc(f.name)}, ${buf.length.toLocaleString()} bytes${known ? `. It looks like ${known}` : ''}. Load the unmodified file from Making Sound Machines. Already-modded files and other versions can’t be patched.<div class="kv">SHA-256 ${h}<br>expected ${U.sha256}</div>`;
+  }
+  render();
+}
+
+/* ---------- render ---------- */
+const anyTable = () => B.SLOTS.some(s => picks[s] !== 'Factory');
+function render(){
+  drawSlots();
+  const badSlot = B.SLOTS.find(s => slotProblems(s).length), anything = B.anyCode(effSel()) || anyTable();
+  const bb = document.getElementById('buildBtn'), hint = document.getElementById('buildHint');
+  bb.disabled = !stock || !anything || !!badSlot;
+  hint.textContent = !stock ? 'Load the official firmware first.' : badSlot ? `Fix the ${badSlot} button first.` : !anything ? 'Pick a table or a mod.' : 'Ready.';
+  drawFlash();
+}
+function invalidate(){ built = null; document.getElementById('result').classList.remove('show'); drawFlash(); }
+
+/* ---------- build ---------- */
+function tagName(){
+  const s = effSel(), m = [s.ratchets && 'ratchet', s.pitch && 'pitch', s.fill && 'fill', s.fillcv && 'fillcv'].filter(Boolean);
+  const t = B.SLOTS.filter(x => picks[x] !== 'Factory').map(x => x + picks[x].replace(/^Factory /, ''));
+  return `stolperbeats-ultra-163${m.length ? '-' + m.join('-') : ''}${t.length ? '-' + t.join('-') : ''}.bin`;
+}
+const riskDlg = document.getElementById('riskDlg');
+document.getElementById('buildBtn').addEventListener('click', () => riskDlg.showModal());
+document.getElementById('riskCancel').addEventListener('click', () => riskDlg.close());
+document.getElementById('riskAccept').addEventListener('click', () => { riskDlg.close(); build(); });
+async function build(){
+  const rs = document.getElementById('resultStatus'); document.getElementById('result').classList.add('show');
+  const fail = (msg, extra) => { built = null; rs.className = 'status show bad'; rs.innerHTML = `<b>Not built.</b> ${msg}` + (extra || ''); document.getElementById('dlBtn').disabled = true; document.getElementById('notesBtn').disabled = true; drawFlash(); };
+  try {
+    const s = effSel(), code = B.codeImage(U, stock, s), ch = await sha256(code), want = U.expected[B.keyOf(s)];
+    if (ch !== want) return fail('The code mods don’t match the reference for this combination, so the download is blocked.', `<div class="kv">got ${ch}<br>expected ${want}</div>`);
+    const {image, changed} = B.withTables(code, picks, customs());
+    for (let i = 0; i < image.length; i++) if (image[i] !== code[i] && !changed.some(w => w.o === i)) return fail('A table write landed outside the tables.');
+    built = image; builtName = tagName(); builtCodeHash = ch; builtHash = await sha256(image);
+    rs.className = 'status show ok';
+    rs.innerHTML = `<b>&#10003; Built and verified.</b> ${B.anyCode(s) ? 'The code mods match the reference build for this combination' : 'No code mods'}${changed.length ? `, and ${changed.length} table bytes changed on ${B.SLOTS.filter(x => picks[x] !== 'Factory').join(', ')}` : ''}.` +
+      `<div class="fname" style="margin-top:6px">${esc(builtName)}</div><div class="kv">SHA-256 ${builtHash}${B.anyCode(s) ? `<br>code mods ${ch}` : ''}</div>` +
+      (s.ratchets && s.pitch && s.fill && s.fillcv ? '<div class="warnbox">All four mods: the same code that has been tested on my own module.</div>' : B.anyCode(s) ? '<div class="warnbox">Every mod has been tested on my own module with all four installed. This pick of mods uses the same code with some of it switched off, checked in emulation rather than on hardware. If anything misbehaves, flash the official file to go back.</div>' : '');
+    document.getElementById('dlBtn').disabled = false; document.getElementById('notesBtn').disabled = false;
+  } catch(err) { fail(esc(err.message || String(err))); }
+  drawFlash();
+}
+function save(name, data, type){
+  const url = URL.createObjectURL(new Blob([data], {type})), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+document.getElementById('dlBtn').addEventListener('click', () => { if (built) save(builtName, built, 'application/octet-stream'); });
+document.getElementById('notesBtn').addEventListener('click', () => {
+  if (!built) return;
+  const strip = h => h.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(), s = effSel();
+  const L = ['STOLPERBEATS ULTRA: build notes', '', 'Firmware: ' + builtName, 'Base: official Stolperbeats firmware 163 (SHA-256 ' + U.sha256 + ')', 'Result SHA-256: ' + builtHash, '', 'Timing buttons:'];
+  for (const x of B.SLOTS) { const r = rowsOf(x); L.push(`  ${x}: ${picks[x] === 'Factory' ? 'factory ' + x : picks[x]}  (ticks per beat ${r.map(q => q.ticksPerBeat).join(' ')})`); }
+  L.push('', 'Mods:');
+  const on = MODS.filter(m => m.key === 'fillcv' ? s.fillcv : s[m.key]);
+  if (!on.length) L.push('  none');
+  for (const m of on) L.push('', '* ' + m.title, '  ' + strip(m.text), '  Controls: ' + strip(m.ctl), '  Note: ' + strip(m.note));
+  L.push('', 'Rollback: flash your original _MSM_stolperbeats_hw_rev4-163.bin.', 'Unofficial community modification by Bribery (@thisisbribery). Not affiliated with, endorsed by or supported by Making Sound Machines. Use entirely at your own risk.');
+  save(builtName.replace(/\.bin$/, '.notes.txt'), L.join('\n'), 'text/plain');
+});
+/* recipes */
+function recipe(){
+  const custom = {}; for (const x of B.SLOTS) { const c = picks[x]; if (sourceOf(c) === 'mine' || sourceOf(c) === 'uploaded') custom[c] = rowsOf(x); }
+  return {stolperbeatsUltraRecipe:1, note:'Picks only, no firmware. Open it in the STOLPERBEATS ULTRA flasher with your own official file.', base:{version:'163', sha256:U.sha256}, buttons:{...picks}, custom, mods:effSel()};
+}
+function openRecipe(o){
+  try {
+    if (!o || !(o.stolperbeatsUltraRecipe === 1 || o.stolperbeatsFirmwareRecipe === 1) || !o.buttons) throw new Error('it isn’t a recipe');
+    for (const [k, rows] of Object.entries(o.custom || {})) {
+      const rr = (rows || []).map(r => ({ticksPerBeat:+r.ticksPerBeat, stepLengths:(r.stepLengths || []).map(Number)})), bad = B.rowsProblems(rr);
+      if (bad.length) throw new Error(`${k}: ${bad[0]}`);
+      uploaded[freeName(k)] = rr;
+    }
+    const ok = v => v === 'Factory' || B.SLOTS.some(x => v === 'Factory ' + x) || B.MODULE[v] || customs()[v];
+    for (const x of B.SLOTS) if (o.buttons[x] && !ok(o.buttons[x])) throw new Error(`${x}: ${o.buttons[x]} isn't available here`);
+    for (const x of B.SLOTS) picks[x] = o.buttons[x] || 'Factory';
+    if (o.mods) for (const k of B.OPTIONS) sel[k] = !!o.mods[k];
+    saveUploaded(); syncMods(); invalidate(); render();
+    tmsg(`<span class="okc">&#10003;</span> Recipe loaded${o.stolperbeatsFirmwareRecipe ? ' from the visualiser’s Firmware lab (tables only; pick your mods below)' : ''}.`, 'ok');
+    document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
+  } catch(err) { tmsg(`Couldn't open that recipe: ${esc(err.message)}.`, 'bad'); }
+}
+document.getElementById('recipeBtn').addEventListener('click', () => save(builtName.replace(/\.bin$/, '.recipe.json'), JSON.stringify(recipe(), null, 1), 'application/json'));
+document.getElementById('recipeOpen').addEventListener('click', () => document.getElementById('recipeFile').click());
+document.getElementById('recipeFile').addEventListener('change', async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; try { openRecipe(JSON.parse(await f.text())); } catch(err) { tmsg(`Couldn't open that recipe: ${esc(err.message)}.`, 'bad'); } });
+
+/* ---------- flashing: the STM32's built-in USB DFU bootloader (DfuSe), the same one dfu-util talks to ---------- */
+const DFU_REQ = {DNLOAD:1,UPLOAD:2,GETSTATUS:3,CLRSTATUS:4,ABORT:6}, ST = {IDLE:2,DNSYNC:3,DNBUSY:4,DNIDLE:5,UPIDLE:9,ERROR:10};
+const dfu = {dev:null, intf:0, alt:0, xfer:1024, segs:[]};
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function parseDfuseLayout(name){   // "@Internal Flash  /0x08000000/16*128Kg" -> sectors
+  const segs = [], parts = String(name || '').split('/');
+  for (let i = 1; i + 1 < parts.length; i += 2) {
+    let addr = parseInt(parts[i].trim(), 16);
+    for (const spec of parts[i+1].split(',')) {
+      const m = spec.trim().match(/^(\d+)\*(\d+)\s*([ KM]?)([a-g])$/i); if (!m) continue;
+      const size = +m[2] * ({K:1024, M:1048576}[m[3].toUpperCase()] || 1), perm = m[4].toLowerCase().charCodeAt(0) - 96;
+      for (let k = 0; k < +m[1]; k++) { segs.push({start:addr, size, erasable:!!(perm&2), writable:!!(perm&4)}); addr += size; }
+    }
+  }
+  return segs;
+}
+const ctl = (req, value) => ({requestType:'class', recipient:'interface', request:req, value, index:dfu.intf});
+async function dOut(req, value, data){ const r = await dfu.dev.controlTransferOut(ctl(req, value), data || new Uint8Array(0)); if (r.status !== 'ok') throw new Error(`USB ${r.status}`); }
+async function dIn(req, value, len){ const r = await dfu.dev.controlTransferIn(ctl(req, value), len); if (r.status !== 'ok') throw new Error(`USB ${r.status}`); return new Uint8Array(r.data.buffer, r.data.byteOffset, r.data.byteLength); }
+async function dStatus(){ const d = await dIn(DFU_REQ.GETSTATUS, 0, 6); return {status:d[0], poll:d[1]|d[2]<<8|d[3]<<16, state:d[4]}; }
+async function dWait(){
+  for (let i = 0; i < 20000; i++) { const s = await dStatus(); if (s.status) throw new Error(`the module reported error ${s.status}`);
+    if (s.state === ST.DNBUSY || s.state === ST.DNSYNC) { await sleep(Math.max(1, s.poll)); continue; } return s; }
+  throw new Error('timed out');
+}
+async function dIdle(){
+  let s = await dStatus(); if (s.state === ST.ERROR) { await dOut(DFU_REQ.CLRSTATUS, 0); s = await dStatus(); }
+  if (s.state !== ST.IDLE) { await dOut(DFU_REQ.ABORT, 0); s = await dStatus(); }
+  if (s.state !== ST.IDLE) throw new Error(`the bootloader is busy (state ${s.state})`);
+}
+async function dCmd(bytes){ await dOut(DFU_REQ.DNLOAD, 0, new Uint8Array(bytes)); const s = await dWait(); if (s.state !== ST.DNIDLE) throw new Error(`command ${bytes[0].toString(16)} failed (state ${s.state})`); }
+const le32 = a => [a&255, (a>>>8)&255, (a>>>16)&255, (a>>>24)&255];
+async function dfuConnect(){
+  if (!navigator.usb) throw new Error('this browser can’t flash over USB. Use Chrome or Edge on a computer, or dfu-util below');
+  const dev = await navigator.usb.requestDevice({filters:[{vendorId:0x0483, productId:0xdf11}]});
+  await dev.open(); if (dev.configuration === null) await dev.selectConfiguration(1);
+  const cands = [];
+  for (const itf of dev.configuration.interfaces) for (const a of itf.alternates)
+    if (a.interfaceClass === 0xfe && a.interfaceSubclass === 1) cands.push({intf:itf.interfaceNumber, alt:a.alternateSetting, name:a.interfaceName || ''});
+  const pick = cands.find(c => /^@Internal Flash/i.test(c.name)) || cands[0];
+  if (!pick) throw new Error('that device isn’t an STM32 DFU bootloader');
+  await dev.claimInterface(pick.intf); await dev.selectAlternateInterface(pick.intf, pick.alt);
+  Object.assign(dfu, {dev, intf:pick.intf, alt:pick.alt, segs:parseDfuseLayout(pick.name)});
+  try { const h = await dev.controlTransferIn({requestType:'standard', recipient:'device', request:6, value:0x0200, index:0}, 9);
+    const tot = new DataView(h.data.buffer).getUint16(2, true), c = await dev.controlTransferIn({requestType:'standard', recipient:'device', request:6, value:0x0200, index:0}, tot);
+    const d = new Uint8Array(c.data.buffer); for (let i = 0; i < d.length && d[i]; i += d[i]) if (d[i+1] === 0x21 && d[i] >= 7) { dfu.xfer = d[i+5] | d[i+6] << 8; break; } } catch(e) {}
+  if (!dfu.segs.length) throw new Error(`can’t read the flash layout ("${pick.name}")`);
+  return pick.name;
+}
+async function dfuFlash(image, onStep){
+  const start = BASE, end = start + image.length, segs = dfu.segs.filter(s => s.start < end && s.start + s.size > start);
+  if (!segs.length || end > dfu.segs[dfu.segs.length-1].start + dfu.segs[dfu.segs.length-1].size) throw new Error('the image doesn’t fit this chip’s flash');
+  if (segs.some(s => !s.erasable || !s.writable)) throw new Error('part of that flash is read-only');
+  await dIdle();
+  for (let i = 0; i < segs.length; i++) { onStep('Erasing', i/segs.length); await dCmd([0x41, ...le32(segs[i].start)]); }
+  const X = dfu.xfer;
+  for (let off = 0; off < image.length; off += X) {
+    onStep('Writing', off/image.length);
+    await dCmd([0x21, ...le32(start + off)]);
+    await dOut(DFU_REQ.DNLOAD, 2, image.subarray(off, Math.min(off + X, image.length)));
+    const s = await dWait(); if (s.state !== ST.DNIDLE) throw new Error(`write failed at ${hx(start + off)}`);
+  }
+  await dIdle(); await dCmd([0x21, ...le32(start)]); await dIdle();
+  const back = new Uint8Array(image.length);
+  for (let off = 0, blk = 2; off < image.length; off += X, blk++) { onStep('Checking', off/image.length);
+    const d = await dIn(DFU_REQ.UPLOAD, blk, Math.min(X, image.length - off)); back.set(d.subarray(0, Math.min(X, image.length - off)), off); }
+  await dIdle();
+  for (let i = 0; i < image.length; i++) if (back[i] !== image[i]) throw new Error(`check failed at ${hx(start + i)}. Flash it again, or flash the official file`);
+  onStep('Starting', 1);
+  try { await dCmd([0x21, ...le32(start)]); await dOut(DFU_REQ.DNLOAD, 0); await dStatus(); } catch(e) {}
+  try { await dfu.dev.close(); } catch(e) {}
+  dfu.dev = null;
+}
+const prog = document.getElementById('prog'), flashStatus = document.getElementById('flashStatus');
+function fmsg(html, cls){ flashStatus.className = 'status show ' + (cls || 'info'); flashStatus.innerHTML = html; }
+function drawFlash(){
+  document.getElementById('flashBtn').disabled = !built || !dfu.dev;
+  document.getElementById('restoreBtn').disabled = !stock || !dfu.dev;
+  document.getElementById('dfuCmd').textContent = `sudo dfu-util -a 0 -s 0x08000000 -D ${built ? builtName : 'your-build.bin'}`;
+}
+document.getElementById('connectBtn').addEventListener('click', async () => {
+  try { const name = await dfuConnect(); fmsg(`<span class="okc">&#10003;</span> Connected to the bootloader (${esc(name.trim() || 'STM32 DFU')}, ${dfu.segs.length} flash sectors, ${dfu.xfer}-byte blocks).`, 'ok'); }
+  catch(err) { if (err.name !== 'NotFoundError') fmsg(`Couldn't connect: ${esc(err.message)}.`, 'bad'); else fmsg('No module picked. It shows up as <b>STM32 BOOTLOADER</b> or <b>DFU in FS Mode</b> once you’ve done BOOT and RESET.'); }
+  drawFlash();
+});
+async function runFlash(image, label){
+  if (!dfu.dev) return;
+  if (!confirm(`Flash ${label} to the module? Keep the USB cable in until it says done.`)) return;
+  prog.hidden = false; prog.value = 0;
+  try {
+    await dfuFlash(image, (what, f) => { prog.value = f; flashStatus.className = 'status show info'; flashStatus.textContent = `${what}… ${Math.round(f*100)}%`; });
+    prog.value = 1; fmsg(`<span class="okc">&#10003;</span> Done: ${esc(label)} is on the module and checked byte for byte. If it doesn’t restart by itself, press RESET.`, 'ok');
+  } catch(err) { fmsg(`Stopped: ${esc(err.message)}. The bootloader is still there: do BOOT and RESET again and flash the official file to get back to normal.`, 'bad'); dfu.dev = null; }
+  drawFlash();
+}
+document.getElementById('flashBtn').addEventListener('click', () => built && runFlash(built, builtName));
+document.getElementById('restoreBtn').addEventListener('click', () => stock && runFlash(stock, stockName || 'the official file'));
+if (navigator.usb) navigator.usb.addEventListener('disconnect', e => { if (e.device === dfu.dev) { dfu.dev = null; drawFlash(); } });
+
+/* ---------- theme ---------- */
+const root = document.documentElement;
+try { const t = localStorage.getItem('stolperbeats-ultra-theme'); if (t) root.setAttribute('data-theme', t); } catch(e) {}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.setAttribute('data-theme', dark ? 'light' : 'dark');
+  try { localStorage.setItem('stolperbeats-ultra-theme', root.getAttribute('data-theme')); } catch(e) {}
+});
+
+window.__ultra = {B, U, picks, sel, load, customs};
+render();
+})();
+</script>
+<script>
+// The STOLPERBEATS / ULTRA title is hidden in classic mode, so refit it when the page switches to new.
+addEventListener("bx-mode", function(){ if (window.BRIBERY) window.BRIBERY.fit(); });
+</script>
+</body>
+</html>
