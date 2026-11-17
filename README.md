@@ -15,7 +15,7 @@ Static HTML, no build step. Vercel deploys every push to `main`.
 | `/sealeggs/` | Seal Eggs flasher (Sealegs) |
 | `/stolperbeats/` | STOLPERBEATS ULTRA flasher |
 | `/stolperbeats/visualiser/` | Stolperbeats Timing visualiser |
-| `/stages/` | Qiemem Bribery Edition (Stages) with in-page update audio |
+| `/bribestages/` | BRIBESTAGES, formerly Qiemem Bribery Edition (Stages), with in-page update audio. `/stages/` redirects here (vercel.json) |
 | `/kali/` | KALI SMASH (dsp.coffee Kali) with a gated zip download |
 
 Ported tools keep their original look as **Classic** mode (toggle in the top bar, remembered per browser). Their original CSS sits in `<style data-bx="classic">`, the new look in `<style data-bx="new">`.
@@ -30,7 +30,7 @@ Ported tools keep their original look as **Classic** mode (toggle in the top bar
 
 - `assets/site.css`, `assets/site.js`: top bar, footer, New/Classic toggle, beta form. Everything is prefixed `bx-`.
 - `assets/pages.css`: layout for the info pages (Bribeluge, Stages).
-- `assets/devices/*.webp`: device shots (`<name>.webp` 1600x1000, `<name>-sm.webp` 800x500). Replace with real photos at the same names and sizes.
+- `assets/devices/*.webp`: device images (`<name>.webp` 1600x1000, `<name>-sm.webp` 800x500). Gear photos live in `scripts/photos/originals/`; `python3 scripts/photos/process.py [name]` crops, fades the edges to black and writes both sizes. The Companion still uses a render (`scripts/renders`).
 
 ## Updating a flasher
 

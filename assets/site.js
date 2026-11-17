@@ -22,7 +22,7 @@
     ["Companion", "/companion/", "companion"],
     ["Seal Eggs", "/sealeggs/", "sealeggs"],
     ["Stolperbeats", "/stolperbeats/", "stolperbeats"],
-    ["Stages", "/stages/", "stages"],
+    ["Bribestages", "/bribestages/", "stages"],
     ["Kali Smash", "/kali/", "kali"],
     ["Music", "/#music", "music"],
     ["Learn", "/#learn", "learn"]
