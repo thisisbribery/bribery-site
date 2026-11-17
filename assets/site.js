@@ -330,6 +330,24 @@
     });
   }
 
+  /* ---------------- glitch scrolling bands ([data-bx-glitch]) ---------------- */
+  function glitchBands() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-bx-glitch]"), function (band) {
+      var track = band.firstElementChild; if (!track || band.classList.contains("bx-glitch-band")) return;
+      band.classList.add("bx-glitch-band");
+      var tracks = [track];
+      ["g1", "g2"].forEach(function (g) {
+        var ghost = document.createElement("div");
+        ghost.className = "bx-glitch-ghost " + g; ghost.setAttribute("aria-hidden", "true");
+        var t = track.cloneNode(true); ghost.appendChild(t); band.appendChild(ghost); tracks.push(t);
+      });
+      // restart every copy of the scroll together so the ghosts sit exactly on the real text
+      tracks.forEach(function (t) { t.style.animation = "none"; });
+      void band.offsetWidth;
+      tracks.forEach(function (t) { t.style.animation = ""; });
+    });
+  }
+
   /* ---------------- wire up after the DOM is ready ---------------- */
   function ready() {
     var body = document.body, page = body.getAttribute("data-bx-page") || "";
@@ -380,6 +398,7 @@
     });
     setMode(root.getAttribute("data-mode"), false);
     fitAll();
+    glitchBands();
     // fitting the big titles moves the page, so land on #section links again afterwards
     if (location.hash.length > 1 && !/^#bx-/.test(location.hash)) {
       var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));

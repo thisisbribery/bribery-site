@@ -68,6 +68,11 @@ html[data-mode="new"] .bx-classic-only,html:not([data-mode]) .bx-classic-only{di
 .bx-glitch::after{color:var(--bx-ink);mix-blend-mode:difference;animation:bxslice2 4.2s steps(1) infinite}
 @keyframes bxslice1{0%,86%,100%{clip-path:inset(100% 0 0 0);transform:none}87%{clip-path:inset(12% 0 70% 0);transform:translate(-1.2vw,0)}89%{clip-path:inset(55% 0 28% 0);transform:translate(1.6vw,0)}91%{clip-path:inset(30% 0 52% 0);transform:translate(-.6vw,0)}93%{clip-path:inset(78% 0 6% 0);transform:translate(2.2vw,0)}95%{clip-path:inset(100% 0 0 0)}}
 @keyframes bxslice2{0%,88%,100%{clip-path:inset(100% 0 0 0);transform:none}89%{clip-path:inset(40% 0 44% 0);transform:translate(1vw,0)}92%{clip-path:inset(4% 0 86% 0);transform:translate(-2vw,0)}94%{clip-path:inset(66% 0 20% 0);transform:translate(.8vw,0)}96%{clip-path:inset(100% 0 0 0)}}
+/* scrolling bands with data-bx-glitch: site.js clones the track into two ghost layers that slice like the H1 */
+.bx-glitch-band{position:relative}
+.bx-glitch-ghost{position:absolute;inset:0;overflow:hidden;pointer-events:none;clip-path:inset(100% 0 0 0)}
+.bx-glitch-ghost.g1{color:var(--bx-teal);mix-blend-mode:screen;animation:bxslice1 4.2s steps(1) infinite}
+.bx-glitch-ghost.g2{color:var(--bx-ink);mix-blend-mode:difference;animation:bxslice2 4.2s steps(1) infinite}
 .bx-lede{margin:0;font-size:clamp(19px,2.3vw,30px);line-height:1.3;font-weight:500;max-width:46ch}
 .bx-lede b{color:var(--bx-pink);font-weight:800}
 .bx-sec-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;border-bottom:2px solid var(--bx-pink);padding-bottom:18px}
@@ -126,6 +131,7 @@ html[data-mode="new"] .bx-classic-only,html:not([data-mode]) .bx-classic-only{di
 }
 @media (prefers-reduced-motion:reduce){
   .bx-coin-inner,.bx-glitch::before,.bx-glitch::after{animation:none!important}
+  .bx-glitch-ghost{display:none}
 }
 /* The Companion app has its own New/Classic switch in its footer */
 body[data-bx-page="companion"] .bx-mode-float{display:none!important}
