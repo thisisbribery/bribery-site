@@ -187,11 +187,11 @@
       '<form class="bx-dialog" novalidate>' +
       '<button type="button" class="bx-close" aria-label="Close">&times;</button>' +
       '<h3 id="bxDlTitle">Download Bribeluge</h3>' +
-      '<p>Free. Tell me who you are and drop a link to your music so I can check it out. The download starts straight after.</p>' +
+      '<p>Free. Tell me who you are and the download starts straight after.</p>' +
       '<label for="bxDlName">Name</label><input id="bxDlName" name="name" autocomplete="name" required>' +
       '<label for="bxDlEmail">Email</label><input id="bxDlEmail" name="email" type="email" autocomplete="email" required>' +
       '<label for="bxDlArtist">Artist name (optional)</label><input id="bxDlArtist" name="artist_name" autocomplete="off">' +
-      '<label for="bxDlMusic">Link to your music</label><input id="bxDlMusic" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram..." required>' +
+      '<label for="bxDlMusic">Link to your music (optional, so I can check it out)</label><input id="bxDlMusic" name="music_link" type="url" inputmode="url" placeholder="Spotify, SoundCloud, Bandcamp, YouTube, Instagram...">' +
       '<input type="checkbox" name="botcheck" class="bx-hp" tabindex="-1" autocomplete="off">' +
       '<p class="bx-dl-note">Unofficial firmware: use it at your own risk and back up your SD card first.</p>' +
       '<div class="bx-ctas"><button class="bx-btn bx-solid" type="submit">Download <span class="bx-dl-ver"></span></button></div>' +
@@ -221,8 +221,11 @@
       status.className = "bx-status";
       var music = form.music_link.value.trim();
       if (music && !/^https?:\/\//i.test(music)) { music = "https://" + music; form.music_link.value = music; }
-      if (!form.name.value.trim() || !/^\S+@\S+\.\S+$/.test(form.email.value.trim()) || !/^https?:\/\/\S+\.\S+/.test(music)) {
-        status.className = "bx-status bx-bad"; status.textContent = "Add your name, a valid email and a link to your music."; return;
+      if (!form.name.value.trim() || !/^\S+@\S+\.\S+$/.test(form.email.value.trim())) {
+        status.className = "bx-status bx-bad"; status.textContent = "Add your name and a valid email."; return;
+      }
+      if (music && !/^https?:\/\/\S+\.\S+/.test(music)) {
+        status.className = "bx-status bx-bad"; status.textContent = "That music link doesn't look right. Fix it or leave it blank."; return;
       }
       try { localStorage.setItem(DL_SAVED, JSON.stringify({ name: form.name.value.trim(), email: form.email.value.trim(),
         artist_name: form.artist_name.value.trim(), music_link: music })); } catch (e2) {}
