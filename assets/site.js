@@ -27,6 +27,27 @@
     ["Learn", "/#learn", "learn"]
   ];
 
+  /* ---------------- one-time import from the old github.io tools ----------------
+     The old thisisbribery.github.io pages redirect here with their saved browser data in the URL
+     fragment (#bx-import=...). Fragments never reach the server. Only the tools' own keys are
+     accepted, and nothing already saved on this site is overwritten. */
+  (function importOld() {
+    var m = /^#bx-import=([A-Za-z0-9_-]+)/.exec(location.hash);
+    if (!m) return;
+    try {
+      var b64 = m[1].replace(/-/g, "+").replace(/_/g, "/");
+      while (b64.length % 4) b64 += "=";
+      var bin = atob(b64), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var data = JSON.parse(new TextDecoder().decode(bytes));
+      Object.keys(data).forEach(function (k) {
+        if (!/^(stolperbeats-|bribeluge-|sealeggs-)/.test(k) || typeof data[k] !== "string") return;
+        if (localStorage.getItem(k) === null) localStorage.setItem(k, data[k]);
+      });
+    } catch (e) {}
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  })();
+
   var root = document.documentElement;
   var KEY = "bribery-mode";
   function store(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
