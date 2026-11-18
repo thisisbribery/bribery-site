@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Manual · BRIBELUGE v1.32 · BRIBERY</title>
+<title>Manual · BRIBELUGE v1.33 · BRIBERY</title>
 <meta name="description" content="The full Bribeluge manual: every feature of the Deluge Bribes firmware, with controls, install steps and quick reference.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBELUGE manual">
@@ -87,7 +87,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <body class="bx" data-bx-page="bribeluge" data-bx-foot>
 <div id="top"></div>
 <header class="m-hero">
-  <p class="bx-kicker">Bribeluge v1.32 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
+  <p class="bx-kicker">Bribeluge v1.33 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
   <h1 class="bx-mega bx-glitch" data-text="MANUAL" data-fit><span class="bx-fit">MANUAL</span></h1>
   <div class="bx-ctas">
     <a class="bx-btn bx-solid" href="#download" data-bx-download>Download</a>
@@ -162,7 +162,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#10-delay-feedback-and-tone">Delay feedback and tone</a>:</strong> Delay amount and feedback on separate controls, plus a DJ filter in the loop, one SHIFT layer down.</li>
 <li><strong><a href="#11-affect-all">Affect all</a>:</strong> SHIFT + AFFECT ENTIRE snapshots any kit: every knob moves all its sound rows (drum synths, samples and synths), and it snaps back on the next bar.</li>
 <li><strong><a href="#12-pad-guides">Pad Guides</a>:</strong> SHIFT lights a drum synth's setting pads (purple on BRINGS, BROPHET and BRUNO106), gold knob buttons flash theirs, shortcut pads blink their gold knob's button, and a held shortcut pad scrolls its name on the 7-segment display.</li>
-<li><strong><a href="#13-synth-browser">Synth browser</a>:</strong> SHIFT + SYNTH: pick a type (SUBT, FM, WAVE, RING, BRINGS, DX7, BROPHET, BRUNO106, 303, INIT), then LEAD, BASS, PAD or MISC (BROPHET: Pro-53's banks), then play through the presets. 99 wavetable, 37 BRINGS, 536 BROPHET and 212 BRUNO106 presets included.</li>
+<li><strong><a href="#13-synth-browser">Synth browser</a>:</strong> SHIFT + SYNTH: pick a type (SUBT, FM, WAVE, RING, BRINGS, DX7, BROPHET, BRUNO106, 303, INIT), then a category, then play through the presets. The audition pads play each type's init synth (or your own patch) the whole way. 99 wavetable, 288 DX7, 37 BRINGS, 536 BROPHET and 212 BRUNO106 presets included.</li>
 <li><strong><a href="#14-instrument-picker">Instrument Picker</a>:</strong> The kit and synth type every new track starts as, on its top preset.</li>
 <li><strong><a href="#15-gate-out">Gate out</a>:</strong> A kit's bottom four rows fire the four gate outputs. GATE and MIDI out sit at the top of each row's menu.</li>
 <li><strong><a href="#16-midi-kits">MIDI kits</a>:</strong> SHIFT + MIDI makes an MKIT: sixteen MIDI rows that kit patterns and Autofill can play.</li>
@@ -178,18 +178,19 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#26-bruno106">BRUNO106</a>:</strong> A Juno-style poly synth engine from Ultramaster KR-106: one DCO with saw, pulse, sub and noise, its IR3109 filter in every LPF list, the four position HPF with bass boost, and BRUNO CHORUS as a Mod FX type on any track.</li>
 <li><strong><a href="#27-bribeluge-companion">BRIBELUGE COMPANION</a>:</strong> A phone or tablet screen for the Deluge over USB: the display spelled out in full, knobs and engine drawings, waveforms with draggable markers, picture pickers and a song view you can tap.</li>
 </ol>
-<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.32" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.32" target="_blank" rel="noopener">v1.32 release</a>. See <a href="#source-code">Source code</a>.</p>
+<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.33" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.33" target="_blank" rel="noopener">v1.33 release</a>. See <a href="#source-code">Source code</a>.</p>
 <p><strong>On the web:</strong> <a href="/bribeluge/">feature overview</a> and this <a href="/bribeluge/manual/">manual</a> at thisisbribery.com.</p>
 <p><strong>Support:</strong> find it useful? <a href="https://ko-fi.com/thisisbribery" target="_blank" rel="noopener">Buy me a coffee on Ko-fi</a>.</p>
 <p><strong>Start here:</strong> <a href="#download">Download</a> · <a href="#install">Install</a> · <strong>Reference:</strong> <a href="#quick-reference">Quick reference</a> · <a href="#about">About</a> · <a href="#changelog">Changelog</a> · <a href="#design-and-credit">Design and credit</a> · <a href="#source-code">Source code</a></p>
 <p>Names in <strong>bold capitals</strong> in brackets are what the 7-segment display shows.</p>
 <h2 id="download"><a class="m-anchor" href="#download" aria-hidden="true" tabindex="-1">#</a>Download</h2>
-<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.32.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.32.bin</code></a></p>
-<p>SHA-256: <code>eb50f6da75ae1c7828ea84cc033dd515899af644e2893a1c18b14b3fad4b9b5d</code></p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.33.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.33.bin</code></a></p>
+<p>SHA-256: <code>6c5a366731dcb08f2fc2c67237d5c091faf4ea05be0f9fa25846b95240e47f49</code></p>
 <p>Presets (optional), copied to the same place on the SD card:</p>
 <ul>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN kits are built into the firmware.</li>
-<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/WAVE" target="_blank" rel="noopener"><code>presets/SYNTHS/WAVE</code></a> to <code>SYNTHS/WAVE</code>. These play the free <strong>BVKER Custom Wavetables</strong> pack, which isn't included here: download it from <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">bvker.com/free-serum-wavetables</a> and unzip it into <code>SAMPLES/WAVETABLES</code>, so the card has <code>SAMPLES/WAVETABLES/BVKER - Custom Wavetables/Analog</code> and the other folders.</li>
+<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/WAVE" target="_blank" rel="noopener"><code>presets/SYNTHS/WAVE</code></a> to <code>SYNTHS/WAVE</code>. These play the free <strong>BVKER Custom Wavetables</strong> pack, which isn't included here: download it from <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">bvker.com/free-serum-wavetables</a> and unzip it into <code>SAMPLES/WAVETABLES</code>, so the card has <code>SAMPLES/WAVETABLES/BVKER - Custom Wavetables/Analog</code> and the other folders. From v1.33 the WAVE presets are a new set with new names: delete the old ones from <code>SYNTHS/WAVE</code> first.</li>
+<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/DX7" target="_blank" rel="noopener"><code>presets/SYNTHS/DX7</code></a> to <code>SYNTHS/DX7</code>: 288 DX7 voices in <code>LEAD</code>, <code>BASS</code>, <code>PAD</code>, <code>KEYS</code>, <code>BELL</code> and <code>MISC</code>.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BRINGS" target="_blank" rel="noopener"><code>presets/SYNTHS/BRINGS</code></a> to <code>SYNTHS/BRINGS</code>. If your card has <code>SYNTHS/BRIB</code> from v1.26, rename it to <code>BRINGS</code>.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BROPHET" target="_blank" rel="noopener"><code>presets/SYNTHS/BROPHET</code></a> to <code>SYNTHS/BROPHET</code>: Pro-53's 512 programs in <code>BNK1</code> to <code>BNK8</code>, and 24 Bribes presets in <code>BRIB</code>.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BRUNO106" target="_blank" rel="noopener"><code>presets/SYNTHS/BRUNO106</code></a> to <code>SYNTHS/BRUNO106</code>: 212 presets in <code>LEAD</code>, <code>BASS</code>, <code>PAD</code> and <code>MISC</code>.</li>
@@ -198,7 +199,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="install"><a class="m-anchor" href="#install" aria-hidden="true" tabindex="-1">#</a>Install</h2>
 <ol>
-<li>Copy <code>deluge-bribes-v1.32.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
+<li>Copy <code>deluge-bribes-v1.33.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
 <li>Turn the Deluge off.</li>
 <li>Hold <strong>SHIFT</strong> and switch the Deluge on. Let go once it starts loading the new firmware.</li>
 </ol>
@@ -1479,7 +1480,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <td><strong>DX7</strong></td>
 <td><strong>DX7</strong></td>
 <td><code>SYNTHS/DX7</code></td>
-<td>DX7 patches (the DX7 engine is always on)</td>
+<td>DX7 voices: 288 presets (the DX7 engine is always on)</td>
 </tr>
 <tr>
 <td><strong>Brophet</strong></td>
@@ -1507,23 +1508,32 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 </tr>
 </tbody>
 </table></div></markdown-accessiblity-table>
-<p>Every type's folder holds four categories, in this order: <strong>LEAD</strong>, <strong>BASS</strong>, <strong>PAD</strong> and <strong>MISC</strong> (DX7's folder is flat). BROPHET's follow Pro-53 instead: <strong>BNK1</strong> to <strong>BNK8</strong>, then <strong>BRIB</strong>.</p>
+<p>Every type's folder holds four categories, in this order: <strong>LEAD</strong>, <strong>BASS</strong>, <strong>PAD</strong> and <strong>MISC</strong>. DX7 has six: <strong>LEAD</strong>, <strong>BASS</strong>, <strong>PAD</strong>, <strong>KEYS</strong>, <strong>BELL</strong> and <strong>MISC</strong>. BROPHET's follow Pro-53 instead: <strong>BNK1</strong> to <strong>BNK8</strong>, then <strong>BRIB</strong>.</p>
 <h3 id="using-it-6"><a class="m-anchor" href="#using-it-6" aria-hidden="true" tabindex="-1">#</a>Using it</h3>
 <ol>
-<li>Press <strong>SHIFT + SYNTH</strong>. The <strong>Instrument</strong> (<strong>INST</strong>) list opens on the type the track plays.</li>
+<li>Press <strong>SHIFT + SYNTH</strong>. The <strong>Instrument</strong> (<strong>INST</strong>) list opens on the type the track plays. On a track with no synth yet (MIDI, CV or an empty kit), it opens on your default synth type (see <a href="#14-instrument-picker">Instrument Picker</a>), or SUBT.</li>
 <li><strong>SHIFT + SYNTH</strong> again, or turn <strong>SELECT</strong>, to move on. <strong>SELECT</strong> or <strong>SYNTH</strong> opens it.</li>
-<li>The <strong>Category</strong> (<strong>CATE</strong>) list shows the categories that hold presets. <strong>SELECT</strong> or <strong>SYNTH</strong> opens one and plays its first preset.</li>
-<li>Turn <strong>SELECT</strong> to play through the presets, and press <strong>SELECT</strong> to keep one. <strong>BACK</strong> puts your old synth back and returns to the categories; <strong>BACK</strong> again returns to the types. Going back into a category opens on the synth you're replacing if it came from there, else on the preset you were last on.</li>
+<li>The <strong>Category</strong> (<strong>CATE</strong>) list shows the categories that hold presets. <strong>SELECT</strong> or <strong>SYNTH</strong> opens one.</li>
+<li>Turn <strong>SELECT</strong> to play through the presets, each loading as you land on it, and press <strong>SELECT</strong> to keep one. <strong>BACK</strong> returns to the categories; <strong>BACK</strong> again returns to the types, and <strong>BACK</strong> from the types puts the track back exactly as it was.</li>
 </ol>
+<p><strong>The audition pads play the whole way.</strong> On each type the pads play that type's init synth, through its categories and into its folder, until you land on a preset:</p>
+<ul>
+<li><strong>A track with no synth</strong> starts with the init of the type the list opens on, so there's always something to play.</li>
+<li><strong>A synth track</strong> plays its own patch on its own type, and through that type's categories and folder (opening on your preset if it lives there). Move to another type and you hear that type's init; move back and your patch comes back.</li>
+<li><strong>Your own init:</strong> save a synth as <code>SYNTHS/INIT/&lt;TYPE&gt;.XML</code> (like <code>SYNTHS/INIT/WAVE.XML</code> or <code>SYNTHS/INIT/BRUNO106.XML</code>, and <code>INIT.XML</code> for INIT) and the picker plays that instead of the built in one.</li>
+<li><strong>DX7's init</strong> is a simple two-operator FM voice rather than the DX7's own bare sine.</li>
+</ul>
+<p>Also:</p>
 <ul>
 <li>It works on synth, MIDI and CV tracks, and on a kit track with no notes or sounds yet.</li>
-<li>A type's folders are made the first time you pick it, ready to save into. A type with no presets yet gives a blank synth of that type that saves into its folder.</li>
-<li>Presets kept loose in a type's folder, outside the categories, open as one flat list.</li>
+<li>A type's folders are made the first time you pick it, ready to save into. A type with no presets yet keeps its init synth, which saves into its folder.</li>
+<li>Presets kept loose in a type's folder, outside the categories, open as one flat list when none of its categories hold presets.</li>
 <li>On the 7-segment display, a type, category or option longer than four letters (like <strong>BRINGS</strong>) blinks twice, then scrolls back and forth so you can read it. This works in every context menu.</li>
 </ul>
 <h3 id="the-presets"><a class="m-anchor" href="#the-presets" aria-hidden="true" tabindex="-1">#</a>The presets</h3>
 <ul>
-<li><strong>WAVE:</strong> 99 presets, one or more for each wavetable in the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which you download yourself (see <a href="#download">Download</a>). Leads, pads and bells play with the filter wide open, so you hear the wavetable itself; basses and plucks start lower and open on each note with envelope 2. On every WAVE preset <strong>CUSTOM 2</strong> moves the wavetable position and <strong>CUSTOM 3</strong> is <a href="#22-feedback">Feedback</a>.</li>
+<li><strong>WAVE:</strong> 99 presets, one for each wavetable in the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which you download yourself (see <a href="#download">Download</a>). Each starts where its wavetable has some body and moves through the part that changes, with an envelope, an LFO or velocity. They're named by recipe, wavetable family and number: basses are <strong>Punch</strong>, <strong>Reese</strong> or <strong>Wobble</strong>, leads <strong>Mono</strong>, <strong>Poly</strong> or <strong>Sweep</strong>, pads <strong>Wide</strong>, <strong>Bloom</strong>, <strong>Air</strong> or <strong>Drift</strong>, and MISC holds <strong>Pluck</strong>, <strong>Bell</strong> and <strong>Keys</strong>. Tables that are close to a sine get the wavefolder and a second oscillator. On every WAVE preset <strong>CUSTOM 2</strong> moves the wavetable position and <strong>CUSTOM 3</strong> is <a href="#22-feedback">Feedback</a>.</li>
+<li><strong>DX7:</strong> 288 voices, sorted by name into LEAD, BASS, PAD, KEYS (pianos, organs, clavs), BELL (bells, mallets, chimes) and MISC, 48 in each. Yamaha's original ROM cartridges come first, then the rest of the collection with duplicates taken out. <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/DX7/SOURCES.txt" target="_blank" rel="noopener"><code>presets/SYNTHS/DX7/SOURCES.txt</code></a> lists the cartridge and slot each came from. The DX7 menu's cartridge browser still loads <code>.syx</code> files as before.</li>
 <li><strong>BRINGS:</strong> 37 BRIBERING MODE presets across all five models: basses, plucked and struck leads, bowed and chordal pads, bells and drones.</li>
 <li><strong>BROPHET:</strong> all 512 of Pro-53's programs, and 24 Bribes presets (see <a href="#24-brophet">BROPHET</a>).</li>
 <li><strong>BRUNO106:</strong> 212 presets: 13 made for this build, and 199 converted from the preset data that ships with KR-106 (see <a href="#26-bruno106">BRUNO106</a>).</li>
@@ -2526,7 +2536,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </tr>
 <tr>
 <td><strong>SHIFT + SYNTH</strong></td>
-<td>Synth browser: pick a type (<strong>SUBT</strong>, <strong>FM</strong>, <strong>WAVE</strong>, <strong>RING</strong>, <strong>BRINGS</strong>, <strong>BROPHET</strong>, <strong>BRUNO106</strong>, <strong>INIT</strong>), then <strong>BASS</strong>, <strong>LEAD</strong>, <strong>PAD</strong> or <strong>MISC</strong> (BROPHET: <strong>BNK1</strong> to <strong>BNK8</strong>, <strong>BRIB</strong>), then turn SELECT to play through its presets. SHIFT + SYNTH again moves on, BACK goes up a level (Synth browser)</td>
+<td>Synth browser: pick a type (<strong>SUBT</strong>, <strong>FM</strong>, <strong>WAVE</strong>, <strong>RING</strong>, <strong>BRINGS</strong>, <strong>DX7</strong>, <strong>BROPHET</strong>, <strong>BRUNO106</strong>, <strong>303</strong>, <strong>INIT</strong>), then a category, then turn SELECT to play through its presets. The audition pads play the type's init (or your own patch) the whole way. SHIFT + SYNTH again moves on, BACK goes up a level (Synth browser)</td>
 </tr>
 <tr>
 <td><strong>SETTINGS &gt; DEFAULTS &gt; UI &gt; CLIP TYPE &gt; KIT / SYNT</strong></td>
@@ -2696,6 +2706,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <p>Newest first: what changed in each release, why, and what it taught me.</p>
 <ul>
 <li>
+<p><strong>v1.33: Synth browser inits and DX7 presets.</strong> SHIFT + SYNTH now always has something on the audition pads: each type plays its init synth through the type list, the categories and the folder, a synth track plays its own patch on its own type, and BACK from the types puts the track back as it was. Your own inits go in <code>SYNTHS/INIT</code>. DX7 is now a type like the others, with six categories, 288 presets and a two-operator FM init. The 99 WAVE presets are rebuilt. The companion names each engine knob by its own control. <em>Fixed:</em> loading a DX7 voice from a cartridge copied 10 of each operator's 11 scaling settings, so its right-hand keyboard scaling kept the previous voice's; DX7 algorithms 4 and 6 with feedback now use the core that plays their feedback loop after a voice loads. <em>Why:</em> audition pads in the first two layers cancelled the picker, and some found it crashed there. <em>Learned:</em> the old WAVE presets all sat in the first 40% of their wavetables, where the Distorted tables are close to a sine and the PWM ones are dull, and every pad came from one family of tables. Measuring each table's brightness along its length and starting where it has body fixed them. If you had presets loose in <code>SYNTHS/DX7</code>, move them into a category.</p>
+</li>
+<li>
 <p><strong>v1.32: BRIBELUGE COMPANION.</strong> A phone or tablet companion screen over USB (see <a href="#27-bribeluge-companion">BRIBELUGE COMPANION</a>). Also: ULTRAKIK and XIA on a single row from SHIFT + KIT, kit types in the order Kit, Cycles, LXR, GIN; the 303 as a synth type; affect all on any kit; the DX7 engine always on; synth categories LEAD first; the synth browser picks up where you left a category; 199 more BRUNO106 presets and 26 more LXR kits. <em>Fixed:</em> SHIFT + the pulse width pad on a sample oscillator flashed <strong>CANT</strong> before opening Start offset. <em>Why:</em> the 7-segment display shows four letters at a time, and a tablet next to it can show everything else. <em>Learned:</em> the 7-segment texts are stored once and shared: one <strong>BASS</strong> serves the synth category and Bass Probability, and <strong>FX</strong> is the end of "Kit FX". So the companion only spells a word out when it knows which setting asked for it, never by matching the letters. Menu items read whatever sound the editor last opened, and asking one for its name outside the editor froze the Deluge, so the companion reads settings straight from the sound.</p>
 </li>
 <li>
@@ -2838,6 +2851,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li><strong>BRUNO106's</strong> DCO, IR3109 filter, HPF with bass boost and BBD chorus are ported from <a href="https://github.com/kayrockscreenprinting/ultramaster_kr106" target="_blank" rel="noopener">Ultramaster KR-106</a> by Karl LaRocca (GPL-3.0); its copyright and licence notice are kept in the source. The filter's stages run without their per-stage saturation, and the chorus leaves out KR-106's modelled noise, clicks and hum. The Deluge integration, controls, BRUNO CHORUS as a Mod FX type and 13 of the presets were made for this build; the other 199 are converted from the preset data KR-106 ships (its factory bank and David Churcher's patch library), under the same GPL-3.0.</li>
 <li><strong>Crush types</strong> are an original design for this build. u-Law uses the segmented μ-law companding of the G.711 telephone standard, the scheme Mutable Instruments Clouds and Beads use for their lo-fi modes.</li>
 <li><strong>The WAVE presets</strong> were made for this build and play the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which isn't included here: all credit for the wavetables goes to BVKER. The BRINGS presets were made for this build.</li>
+<li><strong>The DX7 presets</strong> are voices from the DX7 patch collection on <a href="https://homepages.abdn.ac.uk/d.j.benson/pages/html/dx7.html" target="_blank" rel="noopener">Dave Benson's DX7 page</a>, converted for the Deluge's DX7 engine. The first are Yamaha's original DX7 ROM cartridges, and the sounds belong to Yamaha and the collection's patch authors. The picker's DX7 init was made for this build.</li>
 <li><strong>Delay feedback and tone</strong> are small changes to the Deluge's own delay: each echo is scaled twice, once for what you hear and once for what goes back into the delay, and passes through a one-pole DJ filter on its way out of the delay line.</li>
 <li><strong>The Cycles presets</strong> are my own Model:Cycles kits, made on my own machine and converted for the Cyc engines.</li>
 <li><strong>The LXR presets</strong> are sixteen kits by <strong>Hrtl</strong>, released free by Erica Synths for the LXR-02 (<a href="https://www.ericasynths.lv/news/fresh-kits-and-patterns-lxr-02-hrtl/" target="_blank" rel="noopener">Fresh kits and patterns for the LXR-02 from Hrtl!</a>, <a href="https://soundcloud.com/hrtl" target="_blank" rel="noopener">Hrtl on SoundCloud</a>), ten kits by <strong>EntropiaLabs</strong> from <a href="https://github.com/mcamaradev/ELABS-RLX-02-LXR02-CLONE-VST" target="_blank" rel="noopener">ELABS RLX</a> (GPL-3.0), both converted for the drum synth, and sixteen kits made for this build. Credit for those sounds goes to Hrtl and EntropiaLabs.</li>
