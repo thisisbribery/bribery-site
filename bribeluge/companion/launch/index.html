@@ -1,0 +1,2733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bribeluge Companion</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="description" content="Bribeluge Companion: a second screen for the Synthstrom Deluge running Bribeluge firmware, over USB in Chrome.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style data-bx="classic">
+:root{
+  --bg:#121417; --panel:#1a1d21; --ink:#e9e7e2; --muted:#9aa0a8; --line:#2c3036; --soft:#22262b;
+  --pink:#ff1fd6; --pink-glow:rgba(255,31,214,.45); --accent:var(--pink);
+  --teal:#19ffe0; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;overflow-y:scroll}
+button,select{font:600 15px var(--sans);border:0;border-radius:10px;padding:10px 16px;cursor:pointer;background:var(--accent);color:var(--panel);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button.secondary,select{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+select{font-weight:500}
+.label{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+
+/* Top bar: always on screen. Fixed heights throughout, so nothing below it moves as the text changes. */
+#bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.barin{max-width:1180px;margin:0 auto;padding:8px 14px}
+.row1{display:flex;align-items:center;gap:10px;height:62px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:700;font-size:15px;white-space:nowrap}
+.brand span{color:var(--pink)}
+.coin{display:block;width:30px;height:30px;perspective:220px;flex:0 0 auto}
+.coin-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinspin 4s steps(24) infinite}
+.coin img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(2px)}
+.coin .back{transform:rotateY(180deg) translateZ(2px)}
+.coin .edge{display:block;position:absolute;left:50%;top:8%;width:4px;height:84%;margin-left:-2px;background:linear-gradient(#9a9a9a,#6f6f6f 50%,#4a4a4a);transform:rotateY(90deg)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion:reduce){.coin-inner{animation:none}}
+.group{display:flex;align-items:center;gap:6px}
+.tbtn{width:48px;height:44px;padding:0;border-radius:10px;background:var(--soft);border:1px solid var(--line);color:var(--ink);display:grid;place-items:center}
+.tbtn svg{width:20px;height:20px}
+#tPlay.on{background:#1f3b26;border-color:var(--ok);color:var(--ok);box-shadow:0 0 12px rgba(105,219,124,.35)}
+#tRec{color:#ff4d4d}
+#tRec.on{background:#3b1717;border-color:#ff4d4d;box-shadow:0 0 12px rgba(255,77,77,.4)}
+#tempo{font:700 20px var(--mono);min-width:92px;text-align:right;color:var(--ink)}
+#tempo small{display:block;font:500 10px var(--mono);color:var(--muted);letter-spacing:.1em;text-align:right;margin-top:-2px}
+#metro{width:8px;height:8px;border-radius:50%;background:var(--line)} #metro.on{background:var(--pink)}
+#mirror{background:#060607;border:1px solid var(--line);border-radius:10px;padding:5px 8px;display:flex;align-items:center;gap:8px;height:52px}
+#mirror svg{width:96px;height:auto;display:block}
+.seg{fill:#2a0f0f} .seg.on{fill:#ff3b2f;filter:drop-shadow(0 0 3px rgba(255,59,47,.7))}
+#oled{width:112px;height:42px;image-rendering:pixelated;display:none;background:#000;border-radius:3px}
+.mode{display:flex;flex-direction:column;gap:2px}
+.mode button{padding:2px 6px;font-size:10px;border-radius:5px;background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.mode button.on{background:var(--pink);color:var(--panel);border-color:var(--pink)}
+.nav{margin-left:auto}
+#nSelect{height:44px;padding:0 22px;border-radius:22px;font:700 14px var(--sans);letter-spacing:.06em}
+.conn{display:flex;align-items:center;gap:6px}
+.conn select{max-width:130px;padding:8px 10px;font-size:13px}
+.conn button{padding:8px 12px;font-size:13px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bad);flex:0 0 auto}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok)} .dot.warn{background:var(--warn)}
+/* Readout: name and value, one line each, fixed height */
+.row2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;height:92px;padding:2px 2px 8px}
+#menuName{font-size:20px;font-weight:600;color:var(--muted);height:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#fullText{font-size:48px;font-weight:800;line-height:1.1;height:54px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.015em}
+.side{text-align:right;min-width:0;max-width:44vw}
+#popupText{font-size:22px;font-weight:700;color:var(--pink);height:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rawText{color:var(--muted);font:12px var(--mono);height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#statusText{color:var(--muted);font:12px var(--mono);height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+main{max-width:1180px;margin:0 auto;padding:14px 14px 40px}
+/* One panel at a time in the stage, so panels opening don't push others around */
+.stage{min-height:62vh}
+.panel{display:none} .panel.show{display:block}
+.phead{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:34px}
+.phead .label{margin-right:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phead button{padding:7px 13px;font-size:13.5px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 10px}
+
+/* Pickers */
+#pickerTiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+#pickerTiles.art{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.tile{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 12px;font:700 18px var(--sans);color:var(--ink);min-height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:border-color .15s,box-shadow .15s}
+.tile svg{width:100%;height:auto;display:block}
+.tile.sel{border-color:var(--pink);box-shadow:inset 0 0 0 1px var(--pink),0 0 16px var(--pink-glow)}
+.tile.tapped{opacity:.6}
+
+/* Browser */
+#browserList{height:56vh;overflow-y:auto;border-radius:10px;border:1px solid var(--line)}
+.item{padding:12px 14px;font-size:18px;border-bottom:1px solid var(--line);display:flex;gap:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.item:last-child{border-bottom:0}
+.item .n{color:var(--muted);font:13px var(--mono);min-width:38px;padding-top:4px}
+.item.folder{color:var(--muted)} .item.folder .n{color:var(--pink)}
+.item.sel{background:color-mix(in srgb,var(--pink) 14%,var(--panel));color:var(--ink);box-shadow:inset 4px 0 0 var(--pink)}
+.item.tapped{opacity:.55}
+
+/* Waveform */
+.badge{font:600 11px var(--mono);letter-spacing:.06em;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+.badge.on{color:#2a0020;background:var(--pink);border-color:var(--pink)}
+#waveCanvas{width:100%;height:46vh;min-height:240px;display:block;border-radius:10px;background:#0c0d10;border:1px solid var(--line);touch-action:none}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font:12px var(--mono);color:var(--muted);min-height:20px}
+#waveDiag{font:12px var(--mono);color:var(--warn);margin-top:6px;min-height:18px;white-space:pre-wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+/* Track: engine and knobs */
+#hero{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center}
+#heroArt{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px;aspect-ratio:16/10;display:flex;align-items:center}
+#heroArt svg{width:100%;height:auto;display:block}
+#engine{font-size:38px;font-weight:800;line-height:1.05;margin:2px 0;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#preset{font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rowname{font-size:15px;color:var(--muted);height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#knobs{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.kgroup{padding:8px 6px 4px}
+.kgroup{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:10px 10px 6px}
+.kgroup .label{margin:0 0 6px 2px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:0}
+.knob{background:none;border:1px solid transparent;border-radius:10px;padding:2px 0 0;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:0;font:inherit}
+.knob svg{width:58px;height:58px}
+.knob .kv{font:700 17px var(--mono);height:22px;line-height:22px}
+.knob .kn{font:600 12px var(--sans);color:var(--muted);height:45px;line-height:1.25;text-align:center;overflow:hidden;width:100%;padding:0 1px;overflow-wrap:normal;word-break:normal}
+.knob.open{border-color:var(--pink);box-shadow:0 0 12px var(--pink-glow);background:color-mix(in srgb,var(--pink) 10%,transparent)}
+.knob.open .kn{color:var(--ink)}
+.knob.tapped{opacity:.6}
+.knob.cant{opacity:.28;filter:grayscale(1);cursor:not-allowed}
+.kgroup.engine{border-color:color-mix(in srgb,var(--pink) 35%,var(--line))}
+.kgroup.engine .label{color:var(--pink)}
+.knob.switch{justify-content:center;gap:6px;padding-top:8px}
+.kgroup.switches .kgrid{grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}
+.knob .sw{min-width:56px;max-width:100%;overflow:hidden;text-overflow:ellipsis;height:30px;padding:0 10px;border-radius:15px;background:#2a2d33;border:1px solid var(--line);font:700 14px var(--sans);display:grid;place-items:center;white-space:nowrap}
+.knob.switch.open .sw{background:var(--pink);color:var(--panel);border-color:var(--pink)}
+.knob.cant .kv{visibility:hidden}
+/* Gold knobs: the 8 mod buttons and their two knobs, as on the Deluge, in a gold frame */
+:root{--gold:#e3b04b;--gold-glow:rgba(227,176,75,.45)}
+.frame{border-radius:14px;padding:10px 12px 8px;margin-top:14px}
+.frame > .label{margin:0 0 8px 2px}
+#gold{border:2px solid var(--gold);background:color-mix(in srgb,var(--gold) 5%,var(--soft))}
+#gold > .label{color:var(--gold)}
+.goldgrid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
+.gcol{border:1px solid transparent;border-radius:10px;padding:4px 0 2px;display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.gcol.on{border-color:var(--gold);box-shadow:0 0 12px var(--gold-glow);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.gled{display:flex;align-items:center;gap:6px;font:700 12px var(--mono);color:var(--muted);height:18px}
+.gled i{width:9px;height:9px;border-radius:50%;background:#3a3420;border:1px solid #5a4d2a}
+.gcol.on .gled{color:var(--gold)}
+.gcol.on .gled i{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+.gcol .knob{width:100%;pointer-events:none}
+.gcol .knob .kn{height:45px}
+.gcol .knob.none{opacity:.35}
+.gtag{font:700 10px var(--mono);letter-spacing:.08em;color:var(--gold);height:13px;line-height:13px;text-transform:uppercase}
+/* The engine's own controls, in a brighter frame */
+#special{border:2px solid var(--pink);box-shadow:0 0 14px var(--pink-glow);background:color-mix(in srgb,var(--pink) 4%,var(--soft))}
+#special > .label{color:var(--pink)}
+#special .kgroup{background:none;border:0;padding:0 0 4px}
+#special .kgroup + .kgroup{border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
+/* Clip state as the hardware pads: green playing (breathing), red stopped, blue soloed, flashing while armed */
+:root{--pad-play:#2bd94a;--pad-stop:#e8322f;--pad-solo:#2f7bff}
+@keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45)}}
+@keyframes armflash{0%,49%{opacity:1}50%,100%{opacity:.08}}
+.steps{display:grid;grid-template-columns:repeat(32,1fr);gap:1px;height:16px;position:relative;margin-top:4px}
+.steps i{background:rgba(255,255,255,.07);border-radius:1px}
+.steps i.on{background:var(--c,#ff1fd6)}
+.steps .ph{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff;box-shadow:0 0 6px #fff;display:none;left:0}
+#rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;margin-top:12px}
+.row{border-radius:10px;padding:8px;font-size:12.5px;background:var(--soft);border:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.row svg{width:100%;height:auto;display:block}
+.row b{font:600 11px var(--mono);color:var(--muted)}
+.row.sel{border-color:var(--pink);box-shadow:inset 0 0 0 1px var(--pink),0 0 12px var(--pink-glow)}
+.row.sel b{color:var(--pink)}
+#kitSamples{margin-top:14px}
+#kitSamples .label{margin-bottom:8px}
+.kslist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.ksrow{display:grid;grid-template-columns:12px minmax(0,1fr);grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;
+  padding:8px 10px;border-radius:9px;background:var(--soft);border:1px solid var(--line);color:var(--ink);font:inherit}
+.ksled{grid-row:1/3;width:12px;height:12px;border-radius:50%;background:#2c3036}
+.ksrow.on .ksled{background:var(--pink);box-shadow:0 0 10px var(--pink-glow)}
+.ksn{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ksf{font:12px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ksrow.sel{border-color:var(--pink);box-shadow:inset 3px 0 0 var(--pink)}
+.ksrow.tapped{opacity:.6}
+
+/* Song */
+.sections{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sections button{padding:6px 12px;font-size:13px;background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.clips{display:flex;flex-direction:column;gap:6px;height:52vh;overflow-y:auto}
+.clip{display:grid;grid-template-columns:10px 1fr auto auto;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--soft);border:1px solid var(--line);cursor:pointer;text-align:left;color:var(--ink);font:inherit}
+.clip .sw{width:10px;height:34px;border-radius:4px}
+.clip .cn{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip .co{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip .sec{font:600 12px var(--mono);color:var(--muted)}
+.clip .st{font:700 11px var(--mono);letter-spacing:.08em;border-radius:6px;padding:2px 8px;border:1px solid var(--line);color:var(--muted)}
+.clip{grid-template-columns:10px minmax(0,1fr) auto 26px 26px}
+.secpad{width:22px;height:22px;border-radius:5px;background:#000}
+.clip .led{width:22px;height:22px;border-radius:5px;background:var(--pad-stop);box-shadow:0 0 8px rgba(232,50,47,.45)}
+.clip.playing .led{background:var(--pad-play);box-shadow:0 0 10px rgba(43,217,74,.6)}
+.clip.soloing .led{background:var(--pad-solo);box-shadow:0 0 10px rgba(47,123,255,.6)}
+.clip.pending .led{animation:armflash .44s steps(1) infinite}
+.clip.playing{border-color:color-mix(in srgb,var(--pad-play) 60%,var(--line))}
+.clip.current{box-shadow:inset 4px 0 0 var(--pink)}
+@keyframes blink{50%{opacity:.25}}
+.grid{display:grid;gap:6px;overflow:auto;height:52vh;align-content:start}
+.gh{font:600 11px var(--mono);color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:2px}
+.gs{font:600 11px var(--mono);color:var(--muted);display:grid;place-items:center}
+.cell{min-height:52px;border-radius:9px;border:1px solid var(--line);background:#16181c;padding:4px 6px;font:600 11px var(--sans);color:#0b0b0d;text-align:left;overflow:hidden}
+.cell.empty{background:transparent;border-style:dashed;cursor:default}
+.cell{display:flex;flex-direction:column;justify-content:space-between}
+.cell.dim{filter:brightness(.38) saturate(.7)}
+.cell.playing{box-shadow:0 0 12px var(--cg,transparent)}
+.cell.current{animation:breathe 1.2s ease-in-out infinite}
+.cell.pending{animation:armflash .44s steps(1) infinite}
+.cell .steps{height:10px;margin-top:2px}
+.cell .steps i{background:rgba(0,0,0,.25)} .cell .steps i.on{background:rgba(0,0,0,.75)}
+.arr{display:flex;flex-direction:column;gap:4px;height:52vh;overflow-y:auto;position:relative}
+.alane{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center;height:34px;flex:0 0 auto}
+.alane .an{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alane.muted .an{color:var(--muted);text-decoration:line-through}
+.atrack{position:relative;height:28px;background:#0c0d10;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.ablock{position:absolute;top:3px;bottom:3px;border-radius:4px;min-width:2px;overflow:hidden;opacity:.9}
+.ablock i{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.55)}
+.atrack{height:30px}
+.arrinfo{font:12px var(--mono);color:var(--muted);margin:-4px 0 8px}
+#arrHead{position:absolute;top:0;bottom:0;width:2px;background:#fff;display:none;pointer-events:none;box-shadow:0 0 6px #fff}
+
+/* Firmware selector: STOCK (community 1.3, no mods) or BRIBELUGE. The green dot marks what the Deluge answered as. */
+.fwbox{display:flex;flex-direction:column;align-items:center;gap:3px;flex:0 0 auto}
+.fwlink{font:600 11px var(--sans);color:var(--pink);text-decoration:none;white-space:nowrap;line-height:1}
+.fwlink:hover{text-decoration:underline}
+.fw{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:0 0 auto}
+.fw button{border-radius:0;padding:0 11px;height:36px;font:700 11.5px var(--mono);letter-spacing:.08em;background:var(--soft);color:var(--muted);position:relative}
+.fw button + button{border-left:1px solid var(--line)}
+.fw button.on{background:var(--pink);color:var(--panel)}
+.fw button.det::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
+/* Stock mode: only what stock firmware can do, everything else hidden */
+#stock{display:none}
+body.stock #stock{display:block}
+body.stock .stage,body.stock #nBack,body.stock #nLeft,body.stock #nRight,body.stock #nSelect,body.stock #metro,
+body.stock #menuName,body.stock #fullText,body.stock #popupText,body.stock #rawText{display:none}
+body.stock #segsvg,body.stock #oled{display:none!important}
+body.stock .row2{height:auto;padding:0 2px 6px;display:block}
+body.stock .side{max-width:none;text-align:left}
+#bigMirror{display:flex;justify-content:center;align-items:center;background:#060607;min-height:180px}
+#bigSeg{width:100%;max-width:560px;height:auto;display:block}
+#bigOled{width:100%;max-width:960px;aspect-ratio:128/48;image-rendering:pixelated;display:none;background:#000;border-radius:6px}
+.sbtns{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:14px}
+.sbtns button{height:52px;background:var(--soft);color:var(--ink);border:1px solid var(--line);font-size:15px}
+.sbtns button:active,.sbtns button.held{background:var(--pink);color:var(--panel);border-color:var(--pink)}
+#followHead{display:flex;align-items:baseline;gap:12px;margin:18px 2px 8px}
+#followHead .hint{margin:0}
+#followKnobs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+#followKnobs .knob{touch-action:none;cursor:ns-resize}
+#followKnobs .knob.unk .kv{color:var(--muted)}
+#followKnobs .knob.absent{opacity:.3}
+#followKnobs .knob.drag{border-color:var(--pink);box-shadow:0 0 12px var(--pink-glow)}
+#stockSetup{margin-top:18px}
+#stockSetup summary{font-weight:600;color:var(--ink)}
+#stockSetup ol{margin:10px 0 0;padding-left:22px;color:var(--ink);font-size:15px}
+#stockSetup li{margin:6px 0}
+#stockSetup code{font:600 13px var(--mono);color:var(--pink)}
+.chans{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 4px;align-items:center}
+.chans label{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:14px}
+.chans select{padding:6px 10px}
+.learn{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px;margin-top:10px}
+.learn div{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:6px 6px 6px 12px;font-size:14px}
+.learn small{font:12px var(--mono);color:var(--muted)}
+.learn button{padding:6px 12px;font-size:13px}
+.upsell{margin-top:16px;color:var(--muted);font-size:14px}
+.upsell a{color:var(--pink)}
+
+details{margin-top:18px} summary{color:var(--muted);cursor:pointer;font-size:14px}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:12px 0 0;font-size:14px}
+dt{color:var(--muted)} dd{margin:0;font-family:var(--mono)}
+#log{font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-all;color:var(--muted);max-height:260px;overflow:auto;background:var(--panel);border:1px solid var(--line);padding:10px;border-radius:10px;margin-top:10px}
+footer{color:var(--muted);font-size:13px;margin-top:22px}
+footer a{color:var(--pink)}
+@media (max-width:900px){
+  .brand b{display:none} #tempo{min-width:70px;font-size:16px} .conn select{max-width:90px}
+  #fullText{font-size:36px;height:42px} .row2{height:80px} #hero{grid-template-columns:120px 1fr} #engine{font-size:28px}
+}
+@media (max-width:640px){
+  .row1{flex-wrap:wrap;height:auto;row-gap:6px} .nav{margin-left:0} #mirror svg{width:72px}
+}
+</style>
+<style data-bx="new">
+/* BRIBERY look: pure black, hot pink, hairline rules, sharp corners, mono labels, heavy headings.
+   Every layout and show/hide rule of the classic sheet has a counterpart here (the app's JS relies on them). */
+:root{
+  --bg:#000; --panel:#000; --ink:#f4f1ec; --muted:#9a9097; --line:#2a2228; --soft:#0d0a0c; --soft2:#151014;
+  --pink:#ff1fd6; --pink-glow:rgba(255,31,214,.45); --accent:var(--pink);
+  --teal:#19ffe0; --ok:#69db7c; --bad:#ff8787; --warn:#ffa94d;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --gold:#e3b04b; --gold-glow:rgba(227,176,75,.45);
+  --pad-play:#2bd94a; --pad-stop:#e8322f; --pad-solo:#2f7bff;
+  --cx-pad:clamp(12px,2vw,28px);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#000;color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;overflow-y:scroll}
+::selection{background:var(--pink);color:#000}
+button,select{font:700 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;border:0;border-radius:0;padding:10px 16px;cursor:pointer;
+  background:var(--pink);color:#000;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button.secondary,select{background:#000;color:var(--ink);border:1px solid var(--line)}
+button.secondary:hover{border-color:var(--pink);color:var(--pink)}
+select{font-weight:600;text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:14px}
+button:focus-visible,select:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.label{font:700 12px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.card{background:#000;border:0;border-top:1px solid var(--line);border-radius:0;padding:16px 0}
+
+/* ---------- top bar ---------- */
+#bar{position:sticky;top:0;z-index:10;background:#000;border-bottom:1px solid var(--line)}
+.barin{max-width:1600px;margin:0 auto;padding:8px var(--cx-pad) 0}
+.row1{display:flex;align-items:center;gap:10px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);white-space:nowrap;flex:0 0 auto}
+.brand b{display:none;font:900 15px/1 var(--sans);letter-spacing:-.01em;text-transform:uppercase}
+.brand b span{display:block;color:var(--pink);font:700 10.5px/1.3 var(--mono);letter-spacing:.2em;margin-top:3px}
+.coin{display:block;width:34px;height:34px;perspective:220px;flex:0 0 auto}
+.coin-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinspin 4s steps(24) infinite}
+.brand:hover .coin-inner{animation-duration:1.6s}
+.coin img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(2px)}
+.coin .back{transform:rotateY(180deg) translateZ(2px)}
+.coin .edge{display:block;position:absolute;left:50%;top:8%;width:4px;height:84%;margin-left:-2px;background:linear-gradient(#9a9a9a,#6f6f6f 50%,#4a4a4a);transform:rotateY(90deg)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion:reduce){.coin-inner{animation:none}}
+.group{display:flex;align-items:center;gap:6px}
+.tbtn{width:48px;height:44px;padding:0;border-radius:0;background:#000;border:1px solid var(--line);color:var(--ink);display:grid;place-items:center}
+.tbtn:hover{border-color:var(--pink)}
+.tbtn svg{width:20px;height:20px}
+#tPlay.on{background:#0b2412;border-color:var(--ok);color:var(--ok);box-shadow:0 0 14px rgba(105,219,124,.35)}
+#tRec{color:#ff4d4d}
+#tRec.on{background:#2a0b0b;border-color:#ff4d4d;box-shadow:0 0 14px rgba(255,77,77,.4)}
+#tempo{font:800 22px/1.05 var(--mono);min-width:86px;text-align:right;color:var(--ink);letter-spacing:-.02em}
+#tempo small{display:block;font:700 9.5px var(--mono);color:var(--muted);letter-spacing:.2em;text-align:right;margin-top:1px}
+#metro{width:8px;height:8px;border-radius:50%;background:var(--line)} #metro.on{background:var(--pink);box-shadow:0 0 8px var(--pink)}
+#mirror{background:#000;border:1px solid var(--line);border-radius:0;padding:5px 6px 5px 8px;display:flex;align-items:center;gap:8px;height:52px}
+#mirror svg{width:96px;height:auto;display:block}
+.seg{fill:#240b0b} .seg.on{fill:#ff3b2f;filter:drop-shadow(0 0 3px rgba(255,59,47,.7))}
+#oled{width:112px;height:42px;image-rendering:pixelated;display:none;background:#000;border-radius:0}
+.mode{display:flex;flex-direction:column;gap:2px}
+.mode button{padding:2px 6px;font:700 9.5px var(--mono);letter-spacing:.1em;border-radius:0;background:#000;color:var(--muted);border:1px solid var(--line)}
+.mode button.on{background:var(--pink);color:#000;border-color:var(--pink)}
+.nav{margin-left:auto}
+#nSelect{height:44px;padding:0 22px;border-radius:0;font:800 14px var(--mono);letter-spacing:.14em}
+#nSelect:hover{box-shadow:0 0 18px var(--pink-glow)}
+.conn{display:flex;align-items:center;gap:6px}
+.conn select{max-width:130px;height:40px;padding:0 10px;font-size:13px}
+.conn button{height:40px;padding:0 14px;font-size:12px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bad);flex:0 0 auto}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px var(--ok)} .dot.warn{background:var(--warn)}
+
+/* firmware selector, styled like the site's New / Classic switch */
+.fwbox{display:flex;flex-direction:column;align-items:stretch;gap:4px;flex:0 0 auto}
+.fwlink{font:700 9.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--pink);text-decoration:none;white-space:nowrap;line-height:1}
+.fwlink:hover{text-decoration:underline}
+.fw{display:flex;border:1.5px solid var(--pink);border-radius:0;overflow:hidden;flex:0 0 auto}
+.fw button{flex:1 1 auto;border-radius:0;padding:0 11px;height:34px;font:800 11px var(--mono);letter-spacing:.12em;background:#000;color:var(--pink);position:relative}
+.fw button + button{border-left:1.5px solid var(--pink)}
+.fw button.on{background:var(--pink);color:#000}
+.fw button.det::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
+
+/* readout */
+.row2{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;height:92px;padding:2px 0 10px}
+#menuName{font:700 13px/28px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pink);height:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#fullText{font-size:50px;font-weight:900;line-height:1.08;height:54px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.035em;text-transform:uppercase}
+.side{text-align:right;min-width:0;max-width:44vw}
+#popupText{font-size:24px;font-weight:900;color:var(--pink);height:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 18px var(--pink-glow)}
+#rawText{color:var(--muted);font:12px var(--mono);height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#statusText{color:var(--muted);font:12px var(--mono);height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+main{max-width:1600px;margin:0 auto;padding:0 var(--cx-pad) 40px}
+.stage{min-height:62vh}
+.panel{display:none} .panel.show{display:block}
+.stage > .card{border-top:0}
+.phead{display:flex;align-items:center;gap:10px;margin-bottom:12px;min-height:34px}
+.phead .label{margin-right:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--pink)}
+.phead button{padding:0 16px;height:40px;font-size:12px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 10px}
+
+/* pickers: a grid of tiles on hairline rules */
+#pickerTiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+#pickerTiles.art{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.tile{background:#000;border:0;border-radius:0;padding:16px 12px;font:900 18px var(--sans);letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);min-height:68px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:box-shadow .15s,background .15s}
+.tile:hover{background:var(--soft2)}
+.tile svg{width:100%;height:auto;display:block}
+.tile.sel{background:#14000f;box-shadow:inset 0 0 0 2px var(--pink),0 0 22px var(--pink-glow);color:var(--pink);position:relative;z-index:1}
+.tile.tapped{opacity:.6}
+
+/* browser */
+#browserList{height:56vh;overflow-y:auto;border-radius:0;border:1px solid var(--line);border-width:1px 0}
+.item{padding:13px 14px;font-size:18px;font-weight:600;border-bottom:1px solid var(--line);display:flex;gap:14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.item:last-child{border-bottom:0}
+.item:hover{background:var(--soft2)}
+.item .n{color:var(--muted);font:600 13px var(--mono);min-width:42px;padding-top:4px}
+.item.folder{color:var(--muted)} .item.folder .n{color:var(--pink)}
+.item.sel{background:var(--pink);color:#000;font-weight:800}
+.item.sel .n{color:#000}
+.item.tapped{opacity:.55}
+
+/* waveform */
+.badge{font:700 11px var(--mono);letter-spacing:.1em;color:var(--muted);border:1px solid var(--line);border-radius:0;padding:2px 8px}
+.badge.on{color:#000;background:var(--pink);border-color:var(--pink)}
+#waveCanvas{width:100%;height:46vh;min-height:240px;display:block;border-radius:0;background:#000;border:1px solid var(--line);touch-action:none}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-height:20px}
+#waveDiag{font:12px var(--mono);color:var(--warn);margin-top:6px;min-height:18px;white-space:pre-wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:0;margin-right:6px;vertical-align:-1px}
+
+/* track: engine and knobs */
+#hero{display:grid;grid-template-columns:220px 1fr;gap:22px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line)}
+#heroArt{background:var(--soft);border:1px solid var(--line);border-radius:0;padding:10px;aspect-ratio:16/10;display:flex;align-items:center}
+#heroArt svg{width:100%;height:auto;display:block}
+#hero .label{color:var(--pink);letter-spacing:.2em}
+#engine{font-size:56px;font-weight:900;line-height:.92;margin:6px 0 6px;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-bottom:2px}
+#preset{font-size:21px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rowname{font:600 13px/22px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#knobs{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+#knobs:empty{display:none}
+.kgroup{background:#000;border:0;border-radius:0;padding:12px 10px 8px}
+.kgroup .label{margin:0 0 8px 4px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:0}
+.knob{background:none;border:1px solid transparent;border-radius:0;padding:2px 0 0;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:0;font:inherit;text-transform:none;letter-spacing:0}
+.knob svg{width:58px;height:58px}
+.knob svg path[stroke="#2c3036"]{stroke:#2a2228}
+.knob svg circle{fill:#120e11;stroke:#3a2f36;stroke-width:1}
+.knob svg line{stroke:#f4f1ec}
+.knob .kv{font:800 17px var(--mono);height:22px;line-height:22px;letter-spacing:-.02em}
+.knob .kn{font:600 12px var(--sans);color:var(--muted);height:45px;line-height:1.25;text-align:center;overflow:hidden;width:100%;padding:0 1px;overflow-wrap:normal;word-break:normal}
+.knob.open{border-color:var(--pink);box-shadow:0 0 14px var(--pink-glow);background:#14000f}
+.knob.open .kn{color:var(--ink)}
+.knob.tapped{opacity:.6}
+.knob.cant{opacity:.28;filter:grayscale(1);cursor:not-allowed}
+.kgroup.engine{box-shadow:inset 0 2px 0 var(--pink)}
+.kgroup.engine .label{color:var(--pink)}
+.knob.switch{justify-content:center;gap:6px;padding-top:8px}
+.kgroup.switches .kgrid{grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}
+.knob .sw{min-width:56px;max-width:100%;overflow:hidden;text-overflow:ellipsis;height:30px;padding:0 10px;border-radius:0;background:#000;border:1px solid var(--line);font:800 13px var(--mono);letter-spacing:.06em;display:grid;place-items:center;white-space:nowrap}
+.knob.switch.open .sw{background:var(--pink);color:#000;border-color:var(--pink)}
+.knob.cant .kv{visibility:hidden}
+/* gold knobs: the 8 mod buttons, in a gold frame */
+.frame{border-radius:0;padding:12px 12px 8px;margin-top:16px}
+.frame > .label{margin:0 0 10px 2px}
+#gold{border:1px solid var(--gold);box-shadow:inset 0 3px 0 var(--gold);background:#070502}
+#gold > .label{color:var(--gold)}
+.goldgrid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:0}
+.gcol{border:1px solid transparent;border-radius:0;padding:4px 0 2px;display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.gcol + .gcol{border-left-color:#2a2414}
+.gcol.on{border-color:var(--gold);box-shadow:0 0 14px var(--gold-glow);background:#1d1607}
+.gled{display:flex;align-items:center;gap:6px;font:800 12px var(--mono);color:var(--muted);height:18px}
+.gled i{width:9px;height:9px;border-radius:50%;background:#3a3420;border:1px solid #5a4d2a}
+.gcol.on .gled{color:var(--gold)}
+.gcol.on .gled i{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+.gcol .knob{width:100%;pointer-events:none}
+.gcol .knob .kn{height:45px}
+.gcol .knob.none{opacity:.35}
+.gtag{font:800 10px var(--mono);letter-spacing:.1em;color:var(--gold);height:13px;line-height:13px;text-transform:uppercase}
+/* the engine's own controls */
+#special{border:1px solid var(--pink);box-shadow:inset 0 3px 0 var(--pink),0 0 18px var(--pink-glow);background:#07000a}
+#special > .label{color:var(--pink)}
+#special .kgroup{background:none;border:0;padding:0 0 4px;box-shadow:none}
+#special .kgroup + .kgroup{border-top:1px solid var(--line);padding-top:10px;margin-top:6px}
+@keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45)}}
+@keyframes armflash{0%,49%{opacity:1}50%,100%{opacity:.08}}
+.steps{display:grid;grid-template-columns:repeat(32,1fr);gap:1px;height:16px;position:relative;margin-top:5px}
+.steps i{background:rgba(255,255,255,.07);border-radius:0}
+.steps i.on{background:var(--c,#ff1fd6)}
+.steps .ph{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff;box-shadow:0 0 6px #fff;display:none;left:0}
+#rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:0;margin-top:16px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+#rows:empty{display:none}
+.row{border-radius:0;padding:8px;font-size:12.5px;font-weight:700;background:#000;border:0;display:flex;flex-direction:column;gap:4px}
+.row svg{width:100%;height:auto;display:block}
+.row b{font:700 11px var(--mono);color:var(--muted)}
+.row.sel{box-shadow:inset 0 0 0 2px var(--pink),0 0 16px var(--pink-glow);background:#14000f;position:relative;z-index:1}
+.row.sel b{color:var(--pink)}
+#kitSamples{margin-top:18px}
+#kitSamples .label{margin-bottom:8px}
+.kslist{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.ksrow{display:grid;grid-template-columns:12px minmax(0,1fr);grid-template-rows:auto auto;column-gap:12px;align-items:center;text-align:left;
+  padding:10px 12px;border-radius:0;background:#000;border:0;color:var(--ink);font:inherit;text-transform:none;letter-spacing:0}
+.ksled{grid-row:1/3;width:12px;height:12px;border-radius:50%;background:#2a2228}
+.ksrow.on .ksled{background:var(--pink);box-shadow:0 0 10px var(--pink-glow)}
+.ksn{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ksf{font:12px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ksrow.sel{box-shadow:inset 3px 0 0 var(--pink);background:#14000f}
+.ksrow.tapped{opacity:.6}
+
+/* song */
+.sections{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sections:empty{display:none}
+.sections button{padding:0 14px;height:40px;font-size:12px;background:#000;color:var(--ink);border:1px solid var(--line)}
+.sections button:hover{border-color:var(--pink);color:var(--pink)}
+.clips{display:flex;flex-direction:column;gap:0;height:52vh;overflow-y:auto;border-top:1px solid var(--line)}
+.clip{display:grid;align-items:center;gap:14px;padding:12px 12px;border-radius:0;background:#000;border:0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;color:var(--ink);font:inherit;text-transform:none;letter-spacing:0;flex:0 0 auto}
+.clip:hover{background:var(--soft2)}
+.clip .sw{width:10px;height:34px;border-radius:0}
+.clip .cn{font-weight:900;text-transform:uppercase;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip .co{color:var(--muted);font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip .sec{font:700 12px var(--mono);color:var(--muted)}
+.clip .st{font:700 11px var(--mono);letter-spacing:.08em;border-radius:0;padding:2px 8px;border:1px solid var(--line);color:var(--muted)}
+.clip{grid-template-columns:10px minmax(0,1fr) auto 26px 26px}
+.secpad{width:22px;height:22px;border-radius:2px;background:#000}
+.clip .led{width:22px;height:22px;border-radius:2px;background:var(--pad-stop);box-shadow:0 0 8px rgba(232,50,47,.45)}
+.clip.playing .led{background:var(--pad-play);box-shadow:0 0 10px rgba(43,217,74,.6)}
+.clip.soloing .led{background:var(--pad-solo);box-shadow:0 0 10px rgba(47,123,255,.6)}
+.clip.pending .led{animation:armflash .44s steps(1) infinite}
+.clip.playing{background:linear-gradient(90deg,rgba(43,217,74,.08),transparent 60%)}
+.clip.current{box-shadow:inset 4px 0 0 var(--pink)}
+@keyframes blink{50%{opacity:.25}}
+.grid{display:grid;gap:1px;overflow:auto;height:52vh;align-content:start}
+.gh{font:700 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 2px}
+.gs{font:700 11px var(--mono);color:var(--pink);display:grid;place-items:center}
+.cell{min-height:52px;border-radius:0;border:1px solid var(--line);background:#0b080a;padding:4px 6px;font:800 11px var(--sans);text-transform:uppercase;color:#0b0b0d;text-align:left;overflow:hidden}
+.cell.empty{background:transparent;border-style:dashed;cursor:default}
+.cell{display:flex;flex-direction:column;justify-content:space-between}
+.cell.dim{filter:brightness(.38) saturate(.7)}
+.cell.playing{box-shadow:0 0 14px var(--cg,transparent)}
+.cell.current{animation:breathe 1.2s ease-in-out infinite}
+.cell.pending{animation:armflash .44s steps(1) infinite}
+.cell .steps{height:10px;margin-top:2px}
+.cell .steps i{background:rgba(0,0,0,.25)} .cell .steps i.on{background:rgba(0,0,0,.75)}
+.arr{display:flex;flex-direction:column;gap:4px;height:52vh;overflow-y:auto;position:relative}
+.alane{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;height:34px;flex:0 0 auto}
+.alane .an{font-size:13px;font-weight:800;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alane.muted .an{color:var(--muted);text-decoration:line-through}
+.atrack{position:relative;height:30px;background:#000;border:1px solid var(--line);border-radius:0;overflow:hidden}
+.ablock{position:absolute;top:3px;bottom:3px;border-radius:0;min-width:2px;overflow:hidden;opacity:.9}
+.ablock i{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.55)}
+.arrinfo{font:12px var(--mono);color:var(--muted);margin:-4px 0 10px}
+#arrHead{position:absolute;top:0;bottom:0;width:2px;background:#fff;display:none;pointer-events:none;box-shadow:0 0 6px #fff}
+
+/* STOCK mode */
+#stock{display:none;padding-top:16px}
+body.stock #stock{display:block}
+body.stock .stage,body.stock #nBack,body.stock #nLeft,body.stock #nRight,body.stock #nSelect,body.stock #metro,
+body.stock #menuName,body.stock #fullText,body.stock #popupText,body.stock #rawText{display:none}
+body.stock #segsvg,body.stock #oled{display:none!important}
+body.stock .row2{height:auto;padding:0 0 8px;display:block}
+body.stock .side{max-width:none;text-align:left}
+#bigMirror{display:flex;justify-content:center;align-items:center;background:#000;min-height:180px;border:1px solid var(--line);padding:16px}
+#bigSeg{width:100%;max-width:560px;height:auto;display:block}
+#bigOled{width:100%;max-width:960px;aspect-ratio:128/48;image-rendering:pixelated;display:none;background:#000;border-radius:0}
+.sbtns{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0;margin-top:16px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.sbtns button{height:56px;background:#000;color:var(--ink);border:0;font-size:13px}
+.sbtns button:hover{color:var(--pink)}
+.sbtns button:active,.sbtns button.held{background:var(--pink);color:#000}
+#followHead{display:flex;align-items:baseline;gap:14px;margin:22px 0 10px}
+#followHead .label{color:var(--pink)}
+#followHead .hint{margin:0}
+#followKnobs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+#followKnobs .knob{touch-action:none;cursor:ns-resize}
+#followKnobs .knob.unk .kv{color:var(--muted)}
+#followKnobs .knob.absent{opacity:.3}
+#followKnobs .knob.drag{border-color:var(--pink);box-shadow:0 0 14px var(--pink-glow)}
+#stockSetup{margin-top:22px;padding:16px 0 4px;border-bottom:1px solid var(--line)}
+#stockSetup summary{font:800 13px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+#stockSetup ol{margin:12px 0 0;padding-left:24px;color:var(--ink);font-size:15px}
+#stockSetup li{margin:8px 0}
+#stockSetup code{font:700 13px var(--mono);color:var(--pink)}
+.chans{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 4px;align-items:center}
+.chans label{display:flex;gap:8px;align-items:center;color:var(--muted);font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.chans select{padding:6px 10px;height:40px}
+.learn{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0;margin-top:12px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.learn div{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#000;border:0;border-radius:0;padding:6px 6px 6px 12px;font:700 13px var(--mono);letter-spacing:.06em}
+.learn small{font:12px var(--mono);color:var(--muted)}
+.learn button{padding:0 14px;height:40px;font-size:12px}
+.upsell{margin-top:18px;color:var(--muted);font-size:14px}
+.upsell a{color:var(--pink);font-weight:700}
+
+details{margin-top:22px} summary{color:var(--muted);cursor:pointer;font:700 12px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+summary:hover{color:var(--pink)}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:12px 0 0;font-size:14px}
+dt{color:var(--muted)} dd{margin:0;font-family:var(--mono)}
+#log{font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-all;color:var(--muted);max-height:260px;overflow:auto;background:#000;border:1px solid var(--line);padding:10px;border-radius:0;margin-top:10px}
+main footer{color:var(--muted);font:12px/1.6 var(--mono);margin-top:22px}
+main footer a{color:var(--pink)}
+
+/* fit the top bar at tablet landscape: brand text only on wide screens */
+@media (min-width:1400px){ .brand b{display:block} }
+@media (max-width:1180px){
+  .row1{gap:8px} #tempo{min-width:72px;font-size:19px} .conn select{max-width:110px} #nSelect{padding:0 16px}
+}
+@media (max-width:900px){
+  #tempo{min-width:64px;font-size:16px} .conn select{max-width:90px}
+  #fullText{font-size:36px;height:42px} .row2{height:80px} #hero{grid-template-columns:130px 1fr;gap:16px} #engine{font-size:34px}
+}
+@media (max-width:640px){
+  .row1{flex-wrap:wrap;height:auto;row-gap:8px;padding-bottom:4px} .nav{margin-left:0} #mirror svg{width:72px}
+  #engine{font-size:28px} #fullText{font-size:30px;height:36px} .row2{height:auto;min-height:72px}
+}
+
+/* hairline grids: each cell draws its right and bottom rule, so a part-filled last row leaves no grey block */
+#pickerTiles > .tile,#knobs > .kgroup,#rows > .row,.kslist > .ksrow,.sbtns > button,#followKnobs > .kgroup,.learn > div{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+@media (max-width:640px){
+  .gcol .knob svg{width:38px;height:38px}
+  .gcol .knob .kv{font-size:13px}
+  .gcol .knob .kn{font-size:10px;height:38px}
+  .gtag{font-size:8px;letter-spacing:0}
+}
+</style>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/site.js"></script>
+<style>
+/* Both modes: the site pieces added to the app (intro band, beta link, in-app style switch) and the installed-app rules */
+.cx-fwlinks{display:flex;align-items:center;justify-content:center;gap:10px;line-height:1}
+.cx-fwlinks .cx-beta{all:unset;cursor:pointer;font:600 11px var(--sans);color:var(--pink);white-space:nowrap;line-height:1;-webkit-tap-highlight-color:transparent}
+.cx-fwlinks .cx-beta:hover{text-decoration:underline}
+.cx-fwlinks .cx-beta:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+html[data-mode="new"] .cx-fwlinks{justify-content:space-between}
+html[data-mode="new"] .cx-fwlinks .cx-beta{font:700 9.5px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.cx-chrome{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:22px}
+.cx-chrome .bx-mode{border-radius:0}
+html[data-mode="classic"] .cx-chrome .bx-mode{border-width:1px;border-radius:8px;overflow:hidden}
+.cx-chrome .cx-beta2{all:unset;cursor:pointer;font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--pink);padding:6px 0;-webkit-tap-highlight-color:transparent}
+.cx-chrome .cx-beta2:hover{text-decoration:underline}
+.cx-chrome footer{margin:0!important;flex:1 1 320px}
+
+/* classic mode in the browser: room to scroll the last controls clear of the floating New / Classic switch */
+html[data-mode="classic"] main{padding-bottom:72px}
+
+/* installed app (fullscreen / standalone): no site bar, intro, site footer or floating switch; the switch is in the app's footer */
+@media (display-mode:standalone),(display-mode:fullscreen){
+  .bx-foot,.bx-mode-float{display:none!important}
+  html[data-mode="classic"] main{padding-bottom:40px}
+}
+
+</style>
+<style>
+/* Engine panels: BRUNO106 as the Juno (sliders) and BROPHET as the Prophet (knobs, a P5 woodgrain or P8 black look),
+   left to right as the synths lay them out. Both ways: drag here and the Deluge follows, and the other way. */
+.cpanel{display:none;margin-top:14px;background:#0d0d0f;border:1px solid #2a2a2e;border-radius:12px;padding:10px 10px 8px;
+  box-shadow:inset 0 1px 0 #1d1d21;color:#d8d6d0;user-select:none;-webkit-user-select:none;
+  --ink2:#f2f0ea;--sub:#8b8a86;--lab:#c9c7c1;--val:#6f6e6a;--sec:#151518;--secb:#26262b;--tbar:#1b1b1f;--acc1:#2f6fe0;--acc2:#d8342c;--hot:#ff5a4f}
+#track.panel-on .cpanel.on{display:block}
+#track.panel-on #special{display:none !important}
+.cpanel .bhead{display:flex;align-items:center;gap:10px;margin:0 2px 8px}
+.cpanel .bname{font:800 15px var(--sans);letter-spacing:.18em;color:var(--ink2)}
+.cpanel .bsub{font:600 10px var(--mono);letter-spacing:.14em;color:var(--sub);text-transform:uppercase}
+.cpanel .bstripe{flex:1;height:3px;background:linear-gradient(90deg,var(--acc1) 0 50%,var(--acc2) 50% 100%);border-radius:2px;opacity:.85}
+.cpanel .bsecs{display:flex;flex-wrap:wrap;gap:6px}
+.cpanel .bsecs + .bsecs{margin-top:6px}
+.cpanel .bsecs:empty{display:none}
+.cpanel .bsec{background:var(--sec);border:1px solid var(--secb);border-radius:8px;padding:0 4px 6px;flex:0 0 auto}
+.cpanel .bsec > .bt{font:700 11px var(--mono);letter-spacing:.2em;color:var(--ink2);text-align:center;padding:4px 8px 3px;white-space:nowrap;margin:0 -4px 6px;
+  border-bottom:2px solid var(--acc1);background:var(--tbar);border-radius:8px 8px 0 0}
+.cpanel .bsec.red > .bt{border-bottom-color:var(--acc2)}
+.cpanel .bitems{display:flex;gap:2px;align-items:flex-start}
+.cpanel .bctl{display:flex;flex-direction:column;align-items:center;width:40px}
+.cpanel .bctl.wide{width:52px}
+.cpanel .bctl.na{opacity:.25;pointer-events:none}
+.cpanel .bl{font:600 10px var(--mono);letter-spacing:.06em;color:var(--lab);height:14px;line-height:14px;white-space:nowrap;text-transform:uppercase}
+.cpanel .bv{font:600 10px var(--mono);color:var(--val);height:14px;line-height:14px;white-space:nowrap}
+.cpanel .bctl.drag .bv{color:var(--hot)}
+/* Slider: a slot with a 0-10 scale, its cap placed by --f */
+.cpanel .bs{position:relative;width:40px;height:var(--bh,156px);touch-action:none;cursor:ns-resize}
+.cpanel .bs .slot{position:absolute;left:50%;top:8px;bottom:8px;width:4px;margin-left:-2px;background:#000;border-radius:2px;box-shadow:0 0 0 1px #2c2c31}
+.cpanel .bs .scale{position:absolute;left:2px;top:8px;bottom:8px;width:8px;
+  background:repeating-linear-gradient(to bottom,#55545a 0 1px,transparent 1px calc((100% - 1px) / 10))}
+.cpanel .bs.steps .scale{background:none}
+.cpanel .bs .cap{position:absolute;left:50%;top:calc((1 - var(--f,0)) * (100% - 16px));width:30px;height:16px;margin-left:-15px;border-radius:3px;
+  background:linear-gradient(#f4f3ef,#cfcdc6);box-shadow:0 2px 3px rgba(0,0,0,.7),inset 0 -1px 0 #a9a69e}
+.cpanel .bs .cap::after{content:"";position:absolute;left:3px;right:3px;top:7px;height:2px;background:#26262a}
+.cpanel .bctl.drag .cap{background:linear-gradient(#fff,#e6e4dd);box-shadow:0 0 10px rgba(255,90,79,.55),0 2px 3px rgba(0,0,0,.7)}
+/* Knob: a dial turned by --a degrees (-150 to +150), over a ring of ticks */
+.cpanel .bk{position:relative;width:40px;height:44px;touch-action:none;cursor:ns-resize}
+.cpanel .bk .ring{position:absolute;left:2px;top:4px;width:36px;height:36px;border-radius:50%;
+  background:repeating-conic-gradient(from -150deg,var(--tick,#5a5a60) 0 2deg,transparent 2deg 30deg);
+  -webkit-mask:radial-gradient(circle,transparent 15px,#000 15.5px);mask:radial-gradient(circle,transparent 15px,#000 15.5px)}
+.cpanel .bk .dial{position:absolute;left:7px;top:9px;width:26px;height:26px;border-radius:50%;transform:rotate(calc(var(--a,-150) * 1deg));
+  background:var(--knob,radial-gradient(circle at 50% 50%,#d9dade 0 5px,#9fa1a6 5.5px 6.5px,#1b1b1e 7px));box-shadow:0 2px 3px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.12)}
+.cpanel .bk .dial i{position:absolute;left:50%;top:1px;width:2px;height:8px;margin-left:-1px;border-radius:1px;background:var(--pointer,#f2f0ea)}
+.cpanel .bctl.drag .bk .dial{box-shadow:0 0 10px var(--glow,rgba(255,90,79,.55)),0 2px 3px rgba(0,0,0,.75)}
+/* Two way slide switch: tap to flip */
+.cpanel .bsw{width:38px;height:var(--bh,156px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  background:none;border:0;padding:0;color:inherit;cursor:pointer;touch-action:manipulation}
+.cpanel .bsw .o{font:700 10px var(--mono);color:#77767a;letter-spacing:.04em}
+.cpanel .bsw .o.on{color:var(--ink2)}
+.cpanel .bsw .well{width:16px;height:44px;border-radius:4px;background:#000;box-shadow:0 0 0 1px #2c2c31;position:relative}
+.cpanel .bsw .nub{position:absolute;left:2px;width:12px;height:20px;border-radius:2px;background:linear-gradient(#e9e7e1,#b9b6ae);top:2px;transition:top .08s}
+.cpanel .bsw.down .nub{top:22px}
+/* Buttons with an LED */
+.cpanel .bbs{display:flex;flex-direction:column;gap:6px;justify-content:center;height:var(--bh,156px)}
+.cpanel .bb{width:44px;height:34px;border-radius:5px;padding:4px 0 0;background:var(--btn,linear-gradient(#3a3a40,#26262b));border:1px solid #111;
+  color:var(--btnink,#e9e7e1);font:700 10px var(--mono);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;touch-action:manipulation;
+  box-shadow:0 2px 0 #000}
+.cpanel .bb:active{transform:translateY(1px);box-shadow:0 1px 0 #000}
+.cpanel .bb i{display:block;width:8px;height:8px;border-radius:50%;background:#3b1210;border:1px solid #5a1d19}
+.cpanel .bb.on i{background:#ff3b2f;border-color:#ff6b61;box-shadow:0 0 7px #ff3b2f}
+.cpanel .bb svg{width:26px;height:10px}
+.cpanel .bhint{font:500 11px var(--sans);color:var(--val);margin:6px 2px 0}
+
+/* BROPHET: knob panels are shorter; buttons sit in the knob row */
+#brophet{--bh:44px}
+#brophet .bbs{flex-direction:row;flex-wrap:wrap;gap:4px;height:auto;min-height:44px;align-content:center}
+#brophet .bctl.wide{width:auto;min-width:44px}
+#brophet .bb{width:40px;height:30px}
+#brophet .bskin{display:flex;border:1px solid var(--secb);border-radius:6px;overflow:hidden;opacity:.55}
+#brophet .bskin:hover,#brophet .bskin:focus-within{opacity:1}
+#brophet .bskin button{font:700 9px var(--mono);letter-spacing:.08em;padding:2px 6px;border-radius:0;background:none;color:var(--sub)}
+#brophet .bskin button.on{background:var(--acc2);color:#fff}
+/* P8: flat black, silver-capped black knobs, red LEDs and red highlights */
+#brophet.p8{background:#08080a;--sec:#0f0f11;--secb:#222226;--tbar:#141417;--acc1:#d8342c;--acc2:#d8342c;--hot:#ff3b2f;--glow:rgba(255,59,47,.6);
+  --knob:radial-gradient(circle at 50% 45%,#e4e5e8 0 4px,#a4a6ab 4.5px 6px,#2a2a2d 6.5px,#141416 12px);--pointer:#ff3b2f;--tick:#4a4a50}
+#brophet.p8 .bstripe{background:#d8342c;height:2px}
+/* P5: woodgrain cheeks, dark panel, cream lettering, black knobs with silver skirts, cream buttons */
+#brophet.p5{--sec:#18130f;--secb:#2c241c;--tbar:#1e1813;--ink2:#efe4c8;--lab:#e2d6b8;--sub:#a3977c;--val:#8a7f68;
+  --acc1:#c9b48a;--acc2:#c9b48a;--hot:#ffd27a;--glow:rgba(255,210,122,.5);--tick:#7a6a50;
+  --knob:radial-gradient(circle at 50% 45%,#1c1c1e 0 6px,#2a2a2c 6.5px 9px,#c8c9cd 9.5px,#8e9095 12px);--pointer:#efe4c8;
+  --btn:linear-gradient(#e9e2cf,#c9c0a8);--btnink:#2a2118;
+  background:linear-gradient(90deg,#5a3418 0,#7b4a24 6px,#4e2c14 10px,#6d3f1e 14px,#3c2210 18px,transparent 18px,transparent calc(100% - 18px),#3c2210 calc(100% - 18px),#6d3f1e calc(100% - 14px),#4e2c14 calc(100% - 10px),#7b4a24 calc(100% - 6px),#5a3418 100%),#141110;
+  padding-left:26px;padding-right:26px;border-color:#3a2a1c}
+#brophet.p5 .bstripe{background:#c9b48a;height:1px;opacity:.6}
+#brophet.p5 .bb i{background:#3b1210}
+
+/* Tablets: narrower columns so each row stays one line; shorter sliders on short screens */
+@media (max-width:1180px){.cpanel{padding:8px 6px 6px} .cpanel .bctl,.cpanel .bs,.cpanel .bsw{width:32px} .cpanel .bctl.wide{width:42px}
+  .cpanel .bb{width:38px} .cpanel .bsec{padding:0 3px 6px} .cpanel .bsec > .bt{letter-spacing:.1em;margin:0 -3px 6px}
+  .cpanel .bs .cap{width:24px;margin-left:-12px} .cpanel .bv,.cpanel .bl{font-size:9px}
+  .cpanel .bk{width:36px} .cpanel .bk .ring{left:0} .cpanel .bk .dial{left:5px}
+  #brophet .bctl{width:38px} #brophet.p5{padding-left:20px;padding-right:20px}}
+@media (max-height:700px){#bruno{--bh:124px}}
+</style>
+</head>
+<body data-bx-page="companion" data-bx-no-top>
+<div id="bar"><div class="barin">
+  <div class="row1">
+    <a class="brand" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener" title="Mods by Bribery">
+      <span class="coin" aria-hidden="true"><span class="coin-inner"><img src="/assets/coin-front.png" alt=""><span class="edge"></span><img class="back" src="/assets/coin-back.png" alt=""></span></span>
+      <b>Bribeluge <span>Companion</span></b>
+    </a>
+    <div class="fwbox">
+      <div class="fw" role="group" aria-label="Firmware on the Deluge">
+        <button id="fwStock" title="Stock community firmware 1.3: screen mirror, MIDI Follow knobs, learned commands">STOCK</button>
+        <button id="fwBribes" title="Bribes firmware: the full companion">BRIBELUGE</button>
+      </div>
+      <div class="cx-fwlinks"><a class="fwlink" href="/bribeluge/companion/" title="Setup steps, credits and how it talks to the Deluge">Help</a><a class="fwlink" href="/bribeluge/" target="_blank" rel="noopener" title="Get Bribeluge firmware">Get firmware</a><button type="button" class="cx-beta" data-bx-beta title="Become a beta tester">Beta tester</button></div>
+    </div>
+    <div class="group">
+      <button class="tbtn" id="tPlay" aria-label="Play"><svg viewBox="0 0 20 20"><path d="M5 3 L17 10 L5 17 Z" fill="currentColor"/></svg></button>
+      <button class="tbtn" id="tRec" aria-label="Record"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="6.5" fill="currentColor"/></svg></button>
+      <div id="tempo">-<small>BPM</small></div><span id="metro" title="Metronome"></span>
+    </div>
+    <div id="mirror" aria-label="Deluge display mirror">
+      <svg id="segsvg" viewBox="0 0 236 100"></svg>
+      <canvas id="oled" width="128" height="48"></canvas>
+      <div class="mode"><button id="mode7">7SEG</button><button id="modeOled">OLED</button></div>
+    </div>
+    <div class="group nav">
+      <button class="tbtn" id="nBack" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M8 4 L3 9 L8 14 M3 9 H12 A5 5 0 0 1 12 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="tbtn" id="nLeft" aria-label="Select knob left"><svg viewBox="0 0 20 20"><path d="M12 4 L6 10 L12 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button id="nSelect">SELECT</button>
+      <button class="tbtn" id="nRight" aria-label="Select knob right"><svg viewBox="0 0 20 20"><path d="M8 4 L14 10 L8 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="conn">
+      <span class="dot" id="dot" title="Connection"></span>
+      <select id="port" aria-label="Deluge port"></select>
+      <button id="connect">Connect</button>
+    </div>
+  </div>
+  <div class="row2">
+    <div style="min-width:0">
+      <div id="menuName"></div>
+      <div id="fullText">-</div>
+    </div>
+    <div class="side">
+      <div id="popupText"></div>
+      <div id="rawText"></div>
+      <div id="statusText">Not connected</div>
+    </div>
+  </div>
+</div></div>
+<main>
+  <div class="stage">
+    <section id="picker" class="card panel">
+      <div class="phead"><div class="label" id="pickerTitle"></div></div>
+      <div id="pickerTiles"></div>
+    </section>
+
+    <section id="browser" class="card panel">
+      <div class="phead">
+        <div class="label" id="browserTitle"></div>
+        <button class="secondary" id="bBack">Back</button>
+        <button id="bLoad">Load</button>
+      </div>
+      <p class="hint">Tap to select, like turning the select knob. Tap it again, or Load, to press select.</p>
+      <div id="browserList"></div>
+    </section>
+
+    <section id="wave" class="card panel">
+      <div class="phead">
+        <div class="label" id="waveTitle">Waveform</div>
+        <span class="badge on" id="wRev">REVERSED</span>
+        <span class="badge on" id="wRec">RECORDING</span>
+        <span class="badge" id="wLoad">LOADING</span>
+      </div>
+      <canvas id="waveCanvas"></canvas>
+      <div class="legend" id="waveLegend"></div>
+      <div id="waveDiag"></div>
+    </section>
+
+    <section id="song" class="card panel">
+      <div class="phead"><div class="label" id="songTitle">Song</div></div>
+      <div class="sections" id="sections"></div>
+      <div id="songBody"></div>
+    </section>
+
+    <section id="track" class="card panel show">
+      <div id="hero">
+        <div id="heroArt"></div>
+        <div style="min-width:0">
+          <div class="label" id="family">waiting</div>
+          <div id="engine">-</div>
+          <div id="preset"></div>
+          <div id="rowname"></div>
+        </div>
+      </div>
+      <div id="bruno" class="cpanel"></div>
+      <div id="brophet" class="cpanel p8"></div>
+      <div id="gold" class="frame" style="display:none"><div class="label">Gold knobs</div><div class="goldgrid"></div></div>
+      <div id="special" class="frame" style="display:none"><div class="label"></div><div class="sbody"></div></div>
+      <div id="knobs"></div>
+      <div id="rows"></div>
+      <div id="kitSamples" style="display:none"></div>
+    </section>
+  </div>
+
+  <section id="stock">
+    <div class="card" id="bigMirror" aria-label="Deluge display">
+      <svg id="bigSeg" viewBox="0 0 236 100"></svg>
+      <canvas id="bigOled" width="128" height="48"></canvas>
+    </div>
+    <div class="sbtns" id="cmdButtons"></div>
+    <div id="followHead"><div class="label">MIDI Follow</div>
+      <p class="hint">Drag a knob up or down. Values arrive when you change track or move a knob on the Deluge; dimmed ones don't apply to this track.</p></div>
+    <div id="followKnobs"></div>
+    <details class="card" id="stockSetup">
+      <summary>Set up the Deluge (once)</summary>
+      <div class="chans">
+        <label>MIDI Follow channel <select id="followCh"></select></label>
+        <label>Command channel <select id="cmdCh"></select></label>
+      </div>
+      <ol>
+        <li><code>SETTINGS &gt; MIDI &gt; MIDI-FOLLOW &gt; CHANNEL A</code>: set it to the MIDI Follow channel above.</li>
+        <li><code>SETTINGS &gt; MIDI &gt; MIDI-FOLLOW &gt; FEEDBACK &gt; CHANNEL</code>: set it to <code>A</code>, so the knobs here show the Deluge's values.</li>
+        <li>Keep <code>SETTINGS &gt; MIDI &gt; CLOCK &gt; OUT</code> on for the tempo and play light.</li>
+        <li>For each button: go to <code>SETTINGS &gt; MIDI &gt; COMMANDS</code>, pick the command, hold <code>LEARN</code> and tap Send below. The Deluge learns it for this USB port.</li>
+      </ol>
+      <div class="learn" id="learnList"></div>
+    </details>
+    <p class="upsell">Running Bribes firmware? Switch to BRIBELUGE for preset names, engine pictures, pickers, the browser, waveforms and song views.
+      <a href="/bribeluge/" target="_blank" rel="noopener">Get the firmware</a>.</p>
+  </section>
+
+  <details>
+    <summary>Debug</summary>
+    <dl id="fields"></dl>
+    <div id="log"></div>
+  </details>
+
+  <div class="cx-chrome">
+    <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
+    <button type="button" class="cx-beta2" data-bx-beta>Become a beta tester</button>
+  <footer>Bribeluge Companion v21 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  </div>
+</main>
+
+<script>
+"use strict";
+// Out: F0 00 21 7B 01 02 03 <mode> F7. Modes: 0 subscribe + send all, 1 keep alive, 2 <n> choose picker option,
+// 3 <hi> <lo> move the browser there, 4 press SELECT, 5 press BACK, 6 <marker> <hi> <lo> drag a waveform marker,
+// 7 <x> <y> open a shortcut pad's setting, 8 <cmd> top bar (0 play, 1 record, 2 select, 3 back, 4 left, 5 right),
+// 9 <hi> <lo> launch or stop a session clip, 10 <section> launch a section, 13 <id> <hi> <lo> move a BRUNO106 panel
+// control, 14 <id> <hi> <lo> a BROPHET one.
+// In: 0x42 STATE, 0x43 KIT_ROWS, 0x44 TEXT, 0x45 PICKER, 0x46 BROWSER, 0x47 BROWSER_SEL, 0x48 WAVEFORM, 0x49 PLAYHEAD,
+// 0x4A PARAMS, 0x4B TRANSPORT, 0x4C OUTPUTS, 0x4D CLIPS, 0x4E ARRANGER, 0x4F ARRANGER_POS, 0x56 PANEL (BRUNO106 / BROPHET).
+// Display mirror: 00 <2 keep alive | 3 force | 4 swap 7SEG/OLED> out, 0x41 7-seg digits / 0x40 OLED frame in.
+var HDR = [0xF0, 0x00, 0x21, 0x7B, 0x01, 0x02];
+
+// drum_synth::Engine numbers (append-only in the firmware) and the special codes above them
+var ENGINES = [ // As the Deluge's SYNTH MODE names them
+  ["Kick / tom", "lxr"], ["Snare", "lxr"], ["Cymbal / hat", "lxr"],
+  ["DXIA", "xia"], ["DIIA", "xia"],
+  ["Cyc Kik", "cyc"], ["Cyc Snr", "cyc"], ["Cyc Metal", "cyc"], ["Cyc Perc", "cyc"],
+  ["Cyc Tone", "cyc"], ["Cyc Chord", "cyc"], ["Vtg Snr", "cyc"], ["clap eng", "cyc"],
+  ["GIN", "gin"], ["ULTRAKIK", "ultrakik"], ["Bribering", "rings"], ["BROPHET", "brophet"], ["BRUNO106", "bruno"]
+];
+var SPECIAL = {
+  0x7A: ["303", "tb303"], 0x7B: ["Subtractive", "deluge"], 0x7C: ["DX7", "dx7"],
+  0x7D: ["MIDI / gate", "midi"], 0x7E: ["Sample", "mpc"], 0x7F: ["None", "none"]
+};
+var FAMILY_NAME = {
+  mpc: "Sample kit row",
+  lxr: "LXR drum voice", xia: "XIA engine", cyc: "Cycles engine", gin: "GIN", ultrakik: "Kick engine",
+  rings: "Resonator", brophet: "Poly synth", bruno: "DCO poly", tb303: "Bass line", deluge: "Deluge synth",
+  dx7: "FM operator synth", midi: "External", sample: "Sample", none: "-"
+};
+var OUTPUT_TYPES = ["SYNTH", "KIT", "MIDI", "CV", "AUDIO"];
+var SYNTH_MODES = ["Subtractive", "Fm", "Ringmod", "303"];
+var OSC_TYPES = ["SINE", "TRIANGLE", "SQUARE", "ANALOG SQUARE", "SAW", "ANALOG SAW", "WAVETABLE", "SAMPLE", "DX7",
+  "DRUM SYNTH", "INPUT L", "INPUT R", "INPUT STEREO"];
+var RINGS_MODELS = ["modal", "sympathetic", "string", "FM", "chord"];
+
+function engineInfo(code) {
+  if (code < ENGINES.length) return ENGINES[code];
+  return SPECIAL[code] || ["ENGINE " + code, "none"];
+}
+function pick(list, v) { return v === 0x7F ? "-" : (list[v] !== undefined ? list[v] : String(v)); }
+function hex(bytes) { return Array.prototype.map.call(bytes, function (b) { return ("0" + b.toString(16)).slice(-2); }).join(" "); }
+
+// ---- Engine art: small SVG drawings, 160 x 100 ----
+var artSeq = 0;
+function R(x, y, w, h, f, rx, ex) {
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + (rx || 0) + '" fill="' + f + '"' + (ex || "") + "/>";
+}
+function C(cx, cy, r, f, ex) { return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + f + '"' + (ex || "") + "/>"; }
+function L(d, s, w, ex) {
+  return '<path d="' + d + '" fill="none" stroke="' + s + '" stroke-width="' + (w || 2) + '" stroke-linecap="round" stroke-linejoin="round"' + (ex || "") + "/>";
+}
+function knob(cx, cy, r, f, m) {
+  return C(cx, cy, r, f) + '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + (cy - r + 1.2) + '" stroke="' + m + '" stroke-width="1.4" stroke-linecap="round"/>';
+}
+function keys(x, y, w, h, n, wc, bc) {
+  var s = R(x, y, w, h, "#0b0c0e", 1.5), kw = w / n, i, pat = [1, 1, 0, 1, 1, 1, 0];
+  for (i = 0; i < n; i++) s += R((x + i * kw + 0.5).toFixed(1), y, (kw - 1).toFixed(1), h, wc, 1);
+  for (i = 0; i < n - 1; i++) if (pat[i % 7]) s += R((x + (i + 1) * kw - kw * 0.32).toFixed(1), y, (kw * 0.64).toFixed(1), (h * 0.6).toFixed(1), bc, 0.8);
+  return s;
+}
+function wavePath(x, y, w, a, fn, n) {
+  var d = "", steps = n || 48;
+  for (var i = 0; i <= steps; i++) {
+    var t = i / steps;
+    d += (i ? " L" : "M") + (x + t * w).toFixed(1) + " " + (y - a * fn(t)).toFixed(1);
+  }
+  return d;
+}
+function sin(c) { return function (t) { return Math.sin(t * Math.PI * 2 * c); }; }
+var ART = {
+  // Cycles: a white drum machine
+  cyc: function () {
+    var s = R(10, 16, 140, 70, "#f3f1ec", 7, ' stroke="#cdc8bd" stroke-width="1.5"') + R(18, 24, 40, 14, "#1d1f22", 3) +
+      R(22, 29, 18, 3, "#ff1fd6", 1) + R(22, 33, 26, 2, "#9aa0a8", 1);
+    for (var i = 0; i < 6; i++) s += knob(70 + i * 13, 31, 4.6, "#2a2c30", "#f3f1ec");
+    for (var r = 0; r < 2; r++) for (var p = 0; p < 8; p++) {
+      var lit = (r === 0 && p === 2) || (r === 1 && p === 5);
+      s += R(18 + p * 16, 46 + r * 18, 13, 13, lit ? "#ff1fd6" : "#dcd8cf", 2.5);
+    }
+    return s;
+  },
+  // LXR: a black drum machine
+  lxr: function () {
+    var s = R(10, 16, 140, 70, "#141518", 7, ' stroke="#3a3d44" stroke-width="1.5"') + R(18, 23, 34, 16, "#2b1d05", 2) +
+      R(21, 27, 22, 3, "#ffb020", 1) + R(21, 33, 14, 2, "#ffb020", 1, ' opacity=".6"');
+    for (var i = 0; i < 6; i++) { s += knob(62 + i * 14, 26, 4.2, "#d5d8de", "#141518") + knob(62 + i * 14, 39, 4.2, "#d5d8de", "#141518"); }
+    for (var k = 0; k < 16; k++) {
+      var x = 16 + k * 8.2;
+      s += C((x + 3).toFixed(1), 51, 1.3, k % 4 === 0 ? "#ff3b2f" : "#3a1a1a") + R(x.toFixed(1), 55, 6, 10, "#2a2c31", 1.5);
+    }
+    for (var b = 0; b < 8; b++) s += R(16 + b * 12, 71, 9, 9, "#26282d", 2);
+    return s + knob(132, 75, 7, "#2a2c31", "#d5d8de");
+  },
+  // GIN: a bare green circuit board with a little screen
+  gin: function () {
+    var s = R(30, 6, 100, 88, "#1e6b3c", 5, ' stroke="#2f8a52" stroke-width="1.5"') +
+      L("M36 46 H48 V40 M112 46 H124 V60 M36 88 H50 M110 88 H124", "#3f9d63", 1.2) +
+      R(52, 12, 56, 28, "#a9bfa2", 3) + L(wavePath(56, 28, 48, 8, function (t) { return Math.exp(-4 * t) * Math.sin(t * 30); }), "#1d2a1c", 1.6) +
+      knob(41, 24, 5.5, "#ecebe6", "#1e6b3c") + knob(119, 24, 5.5, "#ecebe6", "#1e6b3c");
+    for (var j = 0; j < 4; j++) for (var i = 0; i < 4; i++) s += C(56 + i * 16, 52 + j * 11, 4.4, i === 1 && j === 2 ? "#ff1fd6" : "#ecebe6");
+    return s;
+  },
+  // Sample kit: pads and a waveform screen
+  kit: function () {
+    var s = R(14, 14, 132, 72, "#2a2d33", 7) + R(22, 22, 116, 20, "#0f1114", 3), d = "";
+    for (var i = 0; i < 38; i++) {
+      var x = 26 + i * 2.9, a = 8 * Math.exp(-i / 12) * (0.4 + 0.6 * Math.abs(Math.sin(i * 1.7)));
+      d += "M" + x.toFixed(1) + " " + (32 - a).toFixed(1) + " V" + (32 + a).toFixed(1) + " ";
+    }
+    s += L(d, "#ff1fd6", 1.6);
+    for (var r = 0; r < 2; r++) for (var p = 0; p < 6; p++) s += R(22 + p * 19.6, 48 + r * 19, 16, 16, r === 0 && p === 0 ? "#ff1fd6" : "#3b3f47", 3);
+    return s;
+  },
+  // Kick engine: a bass drum from the front
+  ultrakik: function () {
+    var s = L("M54 82 L44 96 M106 82 L116 96", "#c9ccd2", 3) + C(80, 48, 41, "#8e1b2b") + C(80, 48, 41, "none", ' stroke="#c9ccd2" stroke-width="3.5"') +
+      C(80, 48, 33, "#f1ede4");
+    for (var k = 0; k < 8; k++) {
+      var a = k * Math.PI / 4, x = 80 + Math.cos(a) * 41, y = 48 + Math.sin(a) * 41;
+      s += C(x.toFixed(1), y.toFixed(1), 2.6, "#e2e4e8");
+    }
+    return s + C(80, 48, 14, "#ff1fd6", ' opacity=".9"') + C(80, 48, 7, "#121417");
+  },
+  // XIA engines: two little modules
+  xia: function () {
+    var s = "";
+    for (var m = 0; m < 2; m++) {
+      var x = 34 + m * 48;
+      s += R(x, 6, 44, 88, "#c9ccd2", 2, ' stroke="#9a9ea6"') + C(x + 5, 10, 1.6, "#7d8189") + C(x + 39, 90, 1.6, "#7d8189") +
+        knob(x + 22, 30, 9, "#1d1f22", "#e9e7e2") + knob(x + 12, 54, 5, "#1d1f22", "#e9e7e2") + knob(x + 32, 54, 5, "#1d1f22", "#e9e7e2") +
+        C(x + 36, 14, 2, m ? "#19ffe0" : "#ff1fd6");
+      for (var j = 0; j < 3; j++) s += C(x + 10 + j * 12, 78, 4, "#2a2c30") + C(x + 10 + j * 12, 78, 1.8, "#0c0d0f");
+    }
+    return s;
+  },
+  // Bass line: a silver box with knobs and a row of key buttons
+  tb303: function () {
+    var s = R(8, 22, 144, 58, "#cfd2d6", 5, ' stroke="#a5a9af"');
+    for (var i = 0; i < 6; i++) s += knob(22 + i * 20, 36, 5.5, "#1d1f22", "#e9e7e2");
+    s += C(140, 36, 3, "#ff3b2f");
+    var black = [1, 3, 6, 8, 10];
+    for (var k = 0; k < 13; k++) s += R(16 + k * 10, 54, 8, 16, black.indexOf(k) >= 0 ? "#3a3d44" : "#f4f4f2", 1.5);
+    return s;
+  },
+  // Subtractive: a mono synth with a filter curve on its screen
+  subt: function () {
+    var s = R(8, 10, 144, 80, "#24272c", 6) + R(16, 18, 50, 28, "#0f1114", 3) + L("M20 30 H42 Q52 22 56 40 L62 44", "#ff1fd6", 2);
+    for (var i = 0; i < 4; i++) s += knob(80 + i * 18, 25, 5.5, "#c9ccd2", "#24272c") + knob(80 + i * 18, 40, 5.5, "#c9ccd2", "#24272c");
+    return s + keys(14, 54, 132, 30, 16, "#f1efe9", "#1b1c20");
+  },
+  // FM: an operator algorithm on the panel
+  fm: function () {
+    var s = R(8, 10, 144, 80, "#262a31", 6), op = ' stroke="#ff1fd6" stroke-width="1.6"';
+    s += R(18, 15, 14, 9, "none", 2, op) + R(18, 33, 14, 9, "none", 2, op) + R(42, 15, 14, 9, "none", 2, op) + R(42, 33, 14, 9, "none", 2, op) +
+      L("M25 24 V33 M49 24 V33 M25 42 V47 H49 V42", "#ff1fd6", 1.4) + R(68, 16, 74, 12, "#0d2a26", 2) + R(72, 20, 40, 3, "#19ffe0", 1);
+    for (var i = 0; i < 9; i++) s += R(68 + i * 8.4, 34, 6.5, 8, i % 3 === 2 ? "#19ffe0" : "#4b5058", 1.5);
+    return s + keys(14, 54, 132, 30, 16, "#f1efe9", "#1b1c20");
+  },
+  // Wavetable: a landscape of waves morphing from pink to teal
+  wave: function () {
+    var s = R(8, 10, 144, 80, "#1a1d21", 6);
+    for (var k = 6; k >= 0; k--) {
+      var m = k / 6, col = "rgb(" + Math.round(255 * (1 - m)) + "," + Math.round(31 + 193 * m) + "," + Math.round(214 - 22 * m) + ")";
+      var fn = function (t) { var sn = Math.sin(t * Math.PI * 4), sw = 2 * ((t * 2) % 1) - 1; return sn * (1 - m) + sw * m; };
+      s += L(wavePath(18 + k * 6, 74 - k * 7, 92, 9, fn, 64), col, 1.8);
+    }
+    return s;
+  },
+  // Ring mod: two linked rings
+  ring: function () {
+    return R(8, 10, 144, 80, "#1a1d21", 6) + C(64, 50, 24, "none", ' stroke="#ff1fd6" stroke-width="5"') +
+      C(96, 50, 24, "none", ' stroke="#19ffe0" stroke-width="5"') + L(wavePath(30, 50, 100, 10, function (t) { return Math.sin(t * 25) * Math.sin(t * 6); }, 80), "#e9e7e2", 1.6);
+  },
+  // Brings: a resonating body and a vibrating string
+  rings: function () {
+    var s = R(8, 10, 144, 80, "#10201f", 6);
+    for (var r = 4; r >= 1; r--) s += C(54, 50, r * 9, "none", ' stroke="#19ffe0" stroke-width="2" opacity="' + (1.15 - r * 0.22).toFixed(2) + '"');
+    s += C(54, 50, 4, "#19ffe0");
+    var st = function (t) { return Math.sin(t * Math.PI * 3); };
+    s += L(wavePath(96, 70, 48, 8, st), "#ff1fd6", 1.8) + L(wavePath(96, 70, 48, -8, st), "#ff1fd6", 1.8, ' opacity=".5"');
+    return s + knob(108, 30, 7, "#d9dde0", "#10201f") + knob(134, 30, 7, "#d9dde0", "#10201f");
+  },
+  // DX7 style FM keyboard: membrane buttons and a green screen
+  dx7: function () {
+    var s = R(4, 20, 152, 62, "#2b2522", 4) + R(4, 20, 152, 26, "#3a322e", 4) + R(12, 27, 34, 11, "#7fd4a8", 1.5) + R(15, 31, 20, 2.5, "#1f3b2c", 1);
+    var cols = ["#e9e7e2", "#ff8a1f", "#e9e7e2", "#19ffe0"];
+    for (var i = 0; i < 12; i++) s += R(52 + i * 8.4, 27, 6.4, 11, cols[i % 4], 1);
+    return s + keys(8, 50, 144, 28, 21, "#f1efe9", "#1b1c20");
+  },
+  // Brophet: black panel, fake wood cheeks
+  brophet: function () {
+    var id = "wood" + (++artSeq);
+    var s = '<defs><pattern id="' + id + '" width="14" height="40" patternUnits="userSpaceOnUse"><rect width="14" height="40" fill="#7a4a24"/>' +
+      L("M3 0 Q6 10 3 20 T3 40", "#4f2c12", 1.3) + L("M9 0 Q7 12 10 22 T9 40", "#a06a3e", 1) + L("M12 0 Q13 18 11.5 40", "#5e3517", .8) +
+      "</pattern></defs>";
+    s += R(4, 12, 14, 76, "url(#" + id + ")", 2) + R(142, 12, 14, 76, "url(#" + id + ")", 2) + R(18, 12, 124, 44, "#16171a", 1) +
+      R(18, 12, 124, 2, "#c9a46a");
+    for (var i = 0; i < 7; i++) s += knob(28 + i * 17, 26, 5, "#2a2c30", "#e9e7e2") + knob(28 + i * 17, 43, 5, "#2a2c30", "#e9e7e2");
+    return s + R(18, 56, 124, 32, "#16171a") + keys(20, 58, 120, 28, 15, "#f1efe9", "#1b1c20");
+  },
+  // Bruno106: black with blue and red highlights
+  bruno: function () {
+    var s = R(6, 12, 148, 74, "#121316", 5) + R(6, 12, 148, 3, "#2f6fe0", 1) + R(6, 15.5, 148, 1.5, "#e0322f");
+    var caps = [30, 26, 36, 22, 33, 28, 38, 24, 30];
+    for (var i = 0; i < 9; i++) {
+      var x = 16 + i * 10;
+      s += R(x, 22, 2, 24, "#3a3d44", 1) + R(x - 3, caps[i], 8, 5, i < 5 ? "#2f6fe0" : "#e0322f", 1);
+    }
+    for (var b = 0; b < 4; b++) s += R(110 + (b % 2) * 18, 22 + Math.floor(b / 2) * 13, 14, 8, b % 2 ? "#e0322f" : "#2f6fe0", 1.5) + C(117 + (b % 2) * 18, 33 + Math.floor(b / 2) * 13, 1.2, b === 0 ? "#ff3b2f" : "#3a1a1a");
+    return s + R(14, 49, 132, 1, "#2f6fe0", 0, ' opacity=".6"') + keys(12, 53, 136, 29, 17, "#f1efe9", "#1b1c20");
+  },
+  // Init: a plain sine
+  init: function () {
+    return R(8, 10, 144, 80, "#1a1d21", 6, ' stroke="#2c3036" stroke-dasharray="4 4"') + L(wavePath(28, 50, 104, 20, sin(1)), "#9aa0a8", 2.5);
+  },
+  midi: function () {
+    var s = C(80, 50, 30, "#2a2d33") + C(80, 50, 25, "#0f1114") + R(76, 21, 8, 7, "#2a2d33", 1);
+    for (var k = 0; k < 5; k++) {
+      var a = Math.PI + k * Math.PI / 4;
+      s += C((80 + Math.cos(a) * 15).toFixed(1), (52 + Math.sin(a) * 15).toFixed(1), 2.8, "#c9ccd2");
+    }
+    return s + C(80, 50, 30, "none", ' stroke="#ff1fd6" stroke-width="1.5" opacity=".6"');
+  },
+  // Sample kit: a grey pad sampler with a screen and a big data wheel
+  mpc: function () {
+    var s = R(10, 8, 140, 84, "#b9bcc1", 6, ' stroke="#8d9097" stroke-width="1.5"') + R(18, 15, 58, 22, "#1d2a2e", 2) +
+      L("M22 30 L28 22 L32 32 L38 20 L44 30 L50 26 L58 30 L70 28", "#19ffe0", 1.4) +
+      C(116, 27, 13, "#2a2c30") + C(116, 27, 9, "#3a3d44") + C(120, 21, 2, "#c9ccd2");
+    for (var b = 0; b < 4; b++) s += R(18 + b * 15, 41, 11, 5, "#2a2c30", 1);
+    for (var r = 0; r < 4; r++) for (var p = 0; p < 4; p++) {
+      var lit = (r === 1 && p === 2) || (r === 3 && p === 0);
+      s += R(80 + p * 15.5, 44 + r * 11.5, 13, 9.5, lit ? "#ff1fd6" : "#e6e3dc", 2.5);
+    }
+    s += knob(26, 62, 6, "#2a2c30", "#e9e7e2") + knob(46, 62, 6, "#2a2c30", "#e9e7e2") + knob(66, 62, 6, "#2a2c30", "#e9e7e2");
+    return s + R(18, 75, 54, 8, "#2a2c30", 2) + R(20, 77, 18, 4, "#ff3b2f", 1);
+  },
+  sample: function () {
+    var d = "";
+    for (var i = 0; i < 40; i++) {
+      var x = 22 + i * 3, a = 30 * Math.exp(-i / 14) * (0.35 + 0.65 * Math.abs(Math.sin(i * 1.3)));
+      d += "M" + x + " " + (50 - a).toFixed(1) + " V" + (50 + a).toFixed(1) + " ";
+    }
+    return L(d, "#ff1fd6", 1.8);
+  },
+  none: function () { return R(20, 20, 120, 60, "none", 8, ' stroke="#2c3036" stroke-width="2" stroke-dasharray="5 5"'); }
+};
+ART.deluge = ART.subt;
+function art(key) {
+  var f = ART[key] || ART.none;
+  return '<svg viewBox="0 0 160 100" aria-hidden="true">' + f() + "</svg>";
+}
+// Art for the engine of a state: the Deluge's own synth by its mode and oscillator
+function artKeyFor(family, s) {
+  if (family !== "deluge" || !s) return family;
+  if (s.synthMode === 1) return "fm";
+  if (s.synthMode === 2) return "ring";
+  if (s.synthMode === 3) return "tb303";
+  return s.osc0 === 6 ? "wave" : "subt";
+}
+// Picker options that are instruments or kit types (English, or the 7-seg text when the English isn't certain)
+// The drawing for a picker option: exact name, else by its first letters (7-seg texts are cut short)
+function optionArt(name) {
+  var n = String(name).toLowerCase().trim();
+  if (OPTION_ART[n]) return OPTION_ART[n];
+  var starts = [["303", "tb303"], ["ultr", "ultrakik"], ["ukik", "ultrakik"], ["xia", "xia"], ["subt", "subt"], ["wave", "wave"], ["ring", "ring"], ["brin", "rings"], ["brop", "brophet"],
+    ["brun", "bruno"], ["dx", "dx7"], ["init", "init"], ["kit", "mpc"], ["samp", "mpc"], ["lxr", "lxr"], ["cyc", "cyc"],
+    ["gin", "gin"]];
+  for (var i = 0; i < starts.length; i++) if (n.indexOf(starts[i][0]) === 0) return starts[i][1];
+  return null;
+}
+var OPTION_ART = {
+  subtractive: "subt", subt: "subt", fm: "fm", wavetable: "wave", wave: "wave", "ring mod": "ring", ring: "ring",
+  brings: "rings", dx7: "dx7", "303": "tb303", brophet: "brophet", bruno106: "bruno", init: "init",
+  kit: "mpc", lxr: "lxr", cycles: "cyc", cycl: "cyc", gin: "gin"
+};
+
+// ---- 7-seg mirror: bit 6 = A (top) ... bit 0 = G (middle), 0x80 = dot. Segment polygons per digit, 50 wide, 100 high
+var SEG_SHAPES = [
+  [6, "M10,4 L40,4 L35,10 L15,10 Z"],          // A
+  [5, "M42,6 L42,46 L37,42 L37,12 Z"],          // B
+  [4, "M42,54 L42,94 L37,88 L37,58 Z"],         // C
+  [3, "M10,96 L40,96 L35,90 L15,90 Z"],         // D
+  [2, "M8,54 L8,94 L13,88 L13,58 Z"],           // E
+  [1, "M8,6 L8,46 L13,42 L13,12 Z"],            // F
+  [0, "M11,50 L16,46 L34,46 L39,50 L34,54 L16,54 Z"] // G
+];
+function buildMirror(id) {
+  var svg = $(id || "segsvg"), html = "";
+  for (var d = 0; d < 4; d++) {
+    html += '<g transform="translate(' + (d * 58 + 2) + ',0)">';
+    SEG_SHAPES.forEach(function (sg) { html += '<path class="seg" data-d="' + d + '" data-b="' + sg[0] + '" d="' + sg[1] + '"/>'; });
+    html += '<circle class="seg" data-d="' + d + '" data-b="7" cx="48" cy="94" r="3.5"/></g>';
+  }
+  svg.innerHTML = html;
+}
+function showDigits(digits) {
+  var els = document.querySelectorAll("#segsvg .seg, #bigSeg .seg");
+  for (var k = 0; k < els.length; k++) {
+    var e = els[k], v = digits[+e.getAttribute("data-d")], b = +e.getAttribute("data-b");
+    e.setAttribute("class", (v >> b) & 1 ? "seg on" : "seg");
+  }
+}
+
+// OLED mirror: 128 x 48, 6 pages of 128 bytes, bit n of a byte = pixel n down that page
+var oledImage = new Uint8Array(768), screenMode = "7seg";
+
+// Inverse of the firmware's pack_8to7_rle
+function unpackRle(d, start, end) {
+  var out = [], i = start;
+  while (i < end) {
+    var b = d[i++];
+    if (b < 64) {
+      var size, high;
+      if (b < 4) { size = 2; high = b; } else if (b < 12) { size = 3; high = b - 4; }
+      else if (b < 28) { size = 4; high = b - 12; } else { size = 5; high = b - 28; }
+      for (var j = 0; j < size; j++) out.push(d[i++] | (((high >> j) & 1) << 7));
+    } else {
+      var top = (b & 1) << 7, n = (b - 64) >> 1;
+      if (n === 1) { out.push(d[i++] | top); continue; }
+      if (n === 31) n = 31 + d[i++];
+      var v = d[i++] | top;
+      for (var r = 0; r < n; r++) out.push(v);
+    }
+  }
+  return out;
+}
+// Inverse of pack_8bit_to_7bit: groups of a high-bits byte then up to 7 bytes
+function unpack7(d, start, end) {
+  var out = [];
+  for (var i = start; i < end; i += 8) {
+    var hi = d[i];
+    for (var j = 0; j < 7 && i + 1 + j < end; j++) out.push(d[i + 1 + j] | (((hi >> j) & 1) << 7));
+  }
+  return out;
+}
+function drawOled() {
+  var c = $("oled"), ctx = c.getContext("2d"), img = ctx.createImageData(128, 48);
+  for (var y = 0; y < 48; y++) for (var x = 0; x < 128; x++) {
+    var on = (oledImage[(y >> 3) * 128 + x] >> (y & 7)) & 1, p = (y * 128 + x) * 4;
+    img.data[p] = on ? 235 : 0; img.data[p + 1] = on ? 240 : 0; img.data[p + 2] = on ? 255 : 0; img.data[p + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  $("bigOled").getContext("2d").putImageData(img, 0, 0);
+}
+function setScreenMode(mode) {
+  screenMode = mode;
+  $("segsvg").style.display = mode === "7seg" ? "" : "none";
+  $("oled").style.display = mode === "oled" ? "block" : "none";
+  $("bigSeg").style.display = mode === "7seg" ? "" : "none";
+  $("bigOled").style.display = mode === "oled" ? "block" : "none";
+  $("mode7").className = mode === "7seg" ? "on" : "";
+  $("modeOled").className = mode === "oled" ? "on" : "";
+}
+function wantScreen(mode) {
+  if (!output || mode === screenMode) return;
+  output.send(HDR.concat([0x00, 0x04, 0xF7])); // swap the Deluge's display type, as DEx does
+  setScreenMode(mode);
+  setTimeout(function () { sendDisplay(true); }, 150);
+}
+
+
+function tx(bytes) { if (output) output.send(HDR.concat(bytes, [0xF7])); }
+
+// ---- Stage: one panel at a time, by what the Deluge is doing. A menu or browser on top wins, then the waveform,
+// then the song views, then the track.
+var picker = null, browser = null, wave = null, transport = null;
+function updateStage() {
+  var view = transport ? transport.view : 4;
+  var which = picker ? "picker" : browser ? "browser" : wave ? "wave" : (view >= 1 && view <= 3) ? "song" : "track";
+  ["picker", "browser", "wave", "song", "track"].forEach(function (id) {
+    var el = $(id), on = id === which;
+    if (el.classList.contains("show") !== on) el.classList.toggle("show", on);
+  });
+  if (which === "wave") drawWave();
+  if (which === "song") renderSong();
+}
+
+// ---- Picker (any open context menu). Instrument and kit type lists get a drawing per tile.
+function showPicker(p) {
+  picker = p.open ? p : null;
+  if (picker) {
+    $("pickerTitle").textContent = p.title;
+    var tiles = $("pickerTiles");
+    var keysFor = p.options.map(optionArt);
+    // Pictures when most options are instruments or kit types (a list can carry an extra entry, like Current)
+    var withArt = keysFor.length > 1 && keysFor.filter(function (k) { return !!k; }).length * 2 >= keysFor.length;
+    tiles.className = withArt ? "art" : "";
+    tiles.innerHTML = "";
+    p.options.forEach(function (name, idx) {
+      var t = document.createElement("button");
+      t.className = "tile" + (idx === p.selected ? " sel" : "");
+      t.innerHTML = withArt && keysFor[idx] ? art(keysFor[idx]) : "";
+      var label = document.createElement("span"); label.textContent = name; t.appendChild(label);
+      t.onclick = function () { t.className += " tapped"; tx([0x03, 0x02, idx]); };
+      tiles.appendChild(t);
+    });
+  }
+  updateStage();
+}
+
+// ---- Browser (preset, song, pattern and sample browsers): a window of names around the selected one
+function showBrowser(b) {
+  browser = b.open ? b : null;
+  if (browser) {
+    $("browserTitle").textContent = b.folder || "Browser";
+    var list = $("browserList");
+    list.innerHTML = "";
+    b.items.forEach(function (it, idx) {
+      var abs = b.base + idx;
+      var row = document.createElement("div");
+      row.className = "item" + (it.folder ? " folder" : "");
+      row.setAttribute("data-abs", abs);
+      var n = document.createElement("span"); n.className = "n"; n.textContent = it.folder ? "DIR" : String(abs + 1);
+      var t = document.createElement("span"); t.textContent = it.name.replace(/\.xml$/i, "").replace(/\.wav$/i, "");
+      row.appendChild(n); row.appendChild(t);
+      row.onclick = function () {
+        row.className += " tapped";
+        if (abs === browser.selected) tx([0x03, 0x04]); // already selected: press select
+        else tx([0x03, 0x03, (abs >> 7) & 0x7F, abs & 0x7F]);
+      };
+      list.appendChild(row);
+    });
+  }
+  updateStage();
+  if (browser) highlightBrowser(b.selected);
+}
+function highlightBrowser(sel) {
+  if (!browser) return;
+  browser.selected = sel;
+  var rows = $("browserList").querySelectorAll(".item");
+  for (var r = 0; r < rows.length; r++) {
+    var on = +rows[r].getAttribute("data-abs") === sel;
+    rows[r].className = rows[r].className.replace(/ (sel|tapped)/g, "") + (on ? " sel" : "");
+    if (on) rows[r].scrollIntoView({ block: "nearest" });
+  }
+}
+
+// ---- Readout: the menu item's name and value together (the firmware sends the value even while the 7-seg scrolls
+// the name)
+function showText(t) {
+  var main = t.mainEnglish || t.main, pop = t.popupEnglish || t.popupText;
+  $("menuName").textContent = t.menu;
+  $("fullText").textContent = main || (t.menu ? "" : "-");
+  $("popupText").textContent = t.popup && pop !== main ? pop : "";
+  var raws = [];
+  if (t.main && t.main !== main) raws.push(t.main);
+  if (t.popup && t.popupText && t.popupText !== pop) raws.push(t.popupText);
+  $("rawText").textContent = raws.length ? "7-seg: " + raws.join(" / ") : "";
+}
+
+// ---- Waveform: the window the pads show, 12 tablet columns per pad column. Markers can be dragged in the sample
+// marker editor (start, loop start, loop end, end) and in Start offset (the offset).
+var wavePlayheads = [];
+var MARKERS = {
+  0: ["Start", "#19ffe0"], 1: ["Loop start", "#ff9a3c"], 2: ["Loop end", "#ff9a3c"], 3: ["End", "#ff4d6d"],
+  4: ["Clip start", "#e9e7e2"], 5: ["Clip end", "#e9e7e2"], 6: ["Offset", "#ffe14d"]
+};
+var WAVE_KIND = { 1: "Audio clip", 2: "Sample markers", 3: "Sample preview", 4: "Start offset" };
+var drag = null; // {type, col}
+function draggable(type) { return wave && ((wave.kind === 2 && type <= 3) || (wave.kind === 4 && type === 6)); }
+var waveSent = null; // The markers as the Deluge last sent them
+function showWave(w) {
+  wave = w.open ? w : null;
+  if (wave) waveSent = w.markers.map(function (m) { return { type: m.type, col: m.col }; });
+  if (wave) {
+    if (drag) { // Keep the dragged marker where the finger is until the Deluge catches up
+      w.markers.forEach(function (m) { if ((m.type & 0x0F) === drag.type) m.col = drag.col; });
+    }
+    $("waveTitle").textContent = (WAVE_KIND[w.kind] || "Waveform") + (w.name ? " · " + w.name : "");
+    $("wRev").style.display = w.reversed ? "" : "none";
+    $("wRec").style.display = w.recording ? "" : "none";
+    $("wLoad").style.visibility = w.complete || w.recording ? "hidden" : "visible";
+    var seen = {}, legend = "";
+    w.markers.forEach(function (m) {
+      var info = MARKERS[m.type & 0x0F]; if (!info || seen[info[0]]) return; seen[info[0]] = 1;
+      legend += '<span><i style="background:' + info[1] + '"></i>' + info[0] + ((m.type & 0x10) ? " (editing)" : "") + "</span>";
+    });
+    if (w.kind === 2 || w.kind === 4) legend += "<span>Drag a marker to move it</span>";
+    $("waveLegend").innerHTML = legend;
+  }
+  updateStage();
+}
+function drawWave() {
+  if (!wave || !$("wave").classList.contains("show")) return;
+  var c = $("waveCanvas"), dpr = window.devicePixelRatio || 1;
+  var W = Math.max(1, Math.round(c.clientWidth * dpr)), H = Math.max(1, Math.round(c.clientHeight * dpr));
+  if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+  var ctx = c.getContext("2d"), n = wave.cols, colW = W / n, mid = H / 2;
+  ctx.clearRect(0, 0, W, H);
+  // Scale to the loudest column in view, as the pads do, but never blow silence up past 1/8 of full scale
+  var peak = 8;
+  wave.peaks.forEach(function (p) { if (p) peak = Math.max(peak, Math.abs(p[0] - 64), Math.abs(p[1] - 64)); });
+  var scale = (H / 2 - 6 * dpr) / peak;
+  var lo = null, hi = null;
+  wave.markers.forEach(function (m) {
+    var t = m.type & 0x0F;
+    if (t === 0 || t === 4) lo = m.col; if (t === 3 || t === 5) hi = m.col;
+  });
+  ctx.fillStyle = "rgba(255,255,255,.035)";
+  if (lo !== null && lo > 0) ctx.fillRect(0, 0, lo * colW, H);
+  if (hi !== null && hi < n) ctx.fillRect(Math.max(0, hi) * colW, 0, W - Math.max(0, hi) * colW, H);
+  ctx.fillStyle = "#2c3036"; ctx.fillRect(0, mid - dpr / 2, W, dpr);
+  for (var i = 0; i < n; i++) {
+    var p = wave.peaks[i], x = i * colW;
+    if (!p) { ctx.fillStyle = "rgba(154,160,168,.12)"; ctx.fillRect(x, mid - 6 * dpr, Math.max(1, colW - dpr), 12 * dpr); continue; }
+    var inside = (lo === null || i >= lo) && (hi === null || i < hi);
+    var top = mid - (p[1] - 64) * scale, bot = mid - (p[0] - 64) * scale;
+    ctx.fillStyle = inside ? "#ff1fd6" : "rgba(255,31,214,.35)";
+    ctx.fillRect(x, top, Math.max(1, colW - dpr * 0.5), Math.max(dpr, bot - top));
+  }
+  wave.markers.forEach(function (m, mi) {
+    var t = m.type & 0x0F, info = MARKERS[t]; if (!info || m.col < 0 || m.col > n) return;
+    var x = Math.min(W - dpr, m.col * colW), editing = (m.type & 0x10) !== 0 || (drag && drag.type === t);
+    ctx.fillStyle = info[1];
+    if (t === 4 || t === 5) { for (var y = 0; y < H; y += 8 * dpr) ctx.fillRect(x, y, dpr, 4 * dpr); }
+    else ctx.fillRect(x - (editing ? dpr : 0), 0, editing ? 3 * dpr : 1.5 * dpr, H);
+    if (editing) { ctx.shadowColor = info[1]; ctx.shadowBlur = 10 * dpr; ctx.fillRect(x - dpr, 0, 3 * dpr, H); ctx.shadowBlur = 0; }
+    if (draggable(t)) { ctx.beginPath(); ctx.arc(x, H - 14 * dpr, 9 * dpr, 0, Math.PI * 2); ctx.fill(); }
+    ctx.font = (editing ? "600 " : "") + 12 * dpr + "px ui-monospace, monospace";
+    ctx.fillText(info[0], Math.min(x + 4 * dpr, W - 80 * dpr), (16 + (mi % 2) * 16) * dpr);
+  });
+  // Playheads: the clip's, or each voice playing the sample
+  ctx.fillStyle = "#ffffff";
+  wavePlayheads.forEach(function (c) {
+    if (c >= 0 && c <= n) ctx.fillRect(Math.min(W - 2 * dpr, c * colW), 0, 2 * dpr, H);
+  });
+}
+window.addEventListener("resize", drawWave);
+// Dragging: grab the nearest draggable marker, send its new place (a 14-bit fraction of the window) at most every
+// 30 ms, and the last place on release
+var dragSentAt = 0, dragTimer = null;
+function waveFraction(ev) {
+  var r = $("waveCanvas").getBoundingClientRect();
+  return Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width));
+}
+function sendDrag() {
+  if (!drag) return;
+  var f = Math.round(drag.col / wave.cols * 16383);
+  tx([0x03, 0x06, drag.type, (f >> 7) & 0x7F, f & 0x7F]);
+  dragSentAt = Date.now();
+}
+$("waveCanvas").addEventListener("pointerdown", function (ev) {
+  if (!wave) return;
+  var col = waveFraction(ev) * wave.cols, best = null, bestDist = 1e9;
+  var px = $("waveCanvas").getBoundingClientRect().width / wave.cols;
+  wave.markers.forEach(function (m) {
+    var t = m.type & 0x0F; if (!draggable(t)) return;
+    var d = Math.abs(m.col - col) * px;
+    if (d < bestDist) { bestDist = d; best = t; }
+  });
+  if (best === null || bestDist > 44) return;
+  drag = { type: best, col: col };
+  $("waveCanvas").setPointerCapture(ev.pointerId);
+  showWave(wave); drawWave(); sendDrag();
+});
+$("waveCanvas").addEventListener("pointermove", function (ev) {
+  if (!drag || !wave) return;
+  drag.col = waveFraction(ev) * wave.cols;
+  wave.markers.forEach(function (m) { if ((m.type & 0x0F) === drag.type) m.col = drag.col; });
+  drawWave();
+  if (Date.now() - dragSentAt > 30) sendDrag();
+  else { clearTimeout(dragTimer); dragTimer = setTimeout(sendDrag, 35); }
+});
+function endDrag() {
+  if (!drag) return;
+  sendDrag(); drag = null;
+  // Show where the Deluge says the markers are: if it didn't take the move, the marker goes back
+  if (wave && waveSent) wave.markers = waveSent.map(function (m) { return { type: m.type, col: m.col }; });
+  drawWave();
+}
+$("waveCanvas").addEventListener("pointerup", endDrag);
+$("waveCanvas").addEventListener("pointercancel", endDrag);
+
+// ---- Track: engine, knobs, kit rows
+var lastHeroArt = "";
+function render() {
+  if (!state) return;
+  var info = engineInfo(state.engine);
+  var family = info[1];
+  var key = artKeyFor(family, state);
+  if (key !== lastHeroArt) { $("heroArt").innerHTML = art(key); lastHeroArt = key; }
+  $("family").textContent = FAMILY_NAME[family] || family;
+  var engineText = info[0];
+  if (family === "deluge") engineText = pick(SYNTH_MODES, state.synthMode);
+  if (family === "rings") engineText += " " + pick(RINGS_MODELS, state.engineSub);
+  $("engine").textContent = engineText;
+  $("preset").textContent = state.name || "(unnamed)";
+  $("rowname").textContent = state.outType === 1 ? "Row " + (state.row === 0x7F ? "-" : state.row + 1) +
+    (state.rowName ? ": " + state.rowName : "") : "";
+
+  var rowsEl = $("rows");
+  rowsEl.innerHTML = "";
+  if (state.outType === 1 && rows) {
+    rows.forEach(function (code, idx) {
+      var ri = engineInfo(code);
+      var div = document.createElement("div");
+      div.className = "row" + (idx === state.row ? " sel" : "");
+      div.innerHTML = art(ri[1]) + "<b>" + (idx + 1) + "</b><span></span>";
+      div.lastChild.textContent = ri[0];
+      rowsEl.appendChild(div);
+    });
+  }
+
+  var f = [
+    ["Output", pick(OUTPUT_TYPES, state.outType)], ["Synth mode", pick(SYNTH_MODES, state.synthMode)],
+    ["Osc 1", pick(OSC_TYPES, state.osc0)], ["Engine code", state.engine + " (0x" + state.engine.toString(16) + ")"],
+    ["Engine sub", state.engineSub], ["Track", state.track === 0x3FFF ? "-" : state.track + 1],
+    ["Messages", stateCount + " state, seq " + state.seq + ", gaps " + dropped], ["Spec version", state.version]
+  ];
+  $("fields").innerHTML = "";
+  f.forEach(function (p) {
+    var dt = document.createElement("dt"); dt.textContent = p[0];
+    var dd = document.createElement("dd"); dd.textContent = p[1];
+    $("fields").appendChild(dt); $("fields").appendChild(dd);
+  });
+}
+
+var KNOB_GROUPS = ["Oscillators", "Filters", "Envelope 1", "Envelope 2", "Voice", "Effects", "LFOs", "Engine", "Switches"];
+// The engine group is named after the engine
+function groupName(g) {
+  if (g === 7 && state) {
+    var info = engineInfo(state.engine);
+    return info[1] === "deluge" ? "303" : info[0];
+  }
+  return KNOB_GROUPS[g] || "";
+}
+function knobSvg(pos, bipolar, colour) {
+  colour = colour || "#ff1fd6";
+  // 270 degree sweep, from 7:30 to 4:30; bipolar fills from the top
+  var a0 = 135, a = 135 + pos / 127 * 270, r = 18, cx = 23, cy = 23;
+  function pt(deg, rad) { var t = deg * Math.PI / 180; return (cx + rad * Math.cos(t)).toFixed(1) + " " + (cy + rad * Math.sin(t)).toFixed(1); }
+  function arc(from, to) {
+    if (Math.abs(to - from) < 0.5) return "";
+    var large = Math.abs(to - from) > 180 ? 1 : 0, sweep = to > from ? 1 : 0;
+    return '<path d="M' + pt(from, r) + " A" + r + " " + r + " 0 " + large + " " + sweep + " " + pt(to, r) + '" fill="none" stroke="' + colour + '" stroke-width="3.5" stroke-linecap="round"/>';
+  }
+  var track = '<path d="M' + pt(135, r) + " A" + r + " " + r + ' 0 1 1 ' + pt(45, r) + '" fill="none" stroke="#2c3036" stroke-width="3.5" stroke-linecap="round"/>';
+  var fill = bipolar ? arc(270, a) : arc(a0, a);
+  return '<svg viewBox="0 0 46 46">' + track + fill + '<circle cx="23" cy="23" r="12" fill="#2a2d33"/>' +
+    '<line x1="' + pt(a, 4).split(" ")[0] + '" y1="' + pt(a, 4).split(" ")[1] + '" x2="' + pt(a, 11).split(" ")[0] +
+    '" y2="' + pt(a, 11).split(" ")[1] + '" stroke="#e9e7e2" stroke-width="2.4" stroke-linecap="round"/></svg>';
+}
+var knobEls = {}, knobLayout = "";
+function showParams(p) {
+  var box = $("knobs"), special = $("special"), sbody = special.querySelector(".sbody");
+  if (!p.open || !p.knobs.length) {
+    box.innerHTML = ""; sbody.innerHTML = ""; special.style.display = "none"; knobEls = {}; knobLayout = ""; return;
+  }
+  // Rebuild only when the set of knobs changes; otherwise update in place, so nothing moves
+  var layout = p.knobs.map(function (k) { return k.x + "," + k.y + "," + k.group + ":" + k.name + ":" + k.isSwitch; }).join("|");
+  if (layout !== knobLayout) {
+    knobLayout = layout; knobEls = {}; box.innerHTML = ""; sbody.innerHTML = "";
+    var groups = {};
+    p.knobs.forEach(function (k) {
+      if (!groups[k.group]) {
+        var g = document.createElement("div"); g.className = "kgroup";
+        g.innerHTML = '<div class="label"></div><div class="kgrid"></div>';
+        g.querySelector(".label").textContent = groupName(k.group);
+        if (k.group >= 7) g.classList.add("engine");
+        if (k.group === 8) g.classList.add("switches");
+        groups[k.group] = g;
+      }
+      var b = document.createElement("button");
+      b.className = "knob";
+      b.innerHTML = k.isSwitch ? '<span class="sw"></span><span class="kn"></span>'
+        : '<span class="ks"></span><span class="kv"></span><span class="kn"></span>';
+      // Two words too long for a knob label at this size; the rest stay as the Deluge's English titles
+      b.querySelector(".kn").textContent = k.name; // Exactly as the Deluge names it
+      b.title = k.name;
+      b.onclick = function () {
+        if (b.classList.contains("cant")) return; // Its pad would only say CANT
+        b.classList.add("tapped"); tx([0x03, 0x07, k.x, k.y]);
+      };
+      groups[k.group].querySelector(".kgrid").appendChild(b);
+      knobEls[k.x + "," + k.y + "," + k.group] = b;
+    });
+    // The engine's controls and switches go in the bright frame above; the standard sections below
+    var hasSpecial = false;
+    Object.keys(groups).sort(function (a, b) { return a - b; }).forEach(function (g) {
+      if (g >= 7) {
+        hasSpecial = true;
+        groups[g].querySelector(".label").textContent = g == 8 ? "Switches" : "Controls";
+        sbody.appendChild(groups[g]);
+      } else box.appendChild(groups[g]);
+    });
+    special.style.display = hasSpecial ? "" : "none";
+    special.querySelector(".label").textContent = groupName(7);
+  }
+  p.knobs.forEach(function (k) {
+    var b = knobEls[k.x + "," + k.y + "," + k.group]; if (!b) return;
+    var key = k.pos + ":" + k.bipolar + ":" + k.value + ":" + k.open + ":" + k.cant + ":" + k.text;
+    if (b.getAttribute("data-k") === key) return;
+    b.setAttribute("data-k", key);
+    if (k.isSwitch) {
+      b.querySelector(".sw").textContent = k.text;
+    } else {
+      b.querySelector(".ks").innerHTML = knobSvg(k.pos, k.bipolar);
+      b.querySelector(".kv").textContent = (k.bipolar && k.value > 0 ? "+" : "") + k.value;
+    }
+    b.className = "knob" + (k.isSwitch ? " switch" : "") + (k.open ? " open" : "") + (k.cant ? " cant" : "");
+    b.title = k.cant ? "Not available on this sound (the Deluge would say CANT)" : "";
+  });
+}
+
+// ---- Engine panels: BRUNO106 (sliders, as the Juno it comes from) and BROPHET (knobs, as the Prophet). Both ways:
+// a move here goes to the Deluge as 03 <cmd> <id> <hi> <lo> (14-bit), and PANEL (0x56) brings its settings back, so
+// turning a knob there moves the control here. While a control is held (and briefly after) the Deluge's echo of it is
+// ignored, so it doesn't fight the finger; when the hold ends the panel shows what the Deluge last said.
+var PANEL_MAX = 16383;
+var WAVE_SVG = {
+  saw: '<svg viewBox="0 0 26 10"><path d="M1 9 L9 1 V9 L17 1 V9 L25 1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+  pulse: '<svg viewBox="0 0 26 10"><path d="M1 9 V1 H8 V9 H15 V1 H22 V9 H25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+  tri: '<svg viewBox="0 0 26 10"><path d="M1 9 L7 1 L13 9 L19 1 L25 9" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>'
+};
+// What the Deluge would call each position
+function panelReadout(kind, p, P) {
+  var f = p / PANEL_MAX, k;
+  switch (kind) {
+  case "std": return String(Math.round(f * 50));
+  case "ctl": return String(Math.round(f * 127));
+  case "ctl64": k = Math.round(f * 127) - 64; return (k > 0 ? "+" : "") + k;
+  case "dcolfo": return (f * f * 4).toFixed(2) + "st";
+  case "lfofreq": return (f * f * 12).toFixed(1) + "st";
+  case "lfofilt": return (f * 48).toFixed(1) + "st";
+  case "vcflfo": return (f * 42).toFixed(1) + "st";
+  case "kybd": return Math.round(f * 100) + "%";
+  case "env": return (f * 8).toFixed(1) + "oct";
+  case "semis": k = Math.round(f * 48) - 24; return (k > 0 ? "+" : "") + k;
+  case "freqb": { // As the engine: semitone steps, two octaves each way on the keys, four off them (KBD, id 17)
+    var range = P && P.v[17] === 0 ? 48 : 24;
+    k = Math.max(-range, Math.min(range, Math.trunc((Math.round(f * 127) - 64) * range / 63)));
+    return (k > 0 ? "+" : "") + k + "st";
+  }
+  case "fine": k = Math.round((Math.round(f * 127) - 64) / 126 * 100); return (k > 0 ? "+" : "") + k + "ct";
+  case "hpf": return ["BOOST", "FLAT", "236", "754"][p] || "";
+  case "crate": return "x" + Math.pow(2, (Math.round(f * 127) - 64) / 32).toFixed(2); // Of the mode's own rate
+  case "cdepth": return Math.round(Math.round(f * 127) / 64 * 100) + "%";
+  }
+  return "";
+}
+
+function Panel(o) {
+  var P = this;
+  P.root = o.root; P.cmd = o.cmd; P.n = o.n; P.sections = o.sections; P.head = o.head; P.hint = o.hint;
+  P.built = false; P.open = false; P.v = []; P.dev = []; P.hold = []; P.rt = []; P.els = {}; P.dirty = {}; P.timer = 0;
+  for (var i = 0; i < P.n; i++) { P.v.push(-1); P.dev.push(-1); P.hold.push(0); P.rt.push(0); }
+}
+Panel.prototype.send = function (id, p) {
+  var P = this;
+  P.dirty[id] = p;
+  if (P.timer) return;
+  // At most every 25 ms, the latest position of each control moved
+  P.timer = setTimeout(function () {
+    P.timer = 0;
+    var d = P.dirty; P.dirty = {};
+    Object.keys(d).forEach(function (k) { var q = d[k]; tx([0x03, P.cmd, +k, (q >> 7) & 0x7F, q & 0x7F]); });
+  }, 25);
+};
+// A move made here: show it now, hold off the Deluge's echo, send it
+Panel.prototype.set = function (id, p, holdMs) {
+  this.v[id] = p;
+  this.holdFor(id, holdMs);
+  this.draw(id);
+  this.send(id, p);
+};
+// When the hold ends, show what the Deluge last said: it only sends changes, so a move it didn't take (or a track
+// change during the hold) would otherwise leave the panel wrong
+Panel.prototype.holdFor = function (id, ms) {
+  var P = this;
+  clearTimeout(P.rt[id]);
+  if (ms === Infinity) { P.hold[id] = Infinity; return; }
+  P.hold[id] = performance.now() + ms;
+  P.rt[id] = setTimeout(function () {
+    P.hold[id] = 0;
+    if (P.open && P.dev[id] >= 0 && P.dev[id] !== P.v[id]) { P.v[id] = P.dev[id]; P.draw(id); }
+  }, ms + 20);
+};
+// Drag up and down, relative: the control moves with the finger from where it is, so a touch never makes it jump.
+// travel(): pixels for the whole range.
+Panel.prototype.dragger = function (el, col, c, steps, travel) {
+  var P = this, drag = null;
+  el.addEventListener("pointerdown", function (e) {
+    if (P.v[c.id] < 0) return;
+    e.preventDefault();
+    try { el.setPointerCapture(e.pointerId); } catch (err) { /* Pointer already gone: moves still reach it */ }
+    drag = { pid: e.pointerId, y: e.clientY, p: steps ? P.v[c.id] / steps * PANEL_MAX : P.v[c.id], travel: Math.max(40, travel()) };
+    P.holdFor(c.id, Infinity);
+    col.classList.add("drag");
+  });
+  el.addEventListener("pointermove", function (e) {
+    if (!drag || e.pointerId !== drag.pid) return;
+    var p = Math.round(Math.max(0, Math.min(PANEL_MAX, drag.p - (e.clientY - drag.y) / drag.travel * PANEL_MAX)));
+    if (steps) p = Math.round(p / PANEL_MAX * steps);
+    if (p !== P.v[c.id]) P.set(c.id, p, Infinity);
+  });
+  function end(e) {
+    if (!drag || e.pointerId !== drag.pid) return;
+    drag = null;
+    col.classList.remove("drag");
+    P.holdFor(c.id, 600);
+  }
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", end);
+  el.addEventListener("lostpointercapture", end);
+  // Without capture (it can fail), a finger lifted off the control never reaches it: end the drag when it leaves
+  el.addEventListener("pointerleave", function (e) { if (drag && !el.hasPointerCapture(e.pointerId)) end(e); });
+};
+Panel.prototype.column = function (c, wide) {
+  var col = document.createElement("div"); col.className = "bctl" + (wide ? " wide" : "");
+  col.innerHTML = '<div class="bl"></div><div class="bw"></div><div class="bv"></div>';
+  col.querySelector(".bl").textContent = c.n || "";
+  return col;
+};
+Panel.prototype.slider = function (c) {
+  var col = this.column(c), steps = c.k === "hpf" ? 3 : 0;
+  var s = document.createElement("div"); s.className = "bs" + (steps ? " steps" : "");
+  s.innerHTML = '<div class="scale"></div><div class="slot"></div><div class="cap"></div>';
+  s.setAttribute("role", "slider"); s.setAttribute("aria-label", c.n); s.setAttribute("aria-valuemin", 0);
+  s.setAttribute("aria-valuemax", steps || PANEL_MAX);
+  col.querySelector(".bw").appendChild(s);
+  this.dragger(s, col, c, steps, function () { return s.clientHeight - 16; });
+  this.els[c.id] = { kind: c.k, type: "slider", col: col, el: s, cap: s.querySelector(".cap"), out: col.querySelector(".bv") };
+  return col;
+};
+Panel.prototype.knob = function (c) {
+  var col = this.column(c);
+  var k = document.createElement("div"); k.className = "bk";
+  k.innerHTML = '<div class="ring"></div><div class="dial"><i></i></div>';
+  k.setAttribute("role", "slider"); k.setAttribute("aria-label", c.n); k.setAttribute("aria-valuemin", 0);
+  k.setAttribute("aria-valuemax", PANEL_MAX);
+  col.querySelector(".bw").appendChild(k);
+  this.dragger(k, col, c, 0, function () { return 180; }); // A long throw: fine control on a small knob
+  this.els[c.id] = { kind: c.k, type: "knob", col: col, el: k, dial: k.querySelector(".dial"), out: col.querySelector(".bv") };
+  return col;
+};
+Panel.prototype.slide = function (c) { // Two way slide switch: tap to flip
+  var P = this, col = this.column(c);
+  var b = document.createElement("button"); b.className = "bsw"; b.type = "button";
+  b.innerHTML = '<span class="o"></span><span class="well"><span class="nub"></span></span><span class="o"></span>';
+  var o = b.querySelectorAll(".o"); o[0].textContent = c.o[0]; o[1].textContent = c.o[1];
+  b.setAttribute("aria-label", c.n);
+  b.onclick = function () { if (P.v[c.id] >= 0) P.set(c.id, P.v[c.id] ? 0 : 1, 600); };
+  col.querySelector(".bw").appendChild(b);
+  this.els[c.id] = { kind: "sw", type: "slide", col: col, el: b, opts: o };
+  return col;
+};
+// LED buttons. c.b lists them: {id, l (label) or w (wave picture)} and the group's mode:
+//  "radio": one of c.vals (button i sets id to vals[i]); "toggle": each button its own id, 0 / 1;
+//  "bits": button i is bit i of id's value, through c.toBits / c.fromBits, never all off unless c.none.
+Panel.prototype.buttons = function (c) {
+  var P = this, col = this.column(c, true), box = document.createElement("div"); box.className = "bbs";
+  col.querySelector(".bw").appendChild(box);
+  var btns = c.b.map(function (d, i) {
+    var b = document.createElement("button"); b.className = "bb"; b.type = "button";
+    b.innerHTML = "<i></i>" + (d.w ? WAVE_SVG[d.w] : "<span></span>");
+    if (!d.w) b.querySelector("span").textContent = d.l;
+    b.setAttribute("aria-label", d.a || d.l || d.w);
+    b.onclick = function () {
+      var id = c.mode === "toggle" ? d.id : c.id, v = P.v[id];
+      if (v < 0) return;
+      if (c.mode === "radio") P.set(id, c.vals[i], 600);
+      else if (c.mode === "toggle") P.set(id, v ? 0 : 1, 600);
+      else {
+        var bits = (c.toBits ? c.toBits(v) : v) ^ (1 << i);
+        if (!bits && !c.none) return; // An oscillator keeps at least one wave
+        P.set(id, c.fromBits ? c.fromBits(bits) : bits, 600);
+      }
+    };
+    box.appendChild(b);
+    return b;
+  });
+  var e = { kind: c.mode, type: "buttons", col: col, btns: btns, c: c };
+  if (c.mode === "toggle") c.b.forEach(function (d, i) { P.els[d.id] = { kind: "toggle", type: "buttons", col: col, btns: [btns[i]], c: c }; });
+  else P.els[c.id] = e;
+  return col;
+};
+Panel.prototype.build = function () {
+  var P = this;
+  P.root.innerHTML = P.head + '<div class="bsecs"></div><div class="bsecs b2"></div><div class="bsecs b3"></div><div class="bhint"></div>';
+  P.root.querySelector(".bhint").textContent = P.hint;
+  var rowEls = P.root.querySelectorAll(".bsecs");
+  P.sections.forEach(function (sec) {
+    var el = document.createElement("div"); el.className = "bsec" + (sec.red ? " red" : "");
+    el.innerHTML = '<div class="bt"></div><div class="bitems"></div>';
+    el.querySelector(".bt").textContent = sec.t.toUpperCase();
+    var items = el.querySelector(".bitems");
+    sec.c.forEach(function (c) {
+      items.appendChild(c.k === "sw" ? P.slide(c) : c.b ? P.buttons(c) : c.knob ? P.knob(c) : P.slider(c));
+    });
+    rowEls[(sec.row || 1) - 1].appendChild(el);
+  });
+  P.built = true;
+};
+Panel.prototype.draw = function (id) {
+  var e = this.els[id], v = this.v[id]; if (!e || v < 0) return;
+  if (e.type === "slide") {
+    e.el.classList.toggle("down", v === 1);
+    e.opts[0].classList.toggle("on", v === 0); e.opts[1].classList.toggle("on", v === 1);
+    return;
+  }
+  if (e.type === "buttons") {
+    var c = e.c;
+    if (e.kind === "toggle") {
+      e.btns[0].classList.toggle("on", v !== 0);
+      if (this.redrawWith && this.redrawWith[id] !== undefined) this.draw(this.redrawWith[id]); // A readout that reads this
+      return;
+    }
+    var bits = e.kind === "bits" ? (c.toBits ? c.toBits(v) : v) : 0;
+    e.btns.forEach(function (b, i) { b.classList.toggle("on", e.kind === "radio" ? c.vals[i] === v : ((bits >> i) & 1) === 1); });
+    return;
+  }
+  var f = e.kind === "hpf" ? v / 3 : v / PANEL_MAX;
+  // The control's place, in CSS: right at any size, even while hidden
+  if (e.type === "knob") e.dial.style.setProperty("--a", (f * 300 - 150).toFixed(1));
+  else e.cap.style.setProperty("--f", f.toFixed(4));
+  e.out.textContent = panelReadout(e.kind, v, this);
+  e.el.setAttribute("aria-valuenow", v);
+};
+Panel.prototype.show = function (m) {
+  var P = this;
+  if (!m) { if (P.open) { P.open = false; P.root.classList.remove("on"); } return; }
+  for (var di = 0; di < P.n && di < m.v.length; di++) P.dev[di] = m.v[di];
+  if (!P.built) P.build();
+  var first = !P.open;
+  if (first) { P.open = true; P.root.classList.add("on"); }
+  // Controls this firmware doesn't send yet (an older test build) are dimmed, not shown at zero
+  for (var ni = 0; ni < P.n; ni++) if (P.els[ni]) P.els[ni].col.classList.toggle("na", ni >= m.v.length);
+  var now = performance.now();
+  for (var id = 0; id < P.n && id < m.v.length; id++) {
+    if (!first && now < P.hold[id]) continue; // Being moved here: the Deluge is catching up
+    if (P.v[id] === m.v[id] && !first) continue;
+    P.v[id] = m.v[id];
+    P.draw(id);
+  }
+};
+
+var bruno = new Panel({
+  root: $("bruno"), cmd: 0x0D, n: 38,
+  head: '<div class="bhead"><span class="bname">BRUNO106</span><span class="bsub">DCO poly</span><span class="bstripe"></span></div>',
+  hint: "Drag a slider and the Deluge follows. Turn a knob on the Deluge and the slider moves.",
+  sections: [ // row 1: the synth's own panel; row 2: the second envelope and the Deluge's effects
+    { t: "LFO", c: [{ id: 0, n: "Rate", k: "std" }] },
+    { t: "DCO", c: [
+      { id: 1, n: "Range", b: [{ l: "16'" }, { l: "8'" }, { l: "4'" }], mode: "radio", vals: [0, 1, 2] },
+      { id: 2, n: "LFO", k: "dcolfo" }, { id: 3, n: "PWM", k: "ctl" },
+      { id: 4, n: "PWM", k: "sw", o: ["LFO", "MAN"] },
+      { n: "Wave", b: [{ id: 5, w: "pulse", a: "Pulse" }, { id: 6, w: "saw", a: "Saw" }], mode: "toggle" },
+      { id: 7, n: "Sub", k: "ctl" }, { id: 8, n: "Noise", k: "ctl" }, { id: 9, n: "Slop", k: "ctl" }] },
+    { t: "HPF", red: true, c: [{ id: 10, n: "Freq", k: "hpf" }] },
+    { t: "VCF", c: [
+      { id: 11, n: "Freq", k: "std" }, { id: 12, n: "Res", k: "std" }, { id: 13, n: "Env", k: "sw", o: ["NORM", "INV"] },
+      { id: 14, n: "Env", k: "env" }, { id: 15, n: "LFO", k: "vcflfo" }, { id: 16, n: "Kybd", k: "kybd" }] },
+    { t: "VCA", red: true, c: [{ id: 17, n: "Mode", k: "sw", o: ["ENV", "GATE"] }, { id: 18, n: "Level", k: "std" }] },
+    { t: "ENV 1", c: [{ id: 19, n: "A", k: "std" }, { id: 20, n: "D", k: "std" }, { id: 21, n: "S", k: "std" }, { id: 22, n: "R", k: "std" }] },
+    { t: "ENV 2", row: 2, c: [{ id: 24, n: "A", k: "std" }, { id: 25, n: "D", k: "std" }, { id: 26, n: "S", k: "std" }, { id: 27, n: "R", k: "std" }] },
+    // I and II, both for I+II: bits 1 = I, 2 = II, 3 = I+II, 0 = off, the same numbers as the Deluge's
+    { t: "Chorus", red: true, row: 2, c: [{ id: 23, n: "", b: [{ l: "I" }, { l: "II" }], mode: "bits", none: true },
+      { id: 28, n: "Rate", k: "crate" }, { id: 29, n: "Depth", k: "cdepth" }] },
+    { t: "Drive", row: 2, c: [{ id: 30, n: "Drive", k: "std" }, { id: 31, n: "Crush", k: "std" }, { id: 32, n: "Deci", k: "std" }, { id: 33, n: "Sat", k: "std" }] },
+    { t: "Delay", red: true, row: 2, c: [{ id: 34, n: "Amt", k: "std" }, { id: 35, n: "Rate", k: "std" }, { id: 36, n: "Fdbk", k: "std" }] },
+    { t: "Reverb", row: 2, c: [{ id: 37, n: "Amt", k: "std" }] }
+  ]
+});
+
+// BROPHET: the P5 (woodgrain) or P8 (black, red LEDs) look, a choice kept on this device
+var BROPHET_SKIN_KEY = "bribeluge-brophet-skin";
+function brophetSkin() { try { return localStorage.getItem(BROPHET_SKIN_KEY) === "p5" ? "p5" : "p8"; } catch (e) { return "p8"; } }
+var KN = true; // knob
+var brophet = new Panel({
+  root: $("brophet"), cmd: 0x0E, n: 43,
+  head: '<div class="bhead"><span class="bname">BROPHET</span><span class="bsub">Poly synth</span><span class="bstripe"></span>' +
+    '<span class="bskin" role="group" aria-label="Panel look"><button type="button" data-s="p5">P5</button><button type="button" data-s="p8">P8</button></span></div>',
+  hint: "Drag a knob up or down and the Deluge follows. Turn a knob on the Deluge and this one moves.",
+  sections: [
+    { t: "Poly-mod", c: [{ id: 5, n: "Filt env", k: "ctl", knob: KN }, { id: 6, n: "Osc B", k: "ctl", knob: KN },
+      // Destinations as two buttons: Freq A 1, PW A 2, both 3 (the engine's 0, 1, 2)
+      { id: 7, n: "Dest", b: [{ l: "FRQ A" }, { l: "PW A" }], mode: "bits",
+        toBits: function (v) { return v + 1; }, fromBits: function (b) { return b - 1; } }] },
+    { t: "LFO", red: true, c: [{ id: 1, n: "Rate", k: "std", knob: KN },
+      { id: 2, n: "Shape", b: [{ w: "saw", a: "Saw" }, { w: "tri", a: "Triangle" }, { w: "pulse", a: "Square" }], mode: "radio", vals: [3, 1, 2] },
+      { id: 3, n: "Freq", k: "lfofreq", knob: KN }, { id: 4, n: "Filter", k: "lfofilt", knob: KN }] },
+    { t: "Osc A", c: [{ id: 8, n: "Freq", k: "semis", knob: KN },
+      // Saw 1, pulse 2, both 3 (the engine's 0, 1, 2)
+      { id: 9, n: "Wave", b: [{ w: "saw", a: "Saw" }, { w: "pulse", a: "Pulse" }], mode: "bits",
+        toBits: function (v) { return v + 1; }, fromBits: function (b) { return b - 1; } },
+      { id: 10, n: "PW", k: "ctl", knob: KN }, { n: "", b: [{ id: 11, l: "SYNC" }], mode: "toggle" }] },
+    { t: "Osc B", red: true, row: 2, c: [{ id: 12, n: "Freq", k: "freqb", knob: KN }, { id: 13, n: "Fine", k: "fine", knob: KN },
+      { id: 14, n: "Wave", b: [{ w: "saw", a: "Saw" }, { w: "tri", a: "Triangle" }, { w: "pulse", a: "Pulse" }], mode: "bits" },
+      { id: 15, n: "PW", k: "ctl", knob: KN }, { n: "", b: [{ id: 16, l: "LO" }, { id: 17, l: "KBD" }], mode: "toggle" }] },
+    { t: "Mixer", row: 2, c: [{ id: 18, n: "Osc A", k: "ctl", knob: KN }, { id: 19, n: "Osc B", k: "ctl", knob: KN }, { id: 20, n: "Noise", k: "ctl", knob: KN }] },
+    { t: "Filter", row: 2, c: [{ id: 21, n: "Cutoff", k: "std", knob: KN }, { id: 22, n: "Res", k: "std", knob: KN },
+      { id: 23, n: "Env amt", k: "env", knob: KN }, { id: 24, n: "Kbd", k: "kybd", knob: KN }, { id: 25, n: "Drive", k: "std", knob: KN }] },
+    { t: "Filter env", red: true, row: 3, c: [{ id: 26, n: "A", k: "std", knob: KN }, { id: 27, n: "D", k: "std", knob: KN },
+      { id: 28, n: "S", k: "std", knob: KN }, { id: 29, n: "R", k: "std", knob: KN }] },
+    { t: "Amp env", row: 3, c: [{ id: 30, n: "A", k: "std", knob: KN }, { id: 31, n: "D", k: "std", knob: KN },
+      { id: 32, n: "S", k: "std", knob: KN }, { id: 33, n: "R", k: "std", knob: KN }] },
+    { t: "Master", red: true, row: 3, c: [{ id: 0, n: "Glide", k: "std", knob: KN }, { id: 34, n: "Analog", k: "ctl", knob: KN },
+      { id: 35, n: "Volume", k: "std", knob: KN }] },
+    { t: "Dirt", row: 3, c: [{ id: 36, n: "Crush", k: "std", knob: KN }, { id: 37, n: "Deci", k: "std", knob: KN }, { id: 38, n: "Sat", k: "std", knob: KN }] },
+    { t: "Delay", red: true, row: 3, c: [{ id: 39, n: "Amt", k: "std", knob: KN }, { id: 40, n: "Rate", k: "std", knob: KN }, { id: 41, n: "Fdbk", k: "std", knob: KN }] },
+    { t: "Reverb", row: 3, c: [{ id: 42, n: "Amt", k: "std", knob: KN }] }
+  ]
+});
+brophet.redrawWith = { 17: 12 }; // KBD changes osc B's range, so its readout
+function setBrophetSkin(s) {
+  try { localStorage.setItem(BROPHET_SKIN_KEY, s); } catch (e) { /* Private window: just this visit */ }
+  brophet.root.classList.toggle("p5", s === "p5"); brophet.root.classList.toggle("p8", s !== "p5");
+  Array.prototype.forEach.call(brophet.root.querySelectorAll(".bskin button"), function (b) { b.classList.toggle("on", b.getAttribute("data-s") === s); });
+}
+brophet.root.addEventListener("click", function (e) {
+  var b = e.target.closest && e.target.closest(".bskin button");
+  if (b) setBrophetSkin(b.getAttribute("data-s"));
+});
+
+// PANEL: which engine panel, if any
+function showPanel(m) {
+  bruno.show(m.which === 1 ? m : null);
+  var wasBuilt = brophet.built;
+  brophet.show(m.which === 2 ? m : null);
+  if (!wasBuilt && brophet.built) setBrophetSkin(brophetSkin());
+  $("track").classList.toggle("panel-on", bruno.open || brophet.open);
+}
+
+// ---- Gold knobs: each mod button's pair, the lit one glowing. Tapping a pair presses its mod button.
+// The Deluge prints STUTTER/CUSTOM 1 and CUSTOM 2/3 on the last two buttons: those slots are tagged.
+var GOLD_TAGS = { "6,0": "Custom 1", "7,1": "Custom 2", "7,0": "Custom 3" };
+var goldCols = null;
+function showGold(g) {
+  var box = $("gold");
+  if (!g.open) { box.style.display = "none"; return; }
+  box.style.display = "";
+  var grid = box.querySelector(".goldgrid");
+  if (!goldCols) {
+    goldCols = [];
+    for (var b = 0; b < 8; b++) {
+      var col = document.createElement("div"); col.className = "gcol";
+      col.innerHTML = '<div class="gled"><i></i>' + (b + 1) + '</div>';
+      for (var w = 1; w >= 0; w--) {
+        var tag = GOLD_TAGS[b + "," + w] || "";
+        var k = document.createElement("div"); k.className = "knob";
+        k.innerHTML = '<span class="gtag"></span><span class="ks"></span><span class="kv"></span><span class="kn"></span>';
+        k.querySelector(".gtag").textContent = tag;
+        col.appendChild(k);
+      }
+      (function (button, el) {
+        el.onclick = function () { tx([0x03, 0x0C, button]); };
+      })(b, col);
+      grid.appendChild(col); goldCols.push(col);
+    }
+  }
+  for (var c = 0; c < 8; c++) {
+    var colEl = goldCols[c];
+    colEl.classList.toggle("on", g.mode === c);
+    var knobsEl = colEl.querySelectorAll(".knob");
+    for (var u = 0; u < 2; u++) {
+      var e = g.knobs[c * 2 + u], el2 = knobsEl[u];
+      var key = e.pos + ":" + e.bipolar + ":" + e.value + ":" + e.none + ":" + e.name;
+      if (el2.getAttribute("data-k") === key) continue;
+      el2.setAttribute("data-k", key);
+      el2.querySelector(".ks").innerHTML = knobSvg(e.none ? 0 : e.pos, e.bipolar, "#e3b04b");
+      el2.querySelector(".kv").textContent = e.none ? "" : (e.bipolar && e.value > 0 ? "+" : "") + e.value;
+      el2.querySelector(".kn").textContent = e.name; // As the Deluge's OLED names it
+      el2.classList.toggle("none", e.none);
+    }
+  }
+}
+
+// ---- Transport
+function showTransport(t) {
+  var prevView = transport ? transport.view : -1;
+  transport = t;
+  $("tPlay").classList.toggle("on", t.playing);
+  $("tRec").classList.toggle("on", t.recording);
+  $("metro").classList.toggle("on", t.metronome);
+  var bpm = t.bpm / 100;
+  $("tempo").innerHTML = (bpm >= 1000 || bpm % 1 === 0 ? String(Math.round(bpm)) : bpm.toFixed(2).replace(/0$/, "")) +
+    "<small>BPM</small>";
+  if (t.view !== prevView) updateStage();
+}
+
+// ---- Song: rows view (one clip per row, as the Deluge lists them), grid view (tracks across, sections down),
+// arranger (each track's clip instances along the song, read only)
+var outputs = [], clips = [], arranger = null, arrangerPos = -1, clipPos = {};
+function rgb(o) { return o ? "rgb(" + (o.r * 2) + "," + (o.g * 2) + "," + (o.b * 2) + ")" : "#555"; }
+// 32 cells across a clip's loop, lit where notes start (audio clips: all lit)
+function stepCells(pattern) {
+  var h = "";
+  for (var b = 0; b < 32; b++) h += (pattern >>> b) & 1 ? '<i class="on"></i>' : "<i></i>";
+  return h;
+}
+var songLayout = "";
+function renderSong() {
+  if (!$("song").classList.contains("show") || !transport) return;
+  var view = transport.view, body = $("songBody");
+  $("songTitle").textContent = view === 3 ? "Arranger" : view === 2 ? "Song · grid" : "Song · rows";
+  var secs = {};
+  clips.forEach(function (c) { if (c.section < 127) secs[c.section] = 1; });
+  var secHtml = view === 3 ? "" : Object.keys(secs).sort(function (a, b) { return a - b; }).map(function (s) {
+    return '<button data-sec="' + s + '">Section ' + (+s + 1) + "</button>";
+  }).join("");
+  if ($("sections").getAttribute("data-h") !== secHtml) {
+    $("sections").setAttribute("data-h", secHtml); $("sections").innerHTML = secHtml;
+    Array.prototype.forEach.call($("sections").querySelectorAll("button"), function (b) {
+      b.onclick = function () { tx([0x03, 0x0A, +b.getAttribute("data-sec")]); };
+    });
+  }
+  if (view === 3) return renderArranger(body);
+  if (view === 2) return renderGrid(body);
+  var html = '<div class="clips">';
+  // The Deluge's pad rows count from the bottom (clip 1 is the bottom row), so list them top down as the pads are
+  clips.slice().reverse().forEach(function (c, ri) {
+    var i = clips.length - 1 - ri;
+    var o = outputs[c.output];
+    html += '<button class="clip' + (c.playing ? " playing" : "") + (c.pending ? " pending" : "") + (c.current ? " current" : "") +
+      (c.soloing ? " soloing" : "") + '" data-i="' + i + '"><span class="sw" style="background:' + rgb(o) + '"></span>' +
+      '<span style="min-width:0"><div class="cn"></div><div class="co"></div><div class="steps" style="--c:' + rgb(o) + '">' +
+      stepCells(c.pattern) + '<span class="ph"></span></div></span><span class="sec">' +
+      (c.section < 127 ? "S" + (c.section + 1) : "") + '</span><span class="led"></span><span class="secpad" data-type="' +
+      (o ? o.type : 4) + '" data-rgb="' + (c.sectionRgb || [0, 0, 0]).join(",") + '"></span></button>';
+  });
+  html += "</div>";
+  if (songLayout !== html) {
+    songLayout = html; body.innerHTML = html;
+    Array.prototype.forEach.call(body.querySelectorAll(".clip"), function (el) {
+      var c = clips[+el.getAttribute("data-i")], o = outputs[c.output];
+      el.querySelector(".cn").textContent = c.name || (o ? o.name : "Clip");
+      el.querySelector(".co").textContent = (o ? o.name : "") + (c.audio ? " · audio" : "");
+      el.onclick = function () { var i = +el.getAttribute("data-i"); tx([0x03, 0x09, (i >> 7) & 0x7F, i & 0x7F]); };
+    });
+  }
+  placeClipHeads();
+}
+// Each playing clip's own playhead, over its steps
+function placeClipHeads() {
+  Array.prototype.forEach.call(document.querySelectorAll("#songBody [data-i]"), function (el) {
+    var ph = el.querySelector(".ph"); if (!ph) return;
+    var p = clipPos[+el.getAttribute("data-i")];
+    if (p === undefined) { ph.style.display = "none"; return; }
+    ph.style.display = "block"; ph.style.left = (p * 100).toFixed(2) + "%";
+  });
+}
+function renderGrid(body) {
+  // Columns: tracks with session clips, in the Deluge's grid order (the first output is the rightmost). Rows: sections.
+  var cols = [], seen = {};
+  for (var oi = outputs.length - 1; oi >= 0; oi--) {
+    if (clips.some(function (c) { return c.output === oi; }) && !seen[oi]) { seen[oi] = 1; cols.push(oi); }
+  }
+  var maxSec = 0;
+  clips.forEach(function (c) { if (c.section < 127) maxSec = Math.max(maxSec, c.section); });
+  var html = '<div class="grid" style="grid-template-columns:34px repeat(' + Math.max(1, cols.length) + ',minmax(84px,1fr))"><div></div>';
+  cols.forEach(function (oi) { html += '<div class="gh">' + escapeHtml(outputs[oi] ? outputs[oi].name : "") + "</div>"; });
+  for (var s = 0; s <= maxSec; s++) {
+    html += '<div class="gs">S' + (s + 1) + "</div>";
+    cols.forEach(function (oi) {
+      var ci = -1;
+      clips.forEach(function (c, i) { if (ci < 0 && c.output === oi && c.section === s) ci = i; });
+      if (ci < 0) { html += '<div class="cell empty"></div>'; return; }
+      var c = clips[ci], col = rgb(outputs[oi]);
+      html += '<button class="cell' + (c.playing ? " playing" : " dim") + (c.pending ? " pending" : "") + (c.current ? " current" : "") + '" data-i="' + ci +
+        '" style="background:' + col + ";--cg:" + col + '"><span>' + escapeHtml(c.name) + '</span><div class="steps">' +
+        stepCells(c.pattern) + '<span class="ph"></span></div></button>';
+    });
+  }
+  html += "</div>";
+  if (songLayout !== html) {
+    songLayout = html; body.innerHTML = html;
+    Array.prototype.forEach.call(body.querySelectorAll(".cell[data-i]"), function (el) {
+      el.onclick = function () { var i = +el.getAttribute("data-i"); tx([0x03, 0x09, (i >> 7) & 0x7F, i & 0x7F]); };
+    });
+  }
+  placeClipHeads();
+}
+// Arranger: the same window the pads show (it follows the Deluge's scroll and zoom), each clip instance drawn with
+// its clip's steps repeated across it, and the playhead where the Deluge's is
+function renderArranger(body) {
+  if (!arranger) { body.innerHTML = ""; songLayout = ""; return; }
+  var html = '<div class="arrinfo">The same stretch of the song the pads show: scroll and zoom on the Deluge to move it</div>' +
+    '<div class="arr" id="arr">';
+  // The first track is the bottom pad row on the Deluge: draw top down as the pads are
+  arranger.lanes.slice().reverse().forEach(function (lane, ri) {
+    var oi = arranger.lanes.length - 1 - ri;
+    var o = outputs[oi]; if (!o) return;
+    html += '<div class="alane' + (o.muted ? " muted" : "") + '"><div class="an">' + escapeHtml(o.name || "Track " + (oi + 1)) +
+      '</div><div class="atrack">';
+    lane.forEach(function (inst) {
+      var w = Math.max(1, inst.e - inst.a);
+      html += '<div class="ablock" style="left:' + (inst.a / 163.83).toFixed(2) + "%;width:" + (w / 163.83).toFixed(2) +
+        "%;background:" + rgb(o) + '">';
+      // Gaps between notes as dark bars: walk the clip's 32nds across the instance from where the window cuts in
+      var step = inst.loop / 32;
+      if ((inst.pattern >>> 0) !== 0xFFFFFFFF && step > 0) {
+        for (var x = -inst.phase, n = 0; x < w && n < 4096; x += step, n++) {
+          var b = n % 32;
+          if (x + step <= 0 || ((inst.pattern >>> b) & 1)) continue;
+          var l = Math.max(0, x), r = Math.min(w, x + step);
+          html += '<i style="left:' + (l / w * 100).toFixed(2) + "%;width:" + ((r - l) / w * 100).toFixed(2) + '%"></i>';
+        }
+      }
+      html += "</div>";
+    });
+    html += "</div></div>";
+  });
+  html += '<div id="arrHead"></div></div>';
+  if (songLayout !== html) { songLayout = html; body.innerHTML = html; }
+  placeArrangerHead();
+}
+function placeArrangerHead() {
+  var h = $("arrHead"); if (!h) return;
+  var lane = document.querySelector(".atrack");
+  if (arrangerPos < 0 || !lane) { h.style.display = "none"; return; }
+  var arr = $("arr").getBoundingClientRect(), r = lane.getBoundingClientRect();
+  h.style.display = "block";
+  h.style.left = (r.left - arr.left + r.width * arrangerPos / 16383) + "px";
+}
+// Section pads move with the track type, as on the Deluge (session_view.cpp trackTypeBrightness): kits flash on the
+// beat, synths breathe over two beats, MIDI pings and fades each beat, CV and audio stay solid. The beat comes from
+// the Deluge (BEAT) and runs on at the tempo in between.
+var beatAt = null;
+function beatNow() {
+  if (!beatAt) return 0;
+  var bpm = transport && transport.bpm ? transport.bpm / 100 : 120;
+  var beats = beatAt.phase * 4 + (performance.now() - beatAt.time) / (60000 / bpm);
+  return ((beats % 4) + 4) % 4; // 0-4 quarter notes
+}
+function typeBrightness(type, beats) {
+  var low = 50, p1 = (beats % 1) * 256, p2 = (beats % 2) / 2 * 256;
+  if (type === 1) return p1 < 40 ? 255 : low;                       // Kit
+  if (type === 0) {                                                 // Synth
+    var tri = p2 < 128 ? p2 * 2 : (255 - p2) * 2;
+    return low + (tri * tri / 255) * (255 - low) / 255;
+  }
+  if (type === 2) return 255 - p1 * (255 - low) / 255;              // MIDI
+  return 255;                                                       // CV, audio
+}
+function glowLoop() {
+  if ($("song").classList.contains("show")) {
+    var beats = beatNow();
+    Array.prototype.forEach.call(document.querySelectorAll(".secpad"), function (el) {
+      var rgbv = el.getAttribute("data-rgb").split(",").map(Number), k = typeBrightness(+el.getAttribute("data-type"), beats) / 255;
+      el.style.background = "rgb(" + Math.round(rgbv[0] * k) + "," + Math.round(rgbv[1] * k) + "," + Math.round(rgbv[2] * k) + ")";
+    });
+  }
+}
+setInterval(glowLoop, 40);
+
+// ---- Kit samples: every kit row playing a sample, top row first as on the pads, lit while sounding. A tap selects
+// the row and opens its sample's waveform.
+var kitRows = [];
+function showKitSamples(list) {
+  kitRows = list;
+  var box = $("kitSamples");
+  if (!list.length) { box.innerHTML = ""; box.style.display = "none"; return; }
+  box.style.display = "";
+  var html = '<div class="label">Samples in this kit</div><div class="kslist">';
+  // Same order as the kit row tiles above: row 1 (the bottom pad row) first
+  list.forEach(function (r, i) {
+    html += '<button class="ksrow' + (r.selected ? " sel" : "") + '" data-i="' + i + '"><span class="ksled"></span>' +
+      '<span class="ksn"></span><span class="ksf"></span></button>';
+  });
+  box.innerHTML = html + "</div>";
+  Array.prototype.forEach.call(box.querySelectorAll(".ksrow"), function (el) {
+    var r = list[+el.getAttribute("data-i")];
+    el.querySelector(".ksn").textContent = (r.row + 1) + "  " + (r.name || "Row " + (r.row + 1));
+    el.querySelector(".ksf").textContent = r.file.replace(/\.wav$/i, "");
+    el.onclick = function () { el.classList.add("tapped"); tx([0x03, 0x0B, r.row]); };
+  });
+}
+function showKitActive(bits) {
+  Array.prototype.forEach.call(document.querySelectorAll(".ksrow"), function (el) {
+    el.classList.toggle("on", ((bits >>> +el.getAttribute("data-i")) & 1) === 1);
+  });
+}
+
+// ---- STOCK mode: plain community firmware 1.3, nothing flashed. Everything here uses what stock firmware already
+// has: the display mirror (as DEx uses), MIDI Follow with feedback (the default CC map below), learned global
+// commands, and MIDI clock out.
+var FOLLOW_GROUPS = [ // [CC, name, bipolar]: the firmware's default MIDI Follow map (midi_follow.cpp)
+  ["Master", [[7, "Volume"], [10, "Pan", 1], [3, "Pitch", 1], [5, "Portamento"]]],
+  ["Filters", [[74, "LPF frequency"], [71, "LPF resonance"], [70, "LPF morph"], [81, "HPF frequency"], [82, "HPF resonance"], [83, "HPF morph"]]],
+  ["Envelope 1", [[73, "Attack"], [75, "Decay"], [76, "Sustain"], [72, "Release"]]],
+  ["Envelope 2", [[77, "Attack"], [78, "Decay"], [79, "Sustain"], [80, "Release"]]],
+  ["Oscillators", [[21, "Osc1 level"], [26, "Osc2 level"], [12, "Osc1 pitch", 1], [13, "Osc2 pitch", 1], [23, "Osc1 pulse width"],
+    [28, "Osc2 pulse width"], [25, "Osc1 wave index"], [30, "Osc2 wave index"], [41, "Noise level"], [19, "Wavefold"]]],
+  ["FM", [[54, "Mod1 level"], [55, "Mod1 feedback"], [14, "Mod1 pitch", 1], [56, "Mod2 level"], [57, "Mod2 feedback"],
+    [15, "Mod2 pitch", 1], [24, "Carrier1 feedback"], [29, "Carrier2 feedback"]]],
+  ["Effects", [[91, "Reverb amount"], [52, "Delay amount"], [53, "Delay rate"], [93, "Mod-FX depth"], [16, "Mod-FX rate"],
+    [17, "Mod-FX feedback"], [18, "Mod-FX offset"], [62, "Bitcrush"], [63, "Decimation"], [20, "Stutter rate"],
+    [27, "Comp threshold"], [60, "Sidechain shape"]]],
+  ["EQ", [[86, "Bass"], [87, "Treble"], [84, "Bass frequency"], [85, "Treble frequency"]]],
+  ["LFOs", [[58, "LFO1 rate"], [59, "LFO2 rate"], [110, "LFO3 rate"], [111, "LFO4 rate"]]],
+  ["Envelope 3", [[102, "Attack"], [103, "Decay"], [104, "Sustain"], [105, "Release"]]],
+  ["Envelope 4", [[106, "Attack"], [107, "Decay"], [108, "Sustain"], [109, "Release"]]],
+  ["Arpeggiator", [[51, "Arp rate"], [50, "Arp gate"], [42, "Rhythm"], [43, "Sequence length"], [44, "Chord polyphony"],
+    [45, "Ratchets"], [46, "Note probability"], [47, "Bass probability"], [48, "Chord probability"],
+    [49, "Ratchet probability"], [39, "Spread octave"], [40, "Spread gate"], [37, "Spread velocity"],
+    [36, "Reverse probability"], [112, "Swap probability"], [113, "Glide probability"]]]
+];
+// Learned global commands: a CC on the command channel, 127 = press, 0 = release (FILL is held)
+var COMMANDS = [["Play", "PLAY", 102], ["Record", "RECORD", 103], ["Restart", "RESTART", 104], ["Tap tempo", "TAP TEMPO", 105],
+  ["Undo", "UNDO", 106], ["Redo", "REDO", 107], ["Loop", "LOOP", 108], ["Fill", "FILL", 109, true]];
+var followCh = 15, cmdCh = 16; // 1-based, as the Deluge shows them
+var followVal = {}, followEls = {}, burst = null, burstTimer = null, dragCC = -1, lastDragCC = -1, dragUntil = 0;
+function store(k, v) { try { localStorage.setItem("bribeluge-" + k, v); } catch (e) {} }
+function stored(k) { try { return localStorage.getItem("bribeluge-" + k); } catch (e) { return null; } }
+
+function ccOut(ch, cc, v) { if (output) output.send([0xB0 | ((ch - 1) & 15), cc & 127, v & 127]); }
+function command(cc, down) { ccOut(cmdCh, cc, down ? 127 : 0); }
+function pressCommand(cc) { command(cc, true); setTimeout(function () { command(cc, false); }, 40); }
+
+function followText(cc, v, bipolar) {
+  if (v === undefined) return "-";
+  if (bipolar) { var b = Math.round((v - 64) / 2); return (b > 0 ? "+" : "") + b; }
+  return String(Math.round(v * 50 / 127)); // the Deluge's 0-50
+}
+function drawFollowKnob(cc) {
+  var el = followEls[cc]; if (!el) return;
+  var v = followVal[cc], bip = el.getAttribute("data-bip") === "1";
+  el.querySelector(".ks").innerHTML = knobSvg(v === undefined ? (bip ? 64 : 0) : v, bip);
+  el.querySelector(".kv").textContent = followText(cc, v, bip);
+  el.classList.toggle("unk", v === undefined);
+}
+function buildFollowKnobs() {
+  var box = $("followKnobs");
+  if (box.childNodes.length) return;
+  FOLLOW_GROUPS.forEach(function (grp) {
+    var g = document.createElement("div"); g.className = "kgroup";
+    g.innerHTML = '<div class="label"></div><div class="kgrid"></div>';
+    g.querySelector(".label").textContent = grp[0];
+    grp[1].forEach(function (k) {
+      var b = document.createElement("div"), cc = k[0];
+      b.className = "knob"; b.setAttribute("data-bip", k[2] ? "1" : "0");
+      b.innerHTML = '<span class="ks"></span><span class="kv"></span><span class="kn"></span>';
+      b.querySelector(".kn").textContent = k[1];
+      b.title = k[1] + " (CC " + cc + ")";
+      followEls[cc] = b;
+      knobDrag(b, cc, !!k[2]);
+      g.querySelector(".kgrid").appendChild(b);
+      drawFollowKnob(cc);
+    });
+    box.appendChild(g);
+  });
+}
+// Drag up or down: one step per 2 px, sent at most every 15 ms
+function knobDrag(el, cc, bipolar) {
+  var startY = 0, startV = 0, last = -1, sentAt = 0, pend = null;
+  function flush() {
+    pend = null;
+    if (last !== followVal[cc] || sentAt === 0) { ccOut(followCh, cc, followVal[cc]); sentAt = performance.now(); last = followVal[cc]; }
+  }
+  el.addEventListener("pointerdown", function (e) {
+    try { el.setPointerCapture(e.pointerId); } catch (err) {}
+    startY = e.clientY;
+    startV = followVal[cc] !== undefined ? followVal[cc] : (bipolar ? 64 : 0);
+    dragCC = cc; el.classList.add("drag"); last = -1; sentAt = 0;
+  });
+  el.addEventListener("pointermove", function (e) {
+    if (dragCC !== cc) return;
+    var v = Math.max(0, Math.min(127, Math.round(startV + (startY - e.clientY) / 2)));
+    if (v === followVal[cc]) return;
+    followVal[cc] = v; el.classList.remove("absent"); drawFollowKnob(cc);
+    var wait = 15 - (performance.now() - sentAt);
+    if (wait <= 0) flush(); else if (!pend) pend = setTimeout(flush, wait);
+  });
+  function end() {
+    if (dragCC !== cc) return;
+    if (pend) { clearTimeout(pend); flush(); }
+    lastDragCC = cc; dragCC = -1; dragUntil = performance.now() + 400; el.classList.remove("drag");
+  }
+  el.addEventListener("pointerup", end); el.addEventListener("pointercancel", end);
+}
+// Feedback from the Deluge. A burst of 8 or more CCs is a full send (new track selected): knobs left out of it don't
+// apply to this track and are dimmed.
+function followFeedback(cc, v) {
+  // The Deluge echoes values back: ignore them for the knob in your hand, and just after you let go
+  if (cc === dragCC || (cc === lastDragCC && performance.now() < dragUntil)) return;
+  followVal[cc] = v; drawFollowKnob(cc);
+  if (followEls[cc]) followEls[cc].classList.remove("absent");
+  if (!burst) burst = {};
+  burst[cc] = true;
+  clearTimeout(burstTimer);
+  burstTimer = setTimeout(function () {
+    if (Object.keys(burst).length >= 8) {
+      Object.keys(followEls).forEach(function (c) { followEls[c].classList.toggle("absent", !burst[c]); });
+    }
+    burst = null;
+  }, 120);
+}
+
+function buildCommands() {
+  var box = $("cmdButtons"), learn = $("learnList");
+  COMMANDS.forEach(function (c) {
+    var b = document.createElement("button");
+    b.textContent = c[0];
+    if (c[3]) { // held, like the Deluge's own fill
+      b.addEventListener("pointerdown", function () { b.classList.add("held"); command(c[2], true); });
+      var up = function () { if (b.classList.contains("held")) { b.classList.remove("held"); command(c[2], false); } };
+      b.addEventListener("pointerup", up); b.addEventListener("pointercancel", up); b.addEventListener("pointerleave", up);
+    } else b.onclick = function () { pressCommand(c[2]); };
+    if (c[2] !== 102 && c[2] !== 103) box.appendChild(b); // Play and record live in the top bar
+    var row = document.createElement("div");
+    row.innerHTML = "<span></span><small></small><button class=\"secondary\">Send</button>";
+    row.querySelector("span").textContent = c[1];
+    row.querySelector("small").textContent = "CC " + c[2];
+    row.querySelector("button").onclick = function () { pressCommand(c[2]); };
+    learn.appendChild(row);
+  });
+}
+function buildChannels() {
+  [["followCh", followCh], ["cmdCh", cmdCh]].forEach(function (s) {
+    var sel = $(s[0]);
+    for (var ch = 1; ch <= 16; ch++) { var o = document.createElement("option"); o.value = ch; o.textContent = ch; sel.appendChild(o); }
+    sel.value = s[1];
+    sel.onchange = function () {
+      if (s[0] === "followCh") followCh = +sel.value; else cmdCh = +sel.value;
+      store(s[0], sel.value);
+    };
+  });
+}
+
+// MIDI clock from the Deluge: tempo from 24 ticks per beat, play light from start / continue / stop. Only one input's
+// clock is used, in case the Deluge sends it on more than one port.
+var clockFrom = null, clockTimes = [], clockLastAt = 0, clockPlaying = false;
+function onClock(ev, id) {
+  var s = ev.data[0], now = typeof ev.timeStamp === "number" ? ev.timeStamp : performance.now();
+  if (clockFrom && clockFrom !== id && now - clockLastAt < 2000) return;
+  clockFrom = id; clockLastAt = now;
+  if (s === 0xFA || s === 0xFB) { clockPlaying = true; clockTimes = []; }
+  else if (s === 0xFC) clockPlaying = false;
+  else if (s === 0xF8) {
+    clockTimes.push(now);
+    if (clockTimes.length > 49) clockTimes.shift();
+  }
+  if (fwMode !== "stock") return;
+  $("tPlay").classList.toggle("on", clockPlaying);
+  if (s === 0xF8 && clockTimes.length >= 25 && clockTimes.length % 12 === 1) {
+    var per = (clockTimes[clockTimes.length - 1] - clockTimes[0]) / (clockTimes.length - 1);
+    var bpm = 60000 / (per * 24), whole = Math.round(bpm);
+    $("tempo").innerHTML = (Math.abs(bpm - whole) < 0.15 ? String(whole) : bpm.toFixed(1)) + "<small>BPM</small>";
+  }
+}
+// Any non-SysEx message from a Deluge input
+function onChannelMessage(ev, id) {
+  var d = ev.data, s = d[0];
+  if (s >= 0xF8) { if (s === 0xF8 || s === 0xFA || s === 0xFB || s === 0xFC) onClock(ev, id); return; }
+  if ((s & 0xF0) === 0xB0 && (s & 15) === followCh - 1 && d.length >= 3) followFeedback(d[1], d[2]);
+}
+
+// ---- Firmware: the page asks for the companion feed on connect. Stock firmware ignores the request, so 1.5 s of
+// silence means stock. A tap on the selector overrides the guess and is remembered.
+var fwMode = "bribes", fwDetected = null, fwChosen = stored("fw"), detectTimer = null;
+function setFw(m) {
+  fwMode = m;
+  document.body.classList.toggle("stock", m === "stock");
+  $("fwStock").classList.toggle("on", m === "stock");
+  $("fwBribes").classList.toggle("on", m === "bribes");
+  if (m === "stock") {
+    buildFollowKnobs();
+    $("tPlay").classList.toggle("on", clockPlaying); $("tRec").classList.remove("on");
+    $("tempo").innerHTML = "-<small>BPM</small>";
+  } else if (output) send(0);
+  updateStage();
+}
+function setDetected(m) {
+  fwDetected = m;
+  $("fwStock").classList.toggle("det", m === "stock");
+  $("fwBribes").classList.toggle("det", m === "bribes");
+  if (!fwChosen && m !== fwMode) setFw(m);
+}
+function startDetect() {
+  clearTimeout(detectTimer);
+  fwDetected = null;
+  $("fwStock").classList.remove("det"); $("fwBribes").classList.remove("det");
+  detectTimer = setTimeout(function () { if (fwDetected === null) setDetected("stock"); }, 1500);
+}
+
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+var midi = null, input = null, output = null, keepAlive = null;
+var lastMessageAt = 0, lastSeq = -1, dropped = 0, stateCount = 0;
+var state = null, rows = null;
+
+function $(id) { return document.getElementById(id); }
+function setStatus(text, level) { $("statusText").textContent = text; $("dot").className = "dot " + (level || ""); }
+function log(dir, bytes) {
+  var el = $("log");
+  var line = new Date().toLocaleTimeString() + " " + dir + " " + hex(bytes) + "\n";
+  el.textContent = (line + el.textContent).slice(0, 6000);
+}
+
+function sendDisplay(force) {
+  if (!output) return;
+  output.send(HDR.concat([0x00, force ? 0x03 : 0x02, 0xF7]));
+}
+
+function send(mode) {
+  if (!output) return;
+  var msg = HDR.concat([0x03, mode, 0xF7]);
+  output.send(msg);
+  if (mode === 0) log(">", msg);
+}
+
+function readName(d, i) {
+  var n = d[i], s = "";
+  for (var k = 0; k < n; k++) s += String.fromCharCode(d[i + 1 + k]);
+  return { text: s, next: i + 1 + n };
+}
+
+// Exposed for offline tests
+function parse(d) {
+  for (var h = 0; h < HDR.length; h++) if (d[h] !== HDR[h]) return null;
+  var kind = d[6];
+  if (kind === 0x42) {
+    var seq = d[7], i = 8;
+    var s = { kind: "state", seq: seq, version: d[i++], outType: d[i++], synthMode: d[i++], osc0: d[i++],
+      engine: d[i++], engineSub: d[i++] };
+    s.track = (d[i] << 7) | d[i + 1]; i += 2;
+    s.row = d[i++];
+    var a = readName(d, i); s.name = a.text;
+    var b = readName(d, a.next); s.rowName = b.text;
+    s.ok = d[b.next] === 0xF7;
+    return s;
+  }
+  if (kind === 0x40) {
+    var last = d.length - 1; // F7
+    if (d[7] === 0x02) return { kind: "oled", offset: 8 * d[8], bytes: unpackRle(d, 10, last) };
+    return { kind: "oled", offset: 0, bytes: d[7] === 0x01 ? unpackRle(d, 9, last) : unpack7(d, 9, last) };
+  }
+  if (kind === 0x45) {
+    var pk = { kind: "picker", version: d[7], open: d[8] === 1, selected: d[9], options: [] }, count = d[10], pj = 11, pr;
+    pr = readName(d, pj); pk.title = pr.text; pj = pr.next;
+    for (var o = 0; o < count; o++) { pr = readName(d, pj); pk.options.push(pr.text); pj = pr.next; }
+    pk.ok = d[pj] === 0xF7;
+    return pk;
+  }
+  if (kind === 0x46) {
+    var bw = { kind: "browser", version: d[7], open: d[8] === 1, base: (d[9] << 7) | d[10], selected: (d[11] << 7) | d[12],
+      items: [] }, bc = d[13], bj = 14, br;
+    if (bw.selected === 0x3FFF) bw.selected = -1;
+    br = readName(d, bj); bw.folder = br.text; bj = br.next;
+    for (var bi = 0; bi < bc; bi++) {
+      var folder = d[bj++] === 1;
+      br = readName(d, bj); bw.items.push({ folder: folder, name: br.text }); bj = br.next;
+    }
+    bw.ok = d[bj] === 0xF7;
+    return bw;
+  }
+  if (kind === 0x48) {
+    var w = { kind: "wave", version: d[7], open: d[8] === 1 };
+    if (!w.open) return w;
+    w.waveKind = d[9]; w.reversed = (d[10] & 1) !== 0; w.recording = (d[10] & 2) !== 0; w.complete = (d[10] & 4) !== 0;
+    w.cols = (d[11] << 7) | d[12];
+    var nm = d[13], wj = 14; w.markers = [];
+    for (var mk = 0; mk < nm; mk++) {
+      var mc = (d[wj + 1] << 7) | d[wj + 2];
+      w.markers.push({ type: d[wj], col: mc === 0x3FFE ? -1 : mc }); wj += 3;
+    }
+    var wn = readName(d, wj); w.name = wn.text; wj = wn.next;
+    w.peaks = [];
+    for (var wc = 0; wc < w.cols; wc++, wj += 2) w.peaks.push(d[wj] === 127 && d[wj + 1] === 0 ? null : [d[wj], d[wj + 1]]);
+    w.ok = d[wj] === 0xF7;
+    w.kind = "wave"; w.kindCode = w.waveKind;
+    return w;
+  }
+  if (kind === 0x49) {
+    var heads = [], hn = d[8];
+    for (var hh = 0; hh < hn; hh++) {
+      var hc = (d[9 + hh * 2] << 7) | d[10 + hh * 2];
+      if (hc !== 0x3FFE && hc !== 0x3FFF) heads.push(hc);
+    }
+    return { kind: "playhead", heads: heads };
+  }
+  if (kind === 0x4A) {
+    var pp = { kind: "params", open: d[8] === 1, knobs: [] };
+    if (!pp.open) return pp;
+    var pc = d[9], pi = 10;
+    for (var q2 = 0; q2 < pc; q2++) {
+      var kk = { x: d[pi], y: d[pi + 1], group: d[pi + 2], bipolar: (d[pi + 3] & 1) !== 0, open: (d[pi + 3] & 2) !== 0,
+        cant: (d[pi + 3] & 4) !== 0, wide: (d[pi + 3] & 8) !== 0,
+        pos: d[pi + 4], value: ((d[pi + 5] << 7) | d[pi + 6]) - 8192 };
+      var kn = readName(d, pi + 7); kk.name = kn.text; pi = kn.next;
+      var kt = readName(d, pi); kk.text = kt.text; pi = kt.next;
+      kk.isSwitch = kk.text.length > 0;
+      pp.knobs.push(kk);
+    }
+    pp.ok = d[pi] === 0xF7;
+    return pp;
+  }
+  if (kind === 0x4B) {
+    var tf = d[8];
+    return { kind: "transport", playing: (tf & 1) !== 0, recording: (tf & 2) !== 0, arrangement: (tf & 4) !== 0,
+      metronome: (tf & 8) !== 0, bpm: (d[9] << 14) | (d[10] << 7) | d[11], view: d[12] };
+  }
+  if (kind === 0x4C) {
+    var oc = d[8], ol = { kind: "outputs", current: d[9], list: [] }, oj = 10;
+    for (var oo = 0; oo < oc; oo++) {
+      var ent = { type: d[oj], muted: (d[oj + 1] & 1) !== 0, soloing: (d[oj + 1] & 2) !== 0, active: (d[oj + 1] & 4) !== 0,
+        r: d[oj + 2], g: d[oj + 3], b: d[oj + 4] };
+      var on2 = readName(d, oj + 5); ent.name = on2.text; oj = on2.next;
+      ol.list.push(ent);
+    }
+    ol.ok = d[oj] === 0xF7;
+    return ol;
+  }
+  if (kind === 0x4D) {
+    var cc = d[8], cl = { kind: "clips", list: [] }, cj = 9;
+    for (var ci2 = 0; ci2 < cc; ci2++) {
+      var cf = d[cj + 2];
+      var ce = { output: d[cj], section: d[cj + 1], playing: (cf & 1) !== 0, pending: (cf & 2) !== 0, audio: (cf & 4) !== 0,
+        soloing: (cf & 8) !== 0, current: (cf & 16) !== 0 };
+      ce.pattern = d[cj + 3] | (d[cj + 4] << 7) | (d[cj + 5] << 14) | (d[cj + 6] << 21) | ((d[cj + 7] & 0x0F) << 28);
+      ce.sectionRgb = [d[cj + 8] * 2, d[cj + 9] * 2, d[cj + 10] * 2];
+      var cn2 = readName(d, cj + 11); ce.name = cn2.text; cj = cn2.next;
+      cl.list.push(ce);
+    }
+    cl.ok = d[cj] === 0xF7;
+    return cl;
+  }
+  if (kind === 0x4E) {
+    var t4 = function (k) { return (d[k] << 21) | (d[k + 1] << 14) | (d[k + 2] << 7) | d[k + 3]; };
+    var ar = { kind: "arranger", start: t4(8), width: t4(12), length: t4(16), lanes: [] }, aj = 20;
+    while (aj < d.length - 1) {
+      var an = d[aj++], lane = [];
+      for (var ai = 0; ai < an; ai++, aj += 13) {
+        var w14 = function (k) { return (d[k] << 7) | d[k + 1]; };
+        lane.push({ a: w14(aj), e: w14(aj + 2), loop: w14(aj + 4), phase: w14(aj + 6),
+          pattern: d[aj + 8] | (d[aj + 9] << 7) | (d[aj + 10] << 14) | (d[aj + 11] << 21) | ((d[aj + 12] & 0x0F) << 28) });
+      }
+      ar.lanes.push(lane);
+    }
+    return ar;
+  }
+  if (kind === 0x54) return { kind: "diag", text: readName(d, 8).text };
+  if (kind === 0x56) {
+    // Which panel: 0 none, 1 BRUNO106, 2 BROPHET
+    var bp = { kind: "panel", which: d[8], open: d[8] === 1 || d[8] === 2, v: [] };
+    if (!bp.open) return bp;
+    for (var bq = 0, bn = d[9]; bq < bn && 11 + bq * 2 < d.length; bq++) bp.v.push((d[10 + bq * 2] << 7) | d[11 + bq * 2]);
+    bp.ok = d[10 + bp.v.length * 2] === 0xF7;
+    return bp;
+  }
+  if (kind === 0x55) {
+    var gd = { kind: "gold", open: d[8] === 1, mode: d[9], knobs: [] };
+    if (!gd.open) return gd;
+    var gi = 10;
+    for (var gq = 0; gq < 16; gq++) {
+      var ge = { bipolar: (d[gi] & 1) !== 0, none: (d[gi] & 4) !== 0, pos: d[gi + 1], value: ((d[gi + 2] << 7) | d[gi + 3]) - 8192 };
+      var gn = readName(d, gi + 4); ge.name = gn.text; gi = gn.next;
+      gd.knobs.push(ge);
+    }
+    return gd;
+  }
+  if (kind === 0x51) return { kind: "beat", phase: ((d[8] << 7) | d[9]) / 16384 };
+  if (kind === 0x52) {
+    var ks = { kind: "kitSamples", rows: [] }, kc = d[8], kj = 9;
+    for (var kq = 0; kq < kc; kq++) {
+      var krow = { row: d[kj], selected: (d[kj + 1] & 2) !== 0 }, kn1 = readName(d, kj + 2);
+      krow.name = kn1.text; var kn2 = readName(d, kn1.next); krow.file = kn2.text; kj = kn2.next;
+      ks.rows.push(krow);
+    }
+    return ks;
+  }
+  if (kind === 0x53) {
+    return { kind: "kitActive", bits: d[8] | (d[9] << 7) | (d[10] << 14) | (d[11] << 21) | ((d[12] & 0x0F) << 28) };
+  }
+  if (kind === 0x50) {
+    var cpos = {}, pc2 = d[8];
+    for (var q3 = 0; q3 < pc2; q3++) cpos[d[9 + q3 * 2]] = d[10 + q3 * 2] / 128;
+    return { kind: "clipPos", pos: cpos };
+  }
+  if (kind === 0x4F) {
+    var apos = (d[8] << 7) | d[9];
+    return { kind: "arrangerPos", pos: apos === 0x3FFF ? -1 : apos === 0x3FFE ? -2 : apos };
+  }
+  if (kind === 0x47) {
+    var bs = (d[8] << 7) | d[9];
+    return { kind: "browserSel", selected: bs === 0x3FFF ? -1 : bs };
+  }
+  if (kind === 0x41) {
+    // 00 00, then 7-bit packed: one byte of high bits, then 4 digit bytes (left to right)
+    var hi = d[9], digits = [];
+    for (var q = 0; q < 4; q++) digits.push(d[10 + q] | (((hi >> q) & 1) << 7));
+    return { kind: "seg", digits: digits };
+  }
+  if (kind === 0x44) {
+    var t = { kind: "text", version: d[7], popup: (d[8] & 1) === 1 }, j = 9, r;
+    r = readName(d, j); t.main = r.text; j = r.next;
+    r = readName(d, j); t.mainEnglish = r.text; j = r.next;
+    r = readName(d, j); t.popupText = r.text; j = r.next;
+    r = readName(d, j); t.popupEnglish = r.text; j = r.next;
+    r = readName(d, j); t.menu = r.text; j = r.next;
+    t.ok = d[j] === 0xF7;
+    return t;
+  }
+  if (kind === 0x43) {
+    var count = d[8], list = [];
+    for (var r = 0; r < count; r++) list.push(d[9 + r]);
+    return { kind: "rows", version: d[7], rows: list, ok: d[9 + count] === 0xF7 };
+  }
+  return null;
+}
+
+
+var QUIET = { playhead: 1, wave: 1, transport: 1, arrangerPos: 1, params: 1, clips: 1, clipPos: 1, arranger: 1, outputs: 1,
+  beat: 1, kitActive: 1, gold: 1, panel: 1 };
+function onMessage(ev) {
+  if (ev.data[0] !== 0xF0) { onChannelMessage(ev, input ? input.id : ""); return; }
+  var m = parse(ev.data);
+  if (!m) return;
+  lastMessageAt = Date.now();
+  // Anything but the display mirror only comes from Bribes firmware
+  if (m.kind !== "seg" && m.kind !== "oled" && fwDetected !== "bribes") setDetected("bribes");
+  if (m.kind === "seg") { if (screenMode !== "7seg") setScreenMode("7seg"); showDigits(m.digits); return; }
+  if (m.kind === "oled") {
+    if (screenMode !== "oled") setScreenMode("oled");
+    for (var k = 0; k < m.bytes.length && m.offset + k < 768; k++) oledImage[m.offset + k] = m.bytes[k];
+    drawOled();
+    return;
+  }
+  if (!QUIET[m.kind]) log("<", ev.data);
+  switch (m.kind) {
+  case "text": showText(m); return;
+  case "picker": showPicker(m); return;
+  case "browser": showBrowser(m); return;
+  case "browserSel": highlightBrowser(m.selected); return;
+  case "wave": if (m.open) m.kind = m.kindCode; showWave(m); return;
+  case "playhead": wavePlayheads = m.heads; drawWave(); return;
+  case "params": showParams(m); return;
+  case "transport": if (fwMode !== "stock") showTransport(m); return;
+  case "outputs": outputs = m.list; renderSong(); return;
+  case "clips": clips = m.list; renderSong(); return;
+  case "arranger": arranger = m; renderSong(); return;
+  case "arrangerPos": arrangerPos = m.pos; placeArrangerHead(); return;
+  case "clipPos": clipPos = m.pos; placeClipHeads(); return;
+  case "diag": $("waveDiag").textContent = m.text; return;
+  case "gold": showGold(m); return;
+  case "panel": if (!m.open || m.ok) showPanel(m); return;
+  case "beat": beatAt = { phase: m.phase, time: performance.now() }; return;
+  case "kitSamples": showKitSamples(m.rows); return;
+  case "kitActive": showKitActive(m.bits); return;
+  case "state":
+    if (lastSeq >= 0 && m.seq !== ((lastSeq + 1) & 0x7F)) dropped++;
+    lastSeq = m.seq; stateCount++;
+    state = m;
+    break;
+  default:
+    rows = m.rows;
+  }
+  render();
+}
+
+function listPorts() {
+  var sel = $("port"), prev = sel.value;
+  sel.innerHTML = "";
+  var outs = [];
+  midi.outputs.forEach(function (o) { outs.push(o); });
+  outs.forEach(function (o) {
+    var opt = document.createElement("option");
+    opt.value = o.id; opt.textContent = o.name;
+    sel.appendChild(opt);
+  });
+  if (prev && outs.some(function (o) { return o.id === prev; })) sel.value = prev;
+  else {
+    var d = outs.filter(function (o) { return /deluge/i.test(o.name); });
+    if (d.length) sel.value = d[0].id;
+  }
+  if (!outs.length) setStatus("No MIDI devices. Plug in the Deluge, then reload.", "bad");
+}
+
+function usePort() {
+  midi.inputs.forEach(function (i) { i.onmidimessage = null; });
+  output = midi.outputs.get($("port").value) || null;
+  input = null;
+  if (output) {
+    // The Deluge replies on the cable the request came in on: match the input by name
+    midi.inputs.forEach(function (i) { if (!input && i.name === output.name) input = i; });
+    if (!input) midi.inputs.forEach(function (i) { if (!input && /deluge/i.test(i.name)) input = i; });
+  }
+  if (!output || !input) { setStatus("Pick the Deluge port", "bad"); return; }
+  input.onmidimessage = onMessage;
+  // Clock and MIDI Follow feedback can come out of any Deluge port
+  midi.inputs.forEach(function (i) {
+    if (i !== input && /deluge/i.test(i.name)) i.onmidimessage = function (ev) { if (ev.data[0] !== 0xF0) onChannelMessage(ev, i.id); };
+  });
+  lastSeq = -1; dropped = 0;
+  send(0); // Also the firmware check: only Bribes answers it
+  startDetect();
+  sendDisplay(true);
+  setStatus("Asked " + output.name + " for state...", "warn");
+}
+
+var wakeLock = null;
+function keepAwake() {
+  if (!navigator.wakeLock || document.visibilityState !== "visible") return;
+  navigator.wakeLock.request("screen").then(function (l) { wakeLock = l; }, function () {});
+}
+document.addEventListener("visibilitychange", keepAwake);
+
+function connect() {
+  if (!navigator.requestMIDIAccess) { setStatus("This browser has no Web MIDI. Use Chrome.", "bad"); return; }
+  navigator.requestMIDIAccess({ sysex: true }).then(function (access) {
+    midi = access;
+    midi.onstatechange = function () { listPorts(); };
+    listPorts();
+    usePort();
+    if (keepAlive) clearInterval(keepAlive);
+    keepAlive = setInterval(function () {
+      if (fwMode === "bribes") send(1);
+      sendDisplay(false);
+      var age = Date.now() - lastMessageAt;
+      if (fwMode === "stock") setStatus("Connected to " + (output ? output.name : "?") + ", stock firmware" +
+        (fwDetected === "bribes" ? " view (this Deluge runs Bribes)" : ""), output ? "ok" : "bad");
+      else if (!lastMessageAt) setStatus("Connected to " + (output ? output.name : "?") +
+        ". No reply yet: is this a Bribes companion build?", "warn");
+      else setStatus("Live on " + output.name + " (last message " + Math.round(age / 1000) + " s ago)", "ok");
+    }, 1000);
+    $("connect").textContent = "Resend";
+    keepAwake();
+  }, function (err) { setStatus("MIDI access refused: " + err, "bad"); });
+}
+$("connect").onclick = connect;
+$("bLoad").onclick = function () { tx([0x03, 0x04]); };
+$("bBack").onclick = function () { tx([0x03, 0x05]); };
+// Top bar: transport and the select knob, as the Deluge's own buttons
+// In STOCK mode, play and record send their learned commands instead
+[["tPlay", 0, 102], ["tRec", 1, 103], ["nSelect", 2], ["nBack", 3], ["nLeft", 4], ["nRight", 5]].forEach(function (b) {
+  $(b[0]).onclick = function () {
+    if (fwMode === "stock") { if (b[2]) pressCommand(b[2]); }
+    else tx([0x03, 0x08, b[1]]);
+  };
+});
+followCh = +stored("followCh") || 15;
+cmdCh = +stored("cmdCh") || 16;
+buildChannels();
+buildCommands();
+[["fwStock", "stock"], ["fwBribes", "bribes"]].forEach(function (b) {
+  $(b[0]).onclick = function () { fwChosen = b[1]; store("fw", b[1]); if (fwMode !== b[1]) setFw(b[1]); };
+});
+
+// Once MIDI with SysEx has been allowed, connect on launch without a tap
+if (navigator.permissions && navigator.permissions.query) {
+  navigator.permissions.query({ name: "midi", sysex: true }).then(function (p) {
+    if (p.state === "granted") connect();
+  }, function () {});
+}
+// Works offline once opened: the service worker keeps a copy of the app
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
+buildMirror();
+buildMirror("bigSeg");
+setScreenMode("7seg");
+setFw(fwChosen || "bribes");
+$("heroArt").innerHTML = art("none");
+$("mode7").onclick = function () { wantScreen("7seg"); };
+$("modeOled").onclick = function () { wantScreen("oled"); };
+// Leaving the page in OLED mode would leave the 7-seg frozen: swap back on the way out
+window.addEventListener("pagehide", function () { if (screenMode === "oled" && output) output.send(HDR.concat([0x00, 0x04, 0xF7])); });
+$("port").onchange = function () { if (midi) usePort(); };
+updateStage();
+if (typeof module !== "undefined") module.exports = { parse: parse, art: art, ART: ART };
+</script>
+<script>
+// New / Classic switch in the app footer (the site bar and the floating switch are hidden when installed)
+Array.prototype.forEach.call(document.querySelectorAll(".cx-modein button"), function (b) {
+  b.addEventListener("click", function () { if (window.BRIBERY) window.BRIBERY.setMode(b.getAttribute("data-m")); });
+});
+</script>
+</body>
+</html>

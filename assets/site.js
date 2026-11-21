@@ -19,7 +19,6 @@
   };
   var NAV = [
     ["Bribeluge", "/bribeluge/", "bribeluge"],
-    ["Companion", "/companion/", "companion"],
     ["Seal Eggs", "/sealeggs/", "sealeggs"],
     ["Stolperbeats", "/stolperbeats/", "stolperbeats"],
     ["Bribestages", "/bribestages/", "stages"],
@@ -181,7 +180,7 @@
   var PRODUCTS = {
     bribeluge: { name: "Bribeluge", dev: "Synthstrom Deluge", json: "/bribeluge/download/latest.json", page: "/bribeluge/", install: "/bribeluge/#install",
       ver: function (i) { return "v" + i.version; } },
-    companion: { name: "Bribeluge Companion", dev: "Phone or tablet + Deluge", page: "/companion/", open: "Open the app" },
+    companion: { name: "Bribeluge Companion", dev: "Phone or tablet + Deluge", page: "/bribeluge/companion/", open: "Open the app" },
     sealeggs: { name: "Seal Eggs", dev: "Sealegs", page: "/sealeggs/", open: "Open the flasher" },
     stolperbeats: { name: "Stolperbeats Ultra", dev: "Stolperbeats", page: "/stolperbeats/", open: "Open the flasher" },
     stages: { name: "BRIBESTAGES", dev: "Mutable Instruments Stages", json: "/bribestages/firmware/latest.json", page: "/bribestages/", install: "/bribestages/#update",

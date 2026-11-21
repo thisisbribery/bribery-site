@@ -15,7 +15,7 @@ REPO = "thisisbribery/deluge-bribes-v1"
 OUT = SITE / "bribeluge" / "manual" / "index.html"
 # old GitHub Pages tools now live on this site
 OLD_PAGES = {
-    "https://thisisbribery.github.io/bribes-companion": "/companion/",
+    "https://thisisbribery.github.io/bribes-companion": "/bribeluge/companion/",
     "https://thisisbribery.github.io/SealEggs_v1": "/sealeggs/",
     "https://thisisbribery.github.io/stolperbeats-ultra-v1": "/stolperbeats/",
     "https://thisisbribery.github.io/stolperbeats_v2": "/stolperbeats/visualiser/",

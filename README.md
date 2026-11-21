@@ -11,7 +11,9 @@ Static HTML, no build step. Vercel deploys every push to `main`.
 | `/` | Home: firmware rows with device shots, music, learn |
 | `/bribeluge/` | Bribeluge (Deluge firmware) feature guide |
 | `/bribeluge/manual/` | Full Bribeluge manual, generated from the firmware README |
-| `/companion/` | Bribeluge Companion app (PWA, Web MIDI) |
+| `/bribeluge/companion/` | Bribeluge Companion info: setup steps, credits, protocol |
+| `/bribeluge/companion/launch/` | Bribeluge Companion app (PWA, Web MIDI, no site header) |
+| `/companion/` | Redirect stub: installed apps go to the app, browsers to the info page |
 | `/sealeggs/` | Seal Eggs flasher (Sealegs) |
 | `/stolperbeats/` | STOLPERBEATS ULTRA flasher |
 | `/stolperbeats/visualiser/` | Stolperbeats Timing visualiser |

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRIBELUGE COMPANION · Deluge second screen · BRIBERY</title>
+<meta name="description" content="Bribeluge Companion: a second screen for the Synthstrom Deluge over USB MIDI, built on the Deluge Community firmware's SysEx display mirror and MIDI Follow.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="BRIBELUGE COMPANION">
+<meta property="og:description" content="A second screen for the Synthstrom Deluge on a phone, tablet or laptop, over USB.">
+<meta property="og:image" content="https://thisisbribery.com/assets/devices/companion.webp">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/pages.css">
+<style>
+.cx-launch{font-size:clamp(20px,2.6vw,30px);padding:clamp(20px,2.4vw,28px) clamp(28px,3.4vw,44px);letter-spacing:.08em;box-shadow:0 0 32px rgba(255,31,214,.45)}
+.cx-launch:hover{box-shadow:none}
+.cx-ctas{display:flex;flex-direction:column;align-items:flex-start;gap:18px;margin-top:clamp(22px,3vw,34px)}
+.cx-ctas small{font:12px var(--bx-mono);letter-spacing:.04em;color:#a99fa6}
+.cx-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:clamp(18px,2.4vw,28px)}
+.cx-tabs button{all:unset;cursor:pointer;padding:9px 14px;border:1.5px solid var(--bx-line);color:#a99fa6;font:700 12px var(--bx-mono);letter-spacing:.12em;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.cx-tabs button[aria-selected="true"]{background:var(--bx-pink);border-color:var(--bx-pink);color:var(--bx-black)}
+.cx-tabs button:hover{border-color:var(--bx-pink)}
+.cx-tabs button:focus-visible{outline:2px solid var(--bx-pink);outline-offset:2px}
+.cx-tabs .cx-ios{border-style:dashed;color:var(--bx-ink)}
+.bx-steps[hidden]{display:none}
+.bx-section a.cx-a,.bx-rows a,.bx-list a,.bx-prose a{color:var(--bx-pink)}
+.cx-hex{font:600 .92em var(--bx-mono);color:var(--bx-ink);white-space:nowrap}
+.cx-proto{margin-top:clamp(18px,3vw,28px);border:1px solid var(--bx-line)}
+.cx-proto summary{cursor:pointer;padding:14px 16px;font:700 13px var(--bx-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--bx-pink)}
+.cx-proto pre{margin:0;padding:0 16px 18px;overflow-x:auto;font:12.5px/1.6 var(--bx-mono);color:#cfc8cd;white-space:pre}
+</style>
+<script src="/assets/site.js"></script>
+</head>
+<body class="bx" data-bx-page="bribeluge" data-bx-foot>
+
+<main>
+  <section class="bx-hero">
+    <p class="bx-kicker"><a href="/bribeluge/" style="color:inherit">Bribeluge</a> <span>/</span> Companion <span>/</span> Web MIDI over USB</p>
+    <h1 class="bx-mega bx-glitch" data-text="BRIBELUGE COMPANION" data-fit><span class="bx-fit">BRIBELUGE COMPANION</span></h1>
+    <div class="bx-hero-grid">
+      <div>
+        <p class="bx-lede">A second screen for the Synthstrom Deluge on a phone, tablet or laptop, over USB. The display spelled out in full, knobs and engine drawings, waveforms with draggable markers, a song view you can tap, and slider panels for BRUNO106 and BROPHET. Built on the <a href="#credits" style="color:var(--bx-pink)">Deluge Community firmware</a>.</p>
+        <div class="cx-ctas">
+          <a class="bx-btn bx-solid cx-launch" href="/bribeluge/companion/launch/">Launch Companion &#8599;</a>
+          <small>Chrome or Edge. Works with Bribeluge v1.32+ and stock community firmware 1.3.</small>
+        </div>
+        <div class="bx-ctas" style="margin-top:18px">
+          <a class="bx-btn" href="#connect">Connect steps</a>
+          <a class="bx-btn" href="#protocol">How it talks</a>
+          <a class="bx-btn" href="/bribeluge/">Get the firmware</a>
+          <button type="button" class="bx-btn" data-bx-beta>Beta tester</button>
+        </div>
+      </div>
+      <figure class="bx-shot">
+        <img src="/assets/devices/companion.webp" width="1600" height="1000" alt="A tablet showing the Bribeluge Companion next to a Deluge">
+      </figure>
+    </div>
+  </section>
+
+  <section class="bx-section" id="connect">
+    <div class="bx-sec-head">
+      <h2>Connect your Deluge</h2>
+      <p>Pick your device. The app opens on its own platform's steps.</p>
+    </div>
+    <div class="cx-tabs" role="tablist" aria-label="Your device">
+      <button type="button" role="tab" id="cxTabAndroid" aria-controls="cxAndroid" aria-selected="true">Android</button>
+      <button type="button" role="tab" id="cxTabWindows" aria-controls="cxWindows" aria-selected="false">Windows</button>
+      <button type="button" role="tab" id="cxTabMac" aria-controls="cxMac" aria-selected="false">Mac</button>
+      <button type="button" class="cx-ios" data-bx-beta="iPhone or iPad" title="iPhone and iPad support is on the way. Join the beta list to hear first.">iOS launching soon</button>
+    </div>
+    <ol class="bx-steps" id="cxAndroid" role="tabpanel" aria-labelledby="cxTabAndroid">
+      <li><div><b>Plug in.</b> Run a USB cable from the Deluge's USB port to your phone or tablet. Use a USB-C (or OTG) cable or adapter that carries data: some cables only charge.</div></li>
+      <li><div><b>Launch in Chrome.</b> Open this page in Chrome and tap <a class="cx-a" href="/bribeluge/companion/launch/">Launch Companion</a>. Other Android browsers may not support Web MIDI.</div></li>
+      <li><div><b>Tap Connect</b> in the top bar, then <b>Allow</b> when Chrome asks to control your MIDI devices.</div></li>
+      <li><div><b>You're live.</b> The Deluge port is picked for you and the light turns green. Any of the Deluge's ports works.</div></li>
+      <li><div><b>Optional: install it.</b> In the app, Chrome menu &#8942; &rarr; <b>Add to Home screen</b>. It then runs fullscreen, keeps the screen awake and reconnects on its own.</div></li>
+    </ol>
+    <ol class="bx-steps" id="cxWindows" role="tabpanel" aria-labelledby="cxTabWindows" hidden>
+      <li><div><b>Plug in.</b> Connect the Deluge's USB port to your computer with a data USB cable.</div></li>
+      <li><div><b>Free the port.</b> Close any other app using the Deluge's MIDI (a DAW, an editor): on Windows a MIDI port usually opens in one app at a time.</div></li>
+      <li><div><b>Launch in Chrome or Edge.</b> Click <a class="cx-a" href="/bribeluge/companion/launch/">Launch Companion</a>. Firefox and other browsers may not support Web MIDI with SysEx.</div></li>
+      <li><div><b>Click Connect</b> in the top bar, then <b>Allow</b> when the browser asks to control your MIDI devices.</div></li>
+      <li><div><b>You're live.</b> The Deluge port is picked for you and the light turns green. If not, choose it in the port list.</div></li>
+    </ol>
+    <ol class="bx-steps" id="cxMac" role="tabpanel" aria-labelledby="cxTabMac" hidden>
+      <li><div><b>Plug in.</b> Connect the Deluge's USB port to your Mac with a data USB cable (or a USB-C adapter).</div></li>
+      <li><div><b>Launch in Chrome or Edge.</b> Click <a class="cx-a" href="/bribeluge/companion/launch/">Launch Companion</a>. Safari doesn't support Web MIDI.</div></li>
+      <li><div><b>Click Connect</b> in the top bar, then <b>Allow</b> when the browser asks to control your MIDI devices.</div></li>
+      <li><div><b>You're live.</b> The Deluge port is picked for you and the light turns green. Your DAW can keep using the Deluge at the same time.</div></li>
+    </ol>
+    <p class="bx-note"><b>Firmware:</b> everything works with <a class="cx-a" href="/bribeluge/">Bribeluge</a> v1.32 or later. Plain community firmware 1.3 works in <b>STOCK</b> mode after a one-time MIDI Follow setup, listed in the app once you pick STOCK. The STOCK / BRIBELUGE switch picks itself when the Deluge answers.</p>
+  </section>
+
+  <section class="bx-section" id="credits" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>Built on the community firmware</h2>
+      <p>The companion stands on work the Deluge community did first.</p>
+    </div>
+    <ul class="bx-list" style="margin-top:clamp(18px,3vw,30px)">
+      <li><b>Deluge Community firmware.</b> Synthstrom Audible open-sourced the Deluge firmware, and the community keeps it going at <a href="https://github.com/SynthstromAudible/DelugeFirmware" target="_blank" rel="noopener">SynthstromAudible/DelugeFirmware</a> (GPL-3.0). Bribeluge is a fork of it, and the companion talks to the Deluge through features it added.</li>
+      <li><b>Screen over SysEx, by <a href="https://github.com/bfredl" target="_blank" rel="noopener">bfredl</a>.</b> The OLED and 7SEG mirror the companion shows is the community firmware's display-over-SysEx feature (2023), first shown in bfredl's <a href="https://bfredl.github.io/delugeclient/app.html" target="_blank" rel="noopener">delugeclient</a>. The companion unpacks the same stream: 7-to-8 bit packing with run-length encoding, the inverse of the firmware's <code>pack_8to7_rle</code>.</li>
+      <li><b>DEx, by <a href="https://github.com/silicakes/deluge-extensions" target="_blank" rel="noopener">silicakes</a>.</b> The best general Deluge web client, and the reference for how the companion drives the mirror (keep-alive, display swap).</li>
+      <li><b>MIDI Follow.</b> A community firmware feature. In STOCK mode every knob in the companion is a MIDI Follow CC, using the firmware's default map.</li>
+      <li><b>What Bribeluge adds.</b> Extra SysEx messages under the same header, for track state, kit rows, pickers, the browser, waveforms, params, transport, clips, the arranger and the synth panels. These only exist in Bribeluge.</li>
+    </ul>
+  </section>
+
+  <section class="bx-section" id="protocol" style="padding-top:0">
+    <div class="bx-sec-head">
+      <h2>How it talks to the Deluge</h2>
+      <p>For troubleshooting and anyone building their own client.</p>
+    </div>
+    <dl class="bx-rows">
+      <div><dt>Transport</dt><dd>Plain USB MIDI, through the browser's Web MIDI with SysEx permission. No OSC, no NRPN, no custom USB driver. Any of the Deluge's USB MIDI ports works.</dd></div>
+      <div><dt>Header</dt><dd>Community SysEx with Synthstrom's manufacturer ID: <span class="cx-hex">F0 00 21 7B 01 02 &hellip; F7</span>, where <span class="cx-hex">02</span> is the display command. Older docs and clients show <span class="cx-hex">F0 7D</span>: that was the developer ID the community used until February 2024, when it moved to the official Synthstrom ID.</dd></div>
+      <div><dt>Screen mirror</dt><dd>Out: <span class="cx-hex">00 02</span> keep alive, <span class="cx-hex">00 03</span> force a full frame, <span class="cx-hex">00 04</span> swap 7SEG / OLED. In: <span class="cx-hex">40</span> OLED frame (packed + RLE, full or a page range), <span class="cx-hex">41</span> 7SEG digits. Works on stock community firmware 1.3.</dd></div>
+      <div><dt>Bribeluge state</dt><dd>Out: <span class="cx-hex">03 &lt;mode&gt;</span> after the header (subscribe, keep alive, picker, browser, SELECT / BACK, markers, pads, transport, clips, panels). In: <span class="cx-hex">42</span> to <span class="cx-hex">4F</span> and <span class="cx-hex">56</span>. Bribeluge only.</dd></div>
+      <div><dt>Knobs in STOCK</dt><dd>MIDI Follow CCs on the Follow channel, with the Deluge's feedback coming back the same way.</dd></div>
+      <div><dt>Tempo and play light</dt><dd>MIDI clock from the Deluge: tempo from 24 ticks per beat, play from start / continue / stop.</dd></div>
+    </dl>
+    <details class="cx-proto">
+      <summary>Full message list</summary>
+<pre>Header           F0 00 21 7B 01 02 ... F7   (Synthstrom ID, product 01, display command 02)
+
+Display mirror (community firmware)
+  out  00 02                keep alive
+  out  00 03                force a full frame
+  out  00 04                swap 7SEG / OLED
+  in   40 00 ...            OLED frame, packed 7-to-8
+  in   40 01 ...            OLED frame, packed 7-to-8 + RLE
+  in   40 02 &lt;page&gt; ...     OLED pages from &lt;page&gt;, packed + RLE
+  in   41 00 00 &lt;hi&gt; d1-d4  7SEG: a high-bits byte, then 4 digit bytes
+
+Bribeluge companion (Bribeluge only)
+  out  03 00                subscribe and send everything
+  out  03 01                keep alive
+  out  03 02 &lt;n&gt;            choose picker option
+  out  03 03 &lt;hi&gt; &lt;lo&gt;      move the browser
+  out  03 04 / 03 05        press SELECT / BACK
+  out  03 06 &lt;m&gt; &lt;hi&gt; &lt;lo&gt;  drag a waveform marker
+  out  03 07 &lt;x&gt; &lt;y&gt;        open a shortcut pad's setting
+  out  03 08 &lt;cmd&gt;          top bar: 0 play, 1 record, 2 select, 3 back, 4 left, 5 right
+  out  03 09 &lt;hi&gt; &lt;lo&gt;      launch or stop a session clip
+  out  03 0A &lt;section&gt;      launch a section
+  out  03 0D &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a BRUNO106 panel control
+  out  03 0E &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a BROPHET panel control
+  in   42 STATE   43 KIT_ROWS   44 TEXT      45 PICKER     46 BROWSER
+  in   47 BROWSER_SEL           48 WAVEFORM  49 PLAYHEAD   4A PARAMS
+  in   4B TRANSPORT  4C OUTPUTS 4D CLIPS     4E ARRANGER   4F ARRANGER_POS
+  in   56 PANEL (BRUNO106 / BROPHET)</pre>
+    </details>
+    <p class="bx-prose" style="margin-top:18px">The firmware side is in <a href="https://github.com/thisisbribery/DelugeFirmware/blob/bribes/src/deluge/hid/hid_sysex.cpp" target="_blank" rel="noopener">hid_sysex.cpp</a> on the Bribeluge branch. The app is one unminified HTML file: <a href="/bribeluge/companion/launch/">open it</a> and view source.</p>
+  </section>
+
+  <section class="bx-section bx-band">
+    <a class="bx-dl-hit" href="/bribeluge/companion/launch/" aria-label="Launch the Bribeluge Companion">
+      <div class="bx-sec-head">
+        <h2>Launch</h2>
+        <p>Plug in, open it in Chrome or Edge, tap Connect.</p>
+      </div>
+    </a>
+    <div class="bx-band-body">
+      <p>Runs entirely in your browser. Nothing to install on the Deluge beyond the firmware.</p>
+      <div class="bx-ctas">
+        <a class="bx-btn bx-ink bx-solid bx-dl-big" href="/bribeluge/companion/launch/">Launch Companion &#8599;</a>
+        <button type="button" class="bx-btn bx-ink" data-bx-signup="companion">Get updates</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bx-section">
+    <p class="bx-fine">Unofficial. Not affiliated with or endorsed by Synthstrom Audible.</p>
+  </section>
+</main>
+
+<script>
+// Connection steps: tabs, opening on the visitor's own platform.
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.cx-tabs [role="tab"]'));
+  function pick(t) {
+    tabs.forEach(function (b) {
+      var on = b === t; b.setAttribute("aria-selected", String(on));
+      document.getElementById(b.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+  tabs.forEach(function (b) { b.addEventListener("click", function () { pick(b); }); });
+  var ua = navigator.userAgent, id = /Android/i.test(ua) ? "cxTabAndroid" : /Windows/i.test(ua) ? "cxTabWindows" :
+    (/Macintosh/i.test(ua) && !("ontouchend" in document)) ? "cxTabMac" : null;
+  if (id) pick(document.getElementById(id));
+})();
+</script>
+</body>
+</html>
