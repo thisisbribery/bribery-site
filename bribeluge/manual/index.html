@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Manual · BRIBELUGE v1.35 · BRIBERY</title>
+<title>Manual · BRIBELUGE v1.36 · BRIBERY</title>
 <meta name="description" content="The full Bribeluge manual: every feature of the Deluge Bribes firmware, with controls, install steps and quick reference.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBELUGE manual">
@@ -87,7 +87,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <body class="bx" data-bx-page="bribeluge" data-bx-foot>
 <div id="top"></div>
 <header class="m-hero">
-  <p class="bx-kicker">Bribeluge v1.35 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
+  <p class="bx-kicker">Bribeluge v1.36 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
   <h1 class="bx-mega bx-glitch" data-text="MANUAL" data-fit><span class="bx-fit">MANUAL</span></h1>
   <div class="bx-ctas">
     <a class="bx-btn bx-solid" href="#download" data-bx-download>Download</a>
@@ -176,30 +176,30 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#24-brophet">BROPHET</a>:</strong> A two-oscillator poly synth engine from Pro-54, the open source port of NI's Pro-53: sync, poly mod, analog drift, its filter in every LPF list, and all 512 Pro-53 programs.</li>
 <li><strong><a href="#25-pan-spread">Pan spread</a>:</strong> Each note of a poly synth gets its own place in the stereo field, like a poly synth's voice pan spread, no unison needed.</li>
 <li><strong><a href="#26-bruno106">BRUNO106</a>:</strong> A Juno-style poly synth engine from Ultramaster KR-106: one DCO with saw, pulse, sub and noise, its IR3109 filter in every LPF list, the four position HPF with bass boost, and BRUNO CHORUS as a Mod FX type on any track.</li>
-<li><strong><a href="#27-bribeluge-companion">BRIBELUGE COMPANION</a>:</strong> A phone or tablet screen for the Deluge over USB: the display spelled out in full, knobs and engine drawings, waveforms with draggable markers, picture pickers, a song view you can tap, and panels for BRUNO106 (Juno-style sliders) and BROPHET (Prophet-style knobs) that work both ways.</li>
+<li><strong><a href="#27-bribeluge-companion">BRIBELUGE COMPANION</a>:</strong> A phone or tablet screen for the Deluge over USB: the display spelled out in full, knobs and engine drawings, waveforms with draggable markers, picture pickers, a song view you can tap, and panels for BRUNO106 (Juno-style sliders), BROPHET (Prophet-style knobs) and wavetable synths (a 3D view of the table with every note moving through it) that work both ways.</li>
 </ol>
-<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.35" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.35" target="_blank" rel="noopener">v1.35 release</a>. See <a href="#source-code">Source code</a>.</p>
+<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.36" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.36" target="_blank" rel="noopener">v1.36 release</a>. See <a href="#source-code">Source code</a>.</p>
 <p><strong>On the web:</strong> <a href="/bribeluge/">feature overview</a> and this <a href="/bribeluge/manual/">manual</a> at thisisbribery.com.</p>
 <p><strong>Support:</strong> find it useful? <a href="https://ko-fi.com/thisisbribery" target="_blank" rel="noopener">Buy me a coffee on Ko-fi</a>.</p>
 <p><strong>Start here:</strong> <a href="#download">Download</a> · <a href="#install">Install</a> · <strong>Reference:</strong> <a href="#quick-reference">Quick reference</a> · <a href="#about">About</a> · <a href="#changelog">Changelog</a> · <a href="#design-and-credit">Design and credit</a> · <a href="#source-code">Source code</a></p>
 <p>Names in <strong>bold capitals</strong> in brackets are what the 7-segment display shows.</p>
 <h2 id="download"><a class="m-anchor" href="#download" aria-hidden="true" tabindex="-1">#</a>Download</h2>
-<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.35.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.35.bin</code></a></p>
-<p>SHA-256: <code>d95548a784aea92f43ed33553bc7cf9d2f5f116682902296a89dbd9c2a5127f5</code></p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.36.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.36.bin</code></a></p>
+<p>SHA-256: <code>d991d140f46fb5b335869b182681250b2d7d7cf15052920bd3a6ee53b57f40b2</code></p>
 <p>Presets (optional), copied to the same place on the SD card:</p>
 <ul>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN kits are built into the firmware.</li>
-<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/WAVE" target="_blank" rel="noopener"><code>presets/SYNTHS/WAVE</code></a> to <code>SYNTHS/WAVE</code>. These play the free <strong>BVKER Custom Wavetables</strong> pack, which isn't included here: download it from <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">bvker.com/free-serum-wavetables</a> and unzip it into <code>SAMPLES/WAVETABLES</code>, so the card has <code>SAMPLES/WAVETABLES/BVKER - Custom Wavetables/Analog</code> and the other folders. From v1.33 the WAVE presets are a new set with new names: delete the old ones from <code>SYNTHS/WAVE</code> first.</li>
-<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/DX7" target="_blank" rel="noopener"><code>presets/SYNTHS/DX7</code></a> to <code>SYNTHS/DX7</code>: 288 DX7 voices in <code>LEAD</code>, <code>BASS</code>, <code>PAD</code>, <code>KEYS</code>, <code>BELL</code> and <code>MISC</code>.</li>
+<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/WAVE" target="_blank" rel="noopener"><code>presets/SYNTHS/WAVE</code></a> to <code>SYNTHS/WAVE</code>. These play the free <strong>BVKER Custom Wavetables</strong> pack, which isn't included here: download it from <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">bvker.com/free-serum-wavetables</a> and unzip it into <code>SAMPLES/WAVETABLES</code>, so the card has <code>SAMPLES/WAVETABLES/BVKER - Custom Wavetables/Analog</code> and the other folders. From v1.33 the WAVE presets are a new set with new names: delete the old ones from <code>SYNTHS/WAVE</code> first. From v1.36 their <strong>CUSTOM 3</strong> sets LFO 1's sweep of the wavetable position (it was Feedback): copy them over the old ones.</li>
+<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/DX7" target="_blank" rel="noopener"><code>presets/SYNTHS/DX7</code></a> to <code>SYNTHS/DX7</code>: 288 DX7 voices in <code>LEAD</code>, <code>BASS</code>, <code>PAD</code>, <code>KEYS</code>, <code>BELL</code> and <code>MISC</code>. From v1.36, 9 of them that played off C are retuned: copy them over the old ones.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BRINGS" target="_blank" rel="noopener"><code>presets/SYNTHS/BRINGS</code></a> to <code>SYNTHS/BRINGS</code>. If your card has <code>SYNTHS/BRIB</code> from v1.26, rename it to <code>BRINGS</code>.</li>
-<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BROPHET" target="_blank" rel="noopener"><code>presets/SYNTHS/BROPHET</code></a> to <code>SYNTHS/BROPHET</code>: Pro-53's 512 programs in <code>BNK1</code> to <code>BNK8</code>, and 24 Bribes presets in <code>BRIB</code>.</li>
+<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BROPHET" target="_blank" rel="noopener"><code>presets/SYNTHS/BROPHET</code></a> to <code>SYNTHS/BROPHET</code>: Pro-53's 512 programs in <code>BNK1</code> to <code>BNK8</code>, and 24 Bribes presets in <code>BRIB</code>. From v1.36, 128 programs that played off C are retuned: copy them over the old ones.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BRUNO106" target="_blank" rel="noopener"><code>presets/SYNTHS/BRUNO106</code></a> to <code>SYNTHS/BRUNO106</code>: 212 presets in <code>LEAD</code>, <code>BASS</code>, <code>PAD</code> and <code>MISC</code>.</li>
 <li>Your own synth presets: <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/tools/sort_synth_presets.py" target="_blank" rel="noopener"><code>tools/sort_synth_presets.py</code></a> copies them into the synth browser's folders (see <a href="#13-synth-browser">Synth browser</a>).</li>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="install"><a class="m-anchor" href="#install" aria-hidden="true" tabindex="-1">#</a>Install</h2>
 <ol>
-<li>Copy <code>deluge-bribes-v1.35.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
+<li>Copy <code>deluge-bribes-v1.36.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
 <li>Turn the Deluge off.</li>
 <li>Hold <strong>SHIFT</strong> and switch the Deluge on. Let go once it starts loading the new firmware.</li>
 </ol>
@@ -1532,7 +1532,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 </ul>
 <h3 id="the-presets"><a class="m-anchor" href="#the-presets" aria-hidden="true" tabindex="-1">#</a>The presets</h3>
 <ul>
-<li><strong>WAVE:</strong> 99 presets, one for each wavetable in the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which you download yourself (see <a href="#download">Download</a>). Each starts where its wavetable has some body and moves through the part that changes, with an envelope, an LFO or velocity. They're named by recipe, wavetable family and number: basses are <strong>Punch</strong>, <strong>Reese</strong> or <strong>Wobble</strong>, leads <strong>Mono</strong>, <strong>Poly</strong> or <strong>Sweep</strong>, pads <strong>Wide</strong>, <strong>Bloom</strong>, <strong>Air</strong> or <strong>Drift</strong>, and MISC holds <strong>Pluck</strong>, <strong>Bell</strong> and <strong>Keys</strong>. Tables that are close to a sine get the wavefolder and a second oscillator. On every WAVE preset <strong>CUSTOM 2</strong> moves the wavetable position and <strong>CUSTOM 3</strong> is <a href="#22-feedback">Feedback</a>.</li>
+<li><strong>WAVE:</strong> 99 presets, one for each wavetable in the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which you download yourself (see <a href="#download">Download</a>). Each starts where its wavetable has some body and moves through the part that changes, with an envelope, an LFO or velocity. They're named by recipe, wavetable family and number: basses are <strong>Punch</strong>, <strong>Reese</strong> or <strong>Wobble</strong>, leads <strong>Mono</strong>, <strong>Poly</strong> or <strong>Sweep</strong>, pads <strong>Wide</strong>, <strong>Bloom</strong>, <strong>Air</strong> or <strong>Drift</strong>, and MISC holds <strong>Pluck</strong>, <strong>Bell</strong> and <strong>Keys</strong>. Tables that are close to a sine get the wavefolder and a second oscillator. On every WAVE preset <strong>CUSTOM 2</strong> moves the wavetable position and <strong>CUSTOM 3</strong> sets how far LFO 1 sweeps it.</li>
 <li><strong>DX7:</strong> 288 voices, sorted by name into LEAD, BASS, PAD, KEYS (pianos, organs, clavs), BELL (bells, mallets, chimes) and MISC, 48 in each. Yamaha's original ROM cartridges come first, then the rest of the collection with duplicates taken out. <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/DX7/SOURCES.txt" target="_blank" rel="noopener"><code>presets/SYNTHS/DX7/SOURCES.txt</code></a> lists the cartridge and slot each came from. The DX7 menu's cartridge browser still loads <code>.syx</code> files as before.</li>
 <li><strong>BRINGS:</strong> 37 BRIBERING MODE presets across all five models: basses, plucked and struck leads, bowed and chordal pads, bells and drones.</li>
 <li><strong>BROPHET:</strong> all 512 of Pro-53's programs, and 24 Bribes presets (see <a href="#24-brophet">BROPHET</a>).</li>
@@ -1942,7 +1942,6 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li><strong>SHIFT + the shortcut pad directly below FOLD.</strong></li>
 <li>In the sound menu under <strong>Distortion</strong>, after <strong>Wavefold</strong>.</li>
 <li>In automation view, as a patch cable destination (an envelope, LFO or velocity on Feedback), and on a gold knob with LEARN.</li>
-<li>On the WAVE presets it's on <strong>CUSTOM 3</strong>.</li>
 </ul>
 <h3 id="how-it-plays-2"><a class="m-anchor" href="#how-it-plays-2" aria-hidden="true" tabindex="-1">#</a>How it plays</h3>
 <ul>
@@ -2383,7 +2382,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <ul>
 <li><strong>Top bar:</strong> Play, Record, the tempo, the Deluge's display mirrored (7SEG or OLED, switchable), Back, the select knob left and right, and a big SELECT button.</li>
 <li><strong>Readout:</strong> whatever the display shows, spelled out in full English (no four letter abbreviations), with a menu item's name and value side by side.</li>
-<li><strong>Track:</strong> a drawing of the engine, the main settings as knobs (greyed out where the Deluge would say <strong>CANT</strong>), and each engine's own controls and switches: a drum engine's controls, the 303's knobs and filter. Tap a knob and it opens on the Deluge. BRUNO106 and BROPHET get their own panels (below).</li>
+<li><strong>Track:</strong> a drawing of the engine, the main settings as knobs (greyed out where the Deluge would say <strong>CANT</strong>), and each engine's own controls and switches: a drum engine's controls, the 303's knobs and filter. Tap a knob and it opens on the Deluge. BRUNO106, BROPHET and wavetable synths get their own panels (below).</li>
 <li><strong>Kits:</strong> every row's engine, and a list of the kit's sample rows that light as they play. Tap one to open its sample's waveform.</li>
 <li><strong>Pickers and browsers:</strong> SHIFT + SYNTH and SHIFT + KIT as picture tiles, preset folders as a scrollable list. Tap to choose, tap again to load.</li>
 <li><strong>Waveforms:</strong> audio clips, sample markers and Start offset, full width with every playing note's playhead. Drag the start, loop and end markers, or the offset.</li>
@@ -2407,6 +2406,15 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li><strong>Fourth row:</strong> <strong>Dirt</strong> (crush, deci, sat), <strong>Delay</strong> (amount, rate, feedback) and <strong>Reverb</strong>.</li>
 <li>Buttons follow the synth's rules: an oscillator keeps at least one wave on, and the LFO shapes pick one. Osc B's frequency reads two octaves each way on the keyboard and four with KBD off.</li>
 <li>Two looks, from the faint <strong>P5 | P8</strong> switch in the panel's header: <strong>P8</strong> (black panel, red LEDs, silver-capped knobs) or <strong>P5</strong> (wood cheeks, cream lettering and buttons). The tablet remembers which.</li>
+</ul>
+<h3 id="wave-panel"><a class="m-anchor" href="#wave-panel" aria-hidden="true" tabindex="-1">#</a>WAVE panel</h3>
+<p>With a synth whose oscillator 1 or 2 plays a wavetable selected (any WAVE preset, or your own), the companion shows the table itself, like a wavetable synth's display, with the settings that move through it beside it. It works both ways, like the other panels.</p>
+<ul>
+<li><strong>The table:</strong> its frames drawn as a stack going back, the first at the front. The bright blue frame is where the position knob sits; each note playing is an orange line moving through the stack, with everything patched to the position (envelope 2, LFO 1, velocity) included, and a tick on the rail at the side so you can follow it. Osc B gets its own view when it plays a wavetable.</li>
+<li><strong>Drag up or down on a table</strong> to move its position, as with the knob. <strong>3D / 2D</strong> in its corner switches to one flat cycle, the knob's frame large with the notes over it.</li>
+<li><strong>Beside it:</strong> <strong>Osc A</strong> and <strong>Osc B</strong> position, envelope 2 and LFO 1 amounts on the position (centre is none, either way from there), level and pitch.</li>
+<li><strong>Underneath:</strong> <strong>LFO 1</strong> rate, <strong>Env 2</strong> (the one that sweeps the position on the WAVE presets), <strong>Filter</strong> cutoff and resonance, <strong>Amp env</strong>, <strong>Tone</strong> (wavefolder and <a href="#22-feedback">Feedback</a>) and <strong>Out</strong> (volume and reverb).</li>
+<li>The Deluge sends a table once, a little at a time, when it's loaded or the panel opens (about a quarter of a second for a big one), then only the positions while they move.</li>
 </ul>
 <h3 id="using-it-7"><a class="m-anchor" href="#using-it-7" aria-hidden="true" tabindex="-1">#</a>Using it</h3>
 <ol>
@@ -2576,7 +2584,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </tr>
 <tr>
 <td><strong>CUSTOM 2 / CUSTOM 3 gold knobs on a WAVE preset</strong></td>
-<td>Wavetable position / Feedback (Synth browser)</td>
+<td>Wavetable position / LFO 1's sweep of it (Synth browser)</td>
 </tr>
 <tr>
 <td><strong>SHIFT + SATURATION pad</strong></td>
@@ -2729,6 +2737,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <h2 id="changelog"><a class="m-anchor" href="#changelog" aria-hidden="true" tabindex="-1">#</a>Changelog</h2>
 <p>Newest first: what changed in each release, why, and what it taught me.</p>
 <ul>
+<li>
+<p><strong>v1.36: WAVE panel.</strong> With a wavetable synth selected, the companion draws the table as a stack of its frames, with the position knob's frame lit and every playing note moving through it, envelope and LFO sweeps included (see <a href="#wave-panel">WAVE panel</a>). Drag on it to move the position; a 3D / 2D switch flattens it to one cycle. The oscillators' position, sweep amounts, level and pitch sit beside it, envelope 2, filter, amp envelope, fold, feedback, volume and reverb underneath, both ways like the other panels. The WAVE presets' <strong>CUSTOM 3</strong> is LFO 1's sweep of the position again, not Feedback: with the position on CUSTOM 2, the pair reads as where and how much. <em>Fixed:</em> 128 BROPHET programs and 9 DX7 voices played off C (BROPHET where the original's osc A sat on another note, DX7 where the transpose or the carriers did); each now plays C on C, its intervals kept. <em>Why:</em> a wavetable is a picture of the sound, so you should be able to see where you are in it. <em>Learned:</em> the 3D view was slow on a tablet because it drew all 64 frames, and a blurred glow, every time a note moved; now the stack is drawn once and only the moving lines after it.</p>
+</li>
 <li>
 <p><strong>v1.35: BROPHET panel.</strong> With a BROPHET track selected, the companion shows a knob panel laid out like the Prophet: poly-mod, LFO, both oscillators, mixer, filter, both envelopes, master, then crush, deci, saturation, delay and reverb (see <a href="#brophet-panel">BROPHET panel</a>), in a P8 or a P5 look. It works both ways, like the BRUNO106 panel. Turning a knob on the Deluge now shows on either panel right away: an open panel is checked on its own every 15 ms, and knob updates no longer wait behind a busy USB buffer for the preset browser when it isn't open. <em>Fixed:</em> the 85 BROPHET presets with vibrato had almost none, the same squared pitch cable as the KR-106 presets in v1.34. <em>Why:</em> the second engine on the panel pattern, so the next ones are mostly a table. <em>Learned:</em> the lag wasn't the tablet: the Deluge held every knob update back 100 ms whenever its send buffer was more than half full, waiting for room for a browser window that wasn't there.</p>
 </li>
