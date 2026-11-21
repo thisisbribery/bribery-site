@@ -5,6 +5,7 @@
 set -e
 SITE="$(cd "$(dirname "$0")/.." && pwd)"
 cp ~/dev/sealegs_v1/mods.js                "$SITE/sealeggs/mods.js"
+cp ~/dev/sealegs_v1/LICENSE.md             "$SITE/sealeggs/LICENSE.txt"
 cp ~/dev/stolperbeats-ultra-v1/mods.js     "$SITE/stolperbeats/mods.js"
 cp ~/dev/stolperbeats-ultra-v1/builder.js  "$SITE/stolperbeats/builder.js"
 # BRIBESTAGES: replace the update wavs and rewrite the list the sign-up form reads

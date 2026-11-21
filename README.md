@@ -36,6 +36,8 @@ Ported tools keep their original look as **Classic** mode (toggle in the top bar
 
 The flasher logic and data files are copies of the source repos. After a flasher update run `scripts/sync-tools.sh`, test the page, then push. If a flasher's `index.html` changed, rebuild its sub-page from the source page with the generator in `scripts/port/` (each folder holds the generator and the page's new-mode `new.css`; Stolperbeats: `python3 scripts/port/stolperbeats/compose.py scripts/port/stolperbeats`), then check the result with that folder's `equiv.py`, which compares built firmware against the original page. `scripts/` is not deployed (`.vercelignore`).
 
+`sealeggs/LICENSE.txt` is a copy of `LICENSE.md` from SealEggs_v1 (the sync script copies it). The Seal Eggs page links to it at `/sealeggs/LICENSE.txt`, and the flasher's build notes quote that address.
+
 `vercel.json` sets `trailingSlash: true` so `/sealeggs` redirects to `/sealeggs/` and relative script paths resolve.
 
 ## Old addresses
