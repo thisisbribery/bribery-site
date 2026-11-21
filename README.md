@@ -22,6 +22,10 @@ Static HTML, no build step. Vercel deploys every push to `main`.
 
 Ported tools keep their original look as **Classic** mode (toggle in the top bar, remembered per browser). Their original CSS sits in `<style data-bx="classic">`, the new look in `<style data-bx="new">`.
 
+## Licences
+
+Each tool keeps its own licence, in its folder and its source repo: see [LICENSE.md](LICENSE.md). The site's own design, artwork and photos are all rights reserved.
+
 ## Settings (`assets/site.js`, top of file)
 
 - `web3formsKey`: access key from web3forms.com for the beta tester form (delivers to the address you register it with). Empty = the form says sign-ups open soon and sends nothing.

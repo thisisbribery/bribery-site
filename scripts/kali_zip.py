@@ -3,7 +3,7 @@
     python3 scripts/kali_zip.py [path/to/kaliv1]
 
 Default repo: ~/dev/kaliv1. Takes the single KaliSmash-*.bin in release/, plus the Daisy bootloader, its
-MIT licence and tools/flash-kali.sh, and writes kali/download/KaliSmash-<version>.zip and latest.json.
+MIT licence, the KALI SMASH and libDaisy licences and tools/flash-kali.sh (and copies LICENSE.md to kali/LICENSE.txt), and writes kali/download/KaliSmash-<version>.zip and latest.json.
 Older zips are removed. Run it on every KALI SMASH release, then push the site.
 """
 import hashlib, json, os, pathlib, re, sys, zipfile, time
@@ -18,7 +18,9 @@ app = bins[0]
 boot = rel / "dsy_bootloader_v6_4-intdfu-2000ms.bin"
 lic = rel / "LICENSE-DaisyBootloader.txt"
 script = REPO / "tools" / "flash-kali.sh"
-for f in (boot, lic, script):
+kali_lic = REPO / "LICENSE.md"
+daisy_lic = rel / "LICENSE-libDaisy.txt"
+for f in (boot, lic, script, kali_lic, daisy_lic):
     if not f.exists():
         sys.exit(f"missing {f}")
 tag = app.stem.replace("KaliSmash-", "")                     # e.g. phase4-test4
@@ -52,6 +54,14 @@ BACK TO STOCK
 
 Unofficial firmware. Use it at your own risk. Not made or supported by dsp.coffee or Electrosmith.
 The Daisy bootloader is Electrosmith's, MIT licensed (LICENSE-DaisyBootloader.txt).
+
+LICENCE
+  KALI SMASH is licensed under the PolyForm Noncommercial License 1.0.0 plus additional permissions
+  (LICENSE.txt, also at https://www.thisisbribery.com/kali/LICENSE.txt). Free for noncommercial use and
+  for making and selling music; selling the firmware or pre-flashed modules isn't allowed.
+  Required Notice: Copyright 2026 Bribery (https://thisisbribery.com)
+  The firmware includes libDaisy, ST and Arm code under their own licences (LICENSE-libDaisy.txt).
+  Keep these files with every copy.
 """
 
 out = SITE / "kali" / "download"
@@ -71,8 +81,11 @@ with zipfile.ZipFile(out / zname, "w", zipfile.ZIP_DEFLATED) as z:
     add(app.name, app.read_bytes())
     add(boot.name, boot.read_bytes())
     add(lic.name, lic.read_bytes())
+    add("LICENSE.txt", kali_lic.read_bytes())
+    add(daisy_lic.name, daisy_lic.read_bytes())
     add("flash-kali.sh", script.read_bytes(), 0o755)
     add("INSTALL.txt", install)
+(SITE / "kali" / "LICENSE.txt").write_bytes(kali_lic.read_bytes())
 data = (out / zname).read_bytes()
 (out / "latest.json").write_text(json.dumps({
     "version": label,
