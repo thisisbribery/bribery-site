@@ -137,6 +137,8 @@ body.creating #halfCard{--hl:var(--mine)}
 .timings .alt{--lamp:var(--bx-pink)}
 .timings .lampbtn{height:32px;font-size:11.5px}
 .tmore option,.tmore optgroup{background:#000;color:var(--text)}
+.tmore{--arr:var(--bx-pink);height:32px;flex-basis:26px;width:26px;border-radius:0;border-width:2px}
+.tmore:focus-visible{outline:2px solid var(--bx-pink);outline-offset:2px}
 /* Feel menu: the lit tab is its face, the four tabs and the Timing readout open under it */
 .feeldrop #feelNow{height:46px;min-width:120px;font-size:12.5px;letter-spacing:.14em}
 .feeldrop .caret{border-color:var(--bx-pink)}
