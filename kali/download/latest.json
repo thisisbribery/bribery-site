@@ -1,9 +1,9 @@
 {
-  "version": "beta 4.6",
-  "file": "/kali/download/KaliSmash-phase4-test6.zip",
-  "name": "KaliSmash-phase4-test6.zip",
-  "bytes": 196411,
-  "sha256": "7d659e0672aae588673bfeed8e9c84796d72ff4effb5d5d4bfd7eecded005821",
-  "app": "KaliSmash-phase4-test6.bin",
-  "app_sha256": "3daa412f8b3f10c55e0b2f32d524d0c713f2918ee4184e8cfce21abb0e79a499"
+  "version": "beta 4.8",
+  "file": "/kali/download/KaliSmash-phase4-test8.zip",
+  "name": "KaliSmash-phase4-test8.zip",
+  "bytes": 198363,
+  "sha256": "1ce3ee48af91e5d8dacb550d0a6ec31126aca18add537caca8fe71d2f4c11e68",
+  "app": "KaliSmash-phase4-test8.bin",
+  "app_sha256": "aa9be6166f6411ff2bbac909b9710ed6d86885d8024a183da5cc9655228c6b37"
 }
