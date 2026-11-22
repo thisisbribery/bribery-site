@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Manual · BRIBELUGE v1.36 · BRIBERY</title>
+<title>Manual · BRIBELUGE v1.37 · BRIBERY</title>
 <meta name="description" content="The full Bribeluge manual: every feature of the Deluge Bribes firmware, with controls, install steps and quick reference.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBELUGE manual">
@@ -87,7 +87,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <body class="bx" data-bx-page="bribeluge" data-bx-foot>
 <div id="top"></div>
 <header class="m-hero">
-  <p class="bx-kicker">Bribeluge v1.36 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
+  <p class="bx-kicker">Bribeluge v1.37 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
   <h1 class="bx-mega bx-glitch" data-text="MANUAL" data-fit><span class="bx-fit">MANUAL</span></h1>
   <div class="bx-ctas">
     <a class="bx-btn bx-solid" href="#download" data-bx-download>Download</a>
@@ -133,6 +133,8 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><a href="#25-pan-spread"><span>25</span>Pan spread</a></li>
 <li><a href="#26-bruno106"><span>26</span>BRUNO106</a></li>
 <li><a href="#27-bribeluge-companion"><span>27</span>BRIBELUGE COMPANION</a></li>
+<li><a href="#28-master-clip"><span>28</span>Master clip</a></li>
+<li><a href="#29-shift"><span>29</span>SHIFT</a></li>
 <li><a href="#quick-reference"><span></span>Quick reference</a></li>
 <li><a href="#about"><span></span>About</a></li>
 <li><a href="#changelog"><span></span>Changelog</a></li>
@@ -172,20 +174,22 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#20-midi-loop-tracks">MIDI loop tracks</a>:</strong> LOOP tracks and ECHO turn the Deluge into a MIDI looper for synths with their local control on.</li>
 <li><strong><a href="#21-bribering-mode">BRIBERING MODE</a>:</strong> A resonator synth engine after Mutable Instruments Rings: five models, and Bow to keep it sounding. On synths and kit rows.</li>
 <li><strong><a href="#22-feedback">Feedback</a>:</strong> Feeds each synth voice's filter output back into its input: thicker, driven low end, and self-oscillation from patch cables.</li>
-<li><strong><a href="#23-crush-types">Crush types</a>:</strong> Bitcrush and Decimation that sound like real low bit depths and sample rates: Hard, Vintage, u-Law and Jitter, plus the original.</li>
+<li><strong><a href="#23-crush-types">Crush types</a>:</strong> Bitcrush and Decimation that sound like real low bit depths and sample rates: Hard, Vintage, u-Law and Jitter, Decay (a dying BBD chip) and Data (corrupted digital words), plus the original.</li>
 <li><strong><a href="#24-brophet">BROPHET</a>:</strong> A two-oscillator poly synth engine from Pro-54, the open source port of NI's Pro-53: sync, poly mod, analog drift, its filter in every LPF list, and all 512 Pro-53 programs.</li>
 <li><strong><a href="#25-pan-spread">Pan spread</a>:</strong> Each note of a poly synth gets its own place in the stereo field, like a poly synth's voice pan spread, no unison needed.</li>
 <li><strong><a href="#26-bruno106">BRUNO106</a>:</strong> A Juno-style poly synth engine from Ultramaster KR-106: one DCO with saw, pulse, sub and noise, its IR3109 filter in every LPF list, the four position HPF with bass boost, and BRUNO CHORUS as a Mod FX type on any track.</li>
 <li><strong><a href="#27-bribeluge-companion">BRIBELUGE COMPANION</a>:</strong> A phone or tablet screen for the Deluge over USB: the display spelled out in full, knobs and engine drawings, waveforms with draggable markers, picture pickers, a song view you can tap, and panels for BRUNO106 (Juno-style sliders), BROPHET (Prophet-style knobs) and wavetable synths (a 3D view of the table with every note moving through it) that work both ways.</li>
+<li><strong><a href="#28-master-clip">Master clip</a>:</strong> A clipper or limiter at the very end of the song: five curves and a lookahead limiter, with drive and a ceiling, so the output never hits the Deluge's harsh digital clip.</li>
+<li><strong><a href="#29-shift">SHIFT</a>:</strong> A three-band frequency shifter as a Mod FX type on any track: each band moves by its own number of hertz, so harmonics stop lining up. Feedback shifts it again on every pass.</li>
 </ol>
-<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.36" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.36" target="_blank" rel="noopener">v1.36 release</a>. See <a href="#source-code">Source code</a>.</p>
+<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.37" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.37" target="_blank" rel="noopener">v1.37 release</a>. See <a href="#source-code">Source code</a>.</p>
 <p><strong>On the web:</strong> <a href="/bribeluge/">feature overview</a> and this <a href="/bribeluge/manual/">manual</a> at thisisbribery.com.</p>
 <p><strong>Support:</strong> find it useful? <a href="https://ko-fi.com/thisisbribery" target="_blank" rel="noopener">Buy me a coffee on Ko-fi</a>.</p>
 <p><strong>Start here:</strong> <a href="#download">Download</a> · <a href="#install">Install</a> · <strong>Reference:</strong> <a href="#quick-reference">Quick reference</a> · <a href="#about">About</a> · <a href="#changelog">Changelog</a> · <a href="#design-and-credit">Design and credit</a> · <a href="#source-code">Source code</a></p>
 <p>Names in <strong>bold capitals</strong> in brackets are what the 7-segment display shows.</p>
 <h2 id="download"><a class="m-anchor" href="#download" aria-hidden="true" tabindex="-1">#</a>Download</h2>
-<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.36.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.36.bin</code></a></p>
-<p>SHA-256: <code>d991d140f46fb5b335869b182681250b2d7d7cf15052920bd3a6ee53b57f40b2</code></p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.37.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.37.bin</code></a></p>
+<p>SHA-256: <code>49b6fa41f7c814014dc19dc15da1dbfaae0f88e1e8ef80b0b615438a87a239a8</code></p>
 <p>Presets (optional), copied to the same place on the SD card:</p>
 <ul>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN kits are built into the firmware.</li>
@@ -199,7 +203,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="install"><a class="m-anchor" href="#install" aria-hidden="true" tabindex="-1">#</a>Install</h2>
 <ol>
-<li>Copy <code>deluge-bribes-v1.36.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
+<li>Copy <code>deluge-bribes-v1.37.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
 <li>Turn the Deluge off.</li>
 <li>Hold <strong>SHIFT</strong> and switch the Deluge on. Let go once it starts loading the new firmware.</li>
 </ol>
@@ -1954,7 +1958,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="23-crush-types"><a class="m-anchor" href="#23-crush-types" aria-hidden="true" tabindex="-1">#</a>23. Crush types</h2>
-<p>The Deluge's own Bitcrush and Decimation sound more like filters than crushers. Decimation draws a line from each sample it keeps to the next, which smooths the top end away instead of aliasing. Bitcrush jumps through eight steps, adds a DC offset and drops the volume near the top. <strong>Crush type</strong> sets how both of them sound: four types that hold each sample flat and sweep smoothly, and the original kept as Classic.</p>
+<p>The Deluge's own Bitcrush and Decimation sound more like filters than crushers. Decimation draws a line from each sample it keeps to the next, which smooths the top end away instead of aliasing. Bitcrush jumps through eight steps, adds a DC offset and drops the volume near the top. <strong>Crush type</strong> sets how both of them sound: four types that hold each sample flat and sweep smoothly, two that break the sound in other ways (a dying BBD chip and corrupted digital words), and the original kept as Classic.</p>
 <h3 id="where-it-is-1"><a class="m-anchor" href="#where-it-is-1" aria-hidden="true" tabindex="-1">#</a>Where it is</h3>
 <ul>
 <li><strong>FX &gt; DISTORTION &gt; Crush type</strong> (<strong>CTYP</strong>), after <strong>Bitcrush</strong> (<strong>CRUSH</strong>) and <strong>Decimation</strong>, on any synth, kit row or audio clip.</li>
@@ -1997,6 +2001,18 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <td>The clock wobbles by up to half a sample period each time: noisy and broken rather than tonal.</td>
 </tr>
 <tr>
+<td><strong>Decay</strong></td>
+<td><strong>DECY</strong></td>
+<td>A dying BBD chip: grit that rides the level, pushed around by the sound's own 1 kHz band, then irregular sputters, stutter bursts and flickering sags in the level. More of all of it, more often, as you turn up.</td>
+<td>A BBD clock instead of a sampler: 1x down to 32x (about 1.4 kHz), smoothed after, so it goes dark and woolly with only a little aliasing.</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td><strong>DATA</strong></td>
+<td>The sound as 16-bit words, getting corrupted: the low bits rot in proportion to the level, and bursts of stalled words, flipped high bits, lost signs (octave-up fuzz) and byte-swapped noise come more often and last longer as you turn up.</td>
+<td>Sample and hold, as Hard, with the corruption on the held words.</td>
+</tr>
+<tr>
 <td><strong>Classic</strong></td>
 <td><strong>CLAS</strong></td>
 <td>The original.</td>
@@ -2006,7 +2022,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </table></div></markdown-accessiblity-table>
 <h3 id="good-to-know-11"><a class="m-anchor" href="#good-to-know-11" aria-hidden="true" tabindex="-1">#</a>Good to know</h3>
 <ul>
-<li>The level stays put as you turn either control up, with no DC offset. Jitter gets a little louder at the top.</li>
+<li>The level stays put as you turn either control up, with no DC offset. Jitter and Data get a little louder at the top.</li>
+<li>Decay and Data keep silence silent: nothing is left once the sound has stopped.</li>
+<li>Decay's sputters and Data's bursts run on their own random timing, not synced to the tempo.</li>
 <li>New sounds, kits, audio clips and songs start on <strong>Hard</strong>. Songs and presets saved before v1.27 that use Bitcrush or Decimation load as <strong>Classic</strong>, so they sound the same; ones that didn't start on <strong>Hard</strong> when you turn them up.</li>
 <li>Bitcrush and Decimation are still parameters: gold knobs, automation, MIDI learn and parameter locks work as before, and the type changes how they sound.</li>
 <li>Songs and presets save it (<code>crushType</code>). Other firmware ignores it and plays the original.</li>
@@ -2429,6 +2447,110 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li>To charge a tablet while it's connected you need a USB-C hub with Power Delivery pass-through; not every tablet charges while it powers a USB device.</li>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
+<h2 id="28-master-clip"><a class="m-anchor" href="#28-master-clip" aria-hidden="true" tabindex="-1">#</a>28. Master clip</h2>
+<p>The very end of the song: a clipper or limiter after the master compressor, just before the output. Without it, anything over full scale hits the Deluge's plain digital clip, which is harsh. With it, the output stops at the ceiling with the curve you pick, and <strong>Clip drive</strong> pushes the mix into it for more density and loudness.</p>
+<h3 id="where-it-is-3"><a class="m-anchor" href="#where-it-is-3" aria-hidden="true" tabindex="-1">#</a>Where it is</h3>
+<p>Press <strong>SELECT</strong> in song view, then <strong>MASTER</strong>, after Volume and Pan:</p>
+<ul>
+<li><strong>Master clip</strong> (<strong>MASTER CLIP</strong>): <strong>Off</strong>, <strong>Soft</strong>, <strong>Tanh</strong>, <strong>Hard</strong>, <strong>Tape</strong>, <strong>Fold</strong> or <strong>Limit</strong>.</li>
+<li><strong>Clip drive</strong> (<strong>CLIP DRIVE</strong>): 0 to +24 dB into it.</li>
+<li><strong>Ceiling</strong> (<strong>CEILING</strong>): where the output stops, -12 to 0 dB. -1 to start.</li>
+</ul>
+<p>Drive and Ceiling appear once a type is picked.</p>
+<markdown-accessiblity-table><div class="m-table"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>7-seg</th>
+<th>Sound</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Soft</strong></td>
+<td><strong>SOFT</strong></td>
+<td>Clean to 80% of the ceiling, then a cubic knee into it. The most transparent curve.</td>
+</tr>
+<tr>
+<td><strong>Tanh</strong></td>
+<td><strong>TANH</strong></td>
+<td>Clean to 70%, then a tanh shoulder: the classic warm clip.</td>
+</tr>
+<tr>
+<td><strong>Hard</strong></td>
+<td><strong>HARD</strong></td>
+<td>Straight up to the ceiling and flat. Loud and bright.</td>
+</tr>
+<tr>
+<td><strong>Tape</strong></td>
+<td><strong>TAPE</strong></td>
+<td>Bends from halfway, rounder and earlier: saturated, a little squashed.</td>
+</tr>
+<tr>
+<td><strong>Fold</strong></td>
+<td><strong>FOLD</strong></td>
+<td>Folds back down from the ceiling instead of flattening: drive it for metallic, synthy distortion on the whole mix.</td>
+</tr>
+<tr>
+<td><strong>Limit</strong></td>
+<td><strong>LIMT</strong></td>
+<td>A peak limiter with 0.7 ms lookahead instead of a curve: it turns the peaks down just ahead of time, so the mix gets louder with drive without the clip's distortion. A hard clip at the ceiling after it catches what little gets through.</td>
+</tr>
+</tbody>
+</table></div></markdown-accessiblity-table>
+<h3 id="good-to-know-15"><a class="m-anchor" href="#good-to-know-15" aria-hidden="true" tabindex="-1">#</a>Good to know</h3>
+<ul>
+<li>The curves run at twice the sample rate, so the clipping's top harmonics don't fold back down as noise: about 14 dB less of it than a plain clip on a hard driven tone.</li>
+<li>Every type adds the same 1.2 ms of latency, so switching between types while it plays is seamless. Turning it on or off crossfades over 12 ms, with no click.</li>
+<li><strong>Off</strong> touches nothing and adds no latency. Songs from before v1.37 load with it Off, so they sound the same.</li>
+<li>It's on the output, so resampling and stem export (with song FX) record it too.</li>
+<li>Songs save it (<code>masterClip</code>, <code>masterClipDrive</code>, <code>masterClipCeiling</code>), only when it isn't Off. Other firmware ignores it.</li>
+<li>It costs a few percent of the CPU while on, and nothing while Off.</li>
+</ul>
+<p class="m-top"><a href="#top">Back to top &#8593;</a></p>
+<h2 id="29-shift"><a class="m-anchor" href="#29-shift" aria-hidden="true" tabindex="-1">#</a>29. SHIFT</h2>
+<p>A three-band frequency shifter as a <strong>Mod FX</strong> type (<strong>SHIFT</strong>). It splits the sound at 250 Hz and 2.5 kHz and moves every frequency in each band by its own number of hertz. A pitch shift keeps a sound's harmonics in tune with each other; a frequency shift doesn't, so a little makes things wobble and detune, and more turns them clangorous, metallic and inharmonic. Past 0 Hz frequencies fold back up.</p>
+<p>On synths, kit rows, kits, audio clips and the song: pick <strong>SHIFT</strong> in the <strong>MOD FX</strong> menu.</p>
+<markdown-accessiblity-table><div class="m-table"><table>
+<thead>
+<tr>
+<th>Control</th>
+<th>7-seg</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Depth</strong> (shown as <strong>Shift amount</strong>)</td>
+<td><strong>SHIFT AMOUNT</strong></td>
+<td>How far each band moves. At 0 it's off; the shifted sound comes in over the first quarter of the knob and the shift keeps growing to the top.</td>
+</tr>
+<tr>
+<td><strong>Rate</strong></td>
+<td><strong>RATE</strong></td>
+<td>Glide: how long a change of amount takes to arrive, 30 ms to 2.4 s. Slow it down and sweep Depth for falling and rising smears.</td>
+</tr>
+<tr>
+<td><strong>Feedback</strong></td>
+<td><strong>FEEDBACK</strong></td>
+<td>Sends the output back in through 30 ms, so each pass is shifted again: spiralling barber pole sounds. It comes in with Depth and is level-compensated.</td>
+</tr>
+<tr>
+<td><strong>Offset</strong> (shown as <strong>Shift morph</strong>)</td>
+<td><strong>SHIFT MORPH</strong></td>
+<td>Morphs between two sets of band shifts. Set A: low +90, mid -300, high -1500 Hz. Set B: low -190, mid +900, high +2500 Hz.</td>
+</tr>
+</tbody>
+</table></div></markdown-accessiblity-table>
+<h3 id="good-to-know-16"><a class="m-anchor" href="#good-to-know-16" aria-hidden="true" tabindex="-1">#</a>Good to know</h3>
+<ul>
+<li>Depth is a normal Mod FX parameter: gold knob, automation, patch cables and parameter locks all work.</li>
+<li>In stereo the right side's shift runs a quarter turn ahead of the left, so a mono sound spreads out as it moves.</li>
+<li>It runs once per track, not per voice, but costs more than the other Mod FX types (a few percent of the CPU each): use it on a handful of tracks, or the kit or song.</li>
+<li>Each track with it on uses about 17 kB of memory, freed when you pick another type.</li>
+<li>Songs and presets save it (<code>modFXType</code> = <code>freqShift</code>). Other firmware loads it as no Mod FX.</li>
+</ul>
+<p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="quick-reference"><a class="m-anchor" href="#quick-reference" aria-hidden="true" tabindex="-1">#</a>Quick reference</h2>
 <markdown-accessiblity-table><div class="m-table"><table>
 <thead>
@@ -2504,7 +2626,15 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </tr>
 <tr>
 <td><strong>FX &gt; DISTORTION &gt; CTYP</strong></td>
-<td>How Bitcrush and Decimation sound: <strong>HARD</strong>, <strong>VINT</strong>, <strong>ULAW</strong>, <strong>JITR</strong> or <strong>CLAS</strong> (Crush types)</td>
+<td>How Bitcrush and Decimation sound: <strong>HARD</strong>, <strong>VINT</strong>, <strong>ULAW</strong>, <strong>JITR</strong>, <strong>DECY</strong>, <strong>DATA</strong> or <strong>CLAS</strong> (Crush types)</td>
+</tr>
+<tr>
+<td><strong>SELECT in song view &gt; MASTER &gt; MASTER CLIP</strong></td>
+<td>Clip or limit the song's output: <strong>SOFT</strong>, <strong>TANH</strong>, <strong>HARD</strong>, <strong>TAPE</strong>, <strong>FOLD</strong> or <strong>LIMT</strong>, with <strong>CLIP DRIVE</strong> and <strong>CEILING</strong> (Master clip)</td>
+</tr>
+<tr>
+<td><strong>MOD FX &gt; SHIFT</strong></td>
+<td>Three-band frequency shifter: Depth is the amount, Rate the glide, Feedback, Offset morphs between two sets of shifts (SHIFT)</td>
 </tr>
 <tr>
 <td><strong>SHIFT + KIT</strong></td>
@@ -2738,6 +2868,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <p>Newest first: what changed in each release, why, and what it taught me.</p>
 <ul>
 <li>
+<p><strong>v1.37: Master clip, SHIFT, Decay and Data.</strong> Things from my other firmware, brought over. <strong>Master clip</strong> puts a clipper or limiter at the very end of the song (Soft, Tanh, Hard, Tape, Fold or Limit, with drive and a ceiling), with the curves from KALI SMASH's SQUASH section. <strong>SHIFT</strong> is KALI SMASH's three-band frequency shifter as a Mod FX type. Two new crush types: <strong>Decay</strong>, the dying BBD chip from Seal Eggs' BBD character, on a BBD-style clock, and <strong>Data</strong>, new for this build, which corrupts the sound as 16-bit words. <em>Why:</em> the Deluge's output had nothing between a clean mix and a harsh digital clip, and these had already proved themselves on the Kali and the Sealegs. <em>Learned:</em> a clipper's filters start from silence, and the processed sound runs a little late, so switching it on mid-song clicked; now the filters are primed with the last samples that went past, every type has the same latency, and on and off crossfade.</p>
+</li>
+<li>
 <p><strong>v1.36: WAVE panel.</strong> With a wavetable synth selected, the companion draws the table as a stack of its frames, with the position knob's frame lit and every playing note moving through it, envelope and LFO sweeps included (see <a href="#wave-panel">WAVE panel</a>). Drag on it to move the position; a 3D / 2D switch flattens it to one cycle. The oscillators' position, sweep amounts, level and pitch sit beside it, envelope 2, filter, amp envelope, fold, feedback, volume and reverb underneath, both ways like the other panels. The WAVE presets' <strong>CUSTOM 3</strong> is LFO 1's sweep of the position again, not Feedback: with the position on CUSTOM 2, the pair reads as where and how much. <em>Fixed:</em> 128 BROPHET programs and 9 DX7 voices played off C (BROPHET where the original's osc A sat on another note, DX7 where the transpose or the carriers did); each now plays C on C, its intervals kept. <em>Why:</em> a wavetable is a picture of the sound, so you should be able to see where you are in it. <em>Learned:</em> the 3D view was slow on a tablet because it drew all 64 frames, and a blurred glow, every time a note moved; now the stack is drawn once and only the moving lines after it.</p>
 </li>
 <li>
@@ -2890,6 +3023,8 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li><strong>Feedback</strong> is an original design for this build, inside the Deluge's own filters.</li>
 <li><strong>BROPHET's</strong> oscillators, poly mod, mixer and filter are ported from <a href="https://github.com/cmajor-lang/cmajor/tree/main/examples/patches/Pro54" target="_blank" rel="noopener">Pro-54</a> by Cmajor Software (GPL-3.0), which opened up Native Instruments' Pro-53; its copyright and licence notice are kept in the source. The 512 programs come from the preset bank Pro-54 ships, converted for the Deluge. The Deluge integration, controls, drive and the 24 BRIB presets were made for this build.</li>
 <li><strong>BRUNO106's</strong> DCO, IR3109 filter, HPF with bass boost and BBD chorus are ported from <a href="https://github.com/kayrockscreenprinting/ultramaster_kr106" target="_blank" rel="noopener">Ultramaster KR-106</a> by Karl LaRocca (GPL-3.0); its copyright and licence notice are kept in the source. The filter's stages run without their per-stage saturation, and the chorus leaves out KR-106's modelled noise, clicks and hum. The Deluge integration, controls, BRUNO CHORUS as a Mod FX type and 13 of the presets were made for this build; the other 199 are converted from the preset data KR-106 ships (its factory bank and David Churcher's patch library), under the same GPL-3.0.</li>
+<li><strong>Master clip</strong> and <strong>SHIFT</strong> are ported from KALI SMASH, my own firmware for the dsp.coffee Kali, and relicensed under GPL-3.0 for this build: the clip curves from its SQUASH section, run here at twice the sample rate, and the frequency shifter from its MOTION section, rebuilt for 44.1 kHz. Its Hilbert pair is Olli Niemitalo's published allpass design. The limiter, the click-free switching and the Deluge integration were made for this build.</li>
+<li><strong>The Decay crush type's</strong> sputters, stutters and sags and its level-riding grit come from the BBD character in Seal Eggs, my own firmware for the Sealegs, relicensed under GPL-3.0 for this build; its BBD clock and the Data crush type are original designs for this build.</li>
 <li><strong>Crush types</strong> are an original design for this build. u-Law uses the segmented μ-law companding of the G.711 telephone standard, the scheme Mutable Instruments Clouds and Beads use for their lo-fi modes.</li>
 <li><strong>The WAVE presets</strong> were made for this build and play the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which isn't included here: all credit for the wavetables goes to BVKER. The BRINGS presets were made for this build.</li>
 <li><strong>The DX7 presets</strong> are voices from the DX7 patch collection on <a href="https://homepages.abdn.ac.uk/d.j.benson/pages/html/dx7.html" target="_blank" rel="noopener">Dave Benson's DX7 page</a>, converted for the Deluge's DX7 engine. The first are Yamaha's original DX7 ROM cartridges, and the sounds belong to Yamaha and the collection's patch authors. The picker's DX7 init was made for this build.</li>
@@ -2903,7 +3038,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="not-affiliated-or-endorsed"><a class="m-anchor" href="#not-affiliated-or-endorsed" aria-hidden="true" tabindex="-1">#</a>Not affiliated or endorsed</h2>
-<p>This is an independent, unofficial project. It is not affiliated with, endorsed by or supported by <strong>Making Sound Machines</strong>, <strong>Synthstrom Audible</strong>, <strong>Erica Synths</strong>, <strong>Hrtl</strong>, <strong>EntropiaLabs</strong>, <strong>Elektron</strong>, <strong>Roland</strong>, <strong>SquareWave Studio</strong>, <strong>Teenage Engineering</strong>, <strong>Sonic Charge</strong>, <strong>Mutable Instruments</strong>, <strong>Native Instruments</strong>, <strong>Noise Engineering</strong>, <strong>Cmajor Software</strong>, <strong>Sequential</strong>, <strong>Karl LaRocca (Ultramaster KR-106)</strong> or <strong>BVKER</strong>. Stolperbeats is a product of Making Sound Machines, the Deluge is a product of Synthstrom Audible, the LXR-02 is a product of Erica Synths, the Model:Cycles and Syntakt are products of Elektron, the TB-303 and Juno-106 are products of Roland, the OP-1 and PO-32 are products of Teenage Engineering, Rings is a product of Mutable Instruments, Pro-53 is a product of Native Instruments, and the Prophet-5 is a product of Sequential. All trademarks belong to their owners. No rights to the Erica Synths, LXR or LXR-02 trademarks are granted.</p>
+<p>This is an independent, unofficial project. It is not affiliated with, endorsed by or supported by <strong>Making Sound Machines</strong>, <strong>Synthstrom Audible</strong>, <strong>Erica Synths</strong>, <strong>Hrtl</strong>, <strong>EntropiaLabs</strong>, <strong>Elektron</strong>, <strong>Roland</strong>, <strong>SquareWave Studio</strong>, <strong>Teenage Engineering</strong>, <strong>Sonic Charge</strong>, <strong>Mutable Instruments</strong>, <strong>Native Instruments</strong>, <strong>Noise Engineering</strong>, <strong>Cmajor Software</strong>, <strong>Sequential</strong>, <strong>Karl LaRocca (Ultramaster KR-106)</strong>, <strong>dsp.coffee</strong>, <strong>Michigan Synth Works</strong> or <strong>BVKER</strong>. Stolperbeats is a product of Making Sound Machines, the Deluge is a product of Synthstrom Audible, the LXR-02 is a product of Erica Synths, the Model:Cycles and Syntakt are products of Elektron, the TB-303 and Juno-106 are products of Roland, the OP-1 and PO-32 are products of Teenage Engineering, Rings is a product of Mutable Instruments, Pro-53 is a product of Native Instruments, the Prophet-5 is a product of Sequential, the Kali is a product of dsp.coffee, and the Sealegs is a product of Michigan Synth Works. All trademarks belong to their owners. No rights to the Erica Synths, LXR or LXR-02 trademarks are granted.</p>
 <p>Use it at your own risk, and please don't contact Making Sound Machines, Synthstrom Audible, Erica Synths, Elektron, Roland, SquareWave Studio, Teenage Engineering, Mutable Instruments, Native Instruments, Noise Engineering, Cmajor Software, Sequential, Karl LaRocca or BVKER for help with this build.</p>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="source-code"><a class="m-anchor" href="#source-code" aria-hidden="true" tabindex="-1">#</a>Source code</h2>
