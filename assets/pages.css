@@ -120,3 +120,28 @@ code.bx-code{font:600 .9em var(--bx-mono);color:var(--bx-teal);word-break:break-
 .bx-dl-big{font-size:clamp(15px,1.6vw,19px);padding:18px 26px}
 .bx-dl-small{margin:clamp(20px,3vw,32px) 0 0;font-size:14px;color:var(--bx-black)}
 .bx-dl-small a{color:var(--bx-black);font-weight:700}
+
+/* download band: What's new, a short changelog under the Download button */
+.bx-news{margin-top:clamp(16px,2vw,22px);display:flex;flex-direction:column;align-items:flex-end}
+.bx-news>summary{list-style:none;user-select:none}
+.bx-news>summary::-webkit-details-marker{display:none}
+.bx-news>summary:focus-visible{outline:2px solid var(--bx-black);outline-offset:4px}
+.bx-news[open]>summary{background:var(--bx-black);color:var(--bx-pink)}
+.bx-news-sign{position:relative;width:14px;height:14px;flex:none}
+.bx-news-sign::before,.bx-news-sign::after{content:"";position:absolute;left:0;top:6px;width:14px;height:2px;background:currentColor;transition:transform .15s}
+.bx-news-sign::after{transform:rotate(90deg)}
+.bx-news[open] .bx-news-sign::after{transform:rotate(0)}
+.bx-news-body{align-self:stretch;margin-top:clamp(18px,2.5vw,28px);border-top:2px solid var(--bx-black)}
+.bx-news-lead{margin:14px 0 4px;font:600 13px var(--bx-mono);letter-spacing:.04em}
+.bx-news-list{list-style:none;margin:0;padding:0;column-count:2;column-gap:clamp(20px,4vw,56px)}
+.bx-news-list li{break-inside:avoid;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.28)}
+.bx-news-list a{color:var(--bx-black);font-weight:800;font-size:17px;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.bx-news-list a:hover{text-decoration-thickness:4px}
+.bx-news-v{font:700 11.5px var(--bx-mono);letter-spacing:.08em;white-space:nowrap}
+.bx-news-list p{grid-column:1/-1;margin:4px 0 0;font-size:14.5px;line-height:1.4}
+.bx-news-more{margin:16px 0 0;font:700 13px var(--bx-mono);letter-spacing:.06em;text-transform:uppercase}
+.bx-news-more a{color:var(--bx-black)}
+@media (max-width:860px){
+  .bx-news{align-items:flex-start}
+  .bx-news-list{column-count:1}
+}
