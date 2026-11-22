@@ -1,7 +1,7 @@
 {
-  "version": "1.38",
-  "file": "/bribeluge/download/deluge-bribes-v1.38.bin",
-  "name": "deluge-bribes-v1.38.bin",
-  "bytes": 2206684,
-  "sha256": "c317d149723e185ca156854b9ed6dcea50b99362b5fc27f5ae365f7a1f19138b"
+  "version": "1.38.1",
+  "file": "/bribeluge/download/deluge-bribes-v1.38.1.bin",
+  "name": "deluge-bribes-v1.38.1.bin",
+  "bytes": 2206780,
+  "sha256": "831bc5b29911e879d69282768ef4f1dc391ab83b97a1c31322bd2ecfae5d309d"
 }
