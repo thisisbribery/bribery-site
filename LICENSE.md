@@ -10,7 +10,8 @@ Each tool on this site keeps its own licence. The licence file sits in the tool'
 | `stolperbeats/`, `stolperbeats/visualiser/` | STOLPERBEATS ULTRA and the Stolperbeats visualiser | PolyForm Noncommercial 1.0.0 plus additional permissions ([LICENSE.txt](stolperbeats/LICENSE.txt)) |
 | `kali/` | KALI SMASH | PolyForm Noncommercial 1.0.0 plus additional permissions ([LICENSE.txt](kali/LICENSE.txt)); libDaisy, ST and Arm licences and the Daisy bootloader's MIT licence are in the download |
 | `bribestages/` | BRIBESTAGES | MIT ([LICENSE.txt](bribestages/LICENSE.txt)) |
-| `bribeluge/` | Bribeluge firmware and manual | GPL-3.0, like the Deluge firmware it is built on. Full source: https://github.com/thisisbribery/deluge-bribes-v1 |
+| `bribeluge/companion/` | Bribeluge Companion | PolyForm Noncommercial 1.0.0 plus additional permissions ([LICENSE.txt](bribeluge/companion/LICENSE.txt)) |
+| `bribeluge/` (everything else) | Bribeluge firmware and manual | GPL-3.0, like the Deluge firmware it is built on. Full source: https://github.com/thisisbribery/deluge-bribes-v1 |
 
 Everything else here, including the site's design, layout, artwork, logos and photos, is copyright Bribery, all rights reserved.
 
