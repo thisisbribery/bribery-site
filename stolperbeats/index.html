@@ -280,6 +280,7 @@ body{color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialia
 .slot .lbl{grid-area:lbl;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;font:600 11.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .slot .lbl>span:first-child{display:block}
 .slot .lbl b{display:block;margin-bottom:6px;font:900 clamp(36px,4.6vw,68px)/.82 var(--sans);letter-spacing:-.045em;color:var(--ink)}
+.slot .lbl b.long{font-size:clamp(24px,2.8vw,42px);line-height:.95;overflow-wrap:anywhere}
 .slot .lbl>span:last-child{color:var(--muted)}
 .slot.changed .lbl b,.slot.changed .lbl>span:last-child{color:var(--pink)}
 .slot.badslot .lbl b,.slot.badslot .lbl>span:last-child{color:var(--warn)}
@@ -669,9 +670,10 @@ function drawSlots(){
     if (!(picks[slot] === 'Factory' || picks[slot].startsWith('Factory ') || B.MODULE[picks[slot]] || cs[picks[slot]])) picks[slot] = 'Factory';
     const ch = picks[slot], bad = slotProblems(slot), d = document.createElement('div');
     const rec = RECOMMENDED[slot], isRec = rec && ch === rec;
+    const shown = ch.startsWith('Factory ') ? ch.slice(8) : ch;
     d.className = 'slot' + (bad.length ? ' badslot' : ch === 'Factory' ? '' : ' changed') + (isRec && !bad.length ? ' rec' : '');
     const opt = (v, l) => `<option value="${esc(v)}"${v === ch ? ' selected' : ''}>${esc(l)}</option>`;
-    d.innerHTML = `<div class="lbl"><span><b>${slot.toUpperCase()}</b> BUTTON</span><span>${isRec ? 'recommended' : ch === 'Factory' ? 'factory' : sourceOf(ch) === 'factory' ? 'factory table' : sourceOf(ch)}</span></div>
+    d.innerHTML = `<div class="lbl"><span>${ch === 'Factory' ? `<b>${slot.toUpperCase()}</b> BUTTON` : `<b${shown.length > 6 ? ' class="long"' : ''}>${esc(shown.toUpperCase())}</b> IN FACTORY THIS IS ${slot.toUpperCase()}`}</span><span>${isRec ? 'recommended' : ch === 'Factory' ? 'factory' : sourceOf(ch) === 'factory' ? 'factory table' : sourceOf(ch)}</span></div>
       <select aria-label="${slot} button plays">${opt('Factory', 'Factory ' + slot)}
         <optgroup label="Other factory tables">${B.SLOTS.filter(x => x !== slot).map(x => opt('Factory ' + x, 'Factory ' + x)).join('')}</optgroup>
         <optgroup label="Alt tables (visualiser)">${B.STYLES.map(s => opt(s.key, `${s.key}: ${s.blurb}`)).join('')}</optgroup>
