@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Manual · BRIBELUGE v1.38.1 · BRIBERY</title>
+<title>Manual · BRIBELUGE v1.39 · BRIBERY</title>
 <meta name="description" content="The full Bribeluge manual: every feature of the Deluge Bribes firmware, with controls, install steps and quick reference.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBELUGE manual">
@@ -87,7 +87,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <body class="bx" data-bx-page="bribeluge" data-bx-foot>
 <div id="top"></div>
 <header class="m-hero">
-  <p class="bx-kicker">Bribeluge v1.38.1 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
+  <p class="bx-kicker">Bribeluge v1.39 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
   <h1 class="bx-mega bx-glitch" data-text="MANUAL" data-fit><span class="bx-fit">MANUAL</span></h1>
   <div class="bx-ctas">
     <a class="bx-btn bx-solid" href="#download" data-bx-download>Download</a>
@@ -135,6 +135,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><a href="#27-bribeluge-companion"><span>27</span>BRIBELUGE COMPANION</a></li>
 <li><a href="#28-master-clip"><span>28</span>Master clip</a></li>
 <li><a href="#29-shift"><span>29</span>SHIFT</a></li>
+<li><a href="#30-tribe"><span>30</span>TRIBE</a></li>
 <li><a href="#quick-reference"><span></span>Quick reference</a></li>
 <li><a href="#about"><span></span>About</a></li>
 <li><a href="#changelog"><span></span>Changelog</a></li>
@@ -157,7 +158,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#3-autofill">Autofill</a>:</strong> TAP plays a fill to the end of the bar: Ghost, Drive, Build, Climb or Stutter.</li>
 <li><strong><a href="#4-mono-sequencer">Mono sequencer</a>:</strong> A bassline step sequencer for synth, MIDI and CV tracks: octave per note, slide steps, gate control and a voltage per row on CV.</li>
 <li><strong><a href="#5-endless-record">Endless Record</a>:</strong> RECORD while playing keeps recording past the end of the loop. RECORD again stops at the next bar.</li>
-<li><strong><a href="#6-drum-synth">Drum synth</a>:</strong> Synthesised drums on any kit row: LXR voices, DXIA, DIIA, eight Cyc engines, GIN and the ULTRAKIK kick. One pad layout, Cycles-style gold knobs, preset kits on SHIFT + KIT, and ULTRAKIK or XIA onto a single row from the same menu.</li>
+<li><strong><a href="#6-drum-synth">Drum synth</a>:</strong> Synthesised drums on any kit row: LXR voices, DXIA, DIIA, eight Cyc engines, GIN, the ULTRAKIK kick and TRIBE. One pad layout, Cycles-style gold knobs, preset kits on SHIFT + KIT, and ULTRAKIK or XIA onto a single row from the same menu.</li>
 <li><strong><a href="#7-saturation">Saturation</a>:</strong> A one-knob drive that gets louder and denser all the way to a hard clip, with five curves. Learnable to a gold knob.</li>
 <li><strong><a href="#8-sample-start-offset">Sample start offset</a>:</strong> Move where a sample starts, per step: draw it, lock it, modulate it.</li>
 <li><strong><a href="#9-303-synth">303 synth</a>:</strong> A TB-303 voice from Open303 with accent and slide from the mono sequencer, three filters (303, LP18, DIRT) and an overdrive after them.</li>
@@ -181,18 +182,19 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#27-bribeluge-companion">BRIBELUGE COMPANION</a>:</strong> A phone or tablet screen for the Deluge over USB: the display spelled out in full, knobs and engine drawings, waveforms with draggable markers, picture pickers, a song view you can tap, and panels for BRUNO106 (Juno-style sliders), BROPHET (Prophet-style knobs) and wavetable synths (a 3D view of the table with every note moving through it) that work both ways.</li>
 <li><strong><a href="#28-master-clip">Master clip</a>:</strong> A clipper or limiter at the very end of the song: five curves and a lookahead limiter, with drive and a ceiling, so the output never hits the Deluge's harsh digital clip.</li>
 <li><strong><a href="#29-shift">SHIFT</a>:</strong> A three-band frequency shifter as a Mod FX type on any track: each band moves by its own number of hertz, so harmonics stop lining up. Feedback shifts it again on every pass.</li>
+<li><strong><a href="#30-tribe">TRIBE</a>:</strong> An 808 / 909 drum machine: eight voices, each with an 808 &gt; 909 knob that blends smoothly from one machine to the other, every knob centred on the real machine, extras after Hexinverter's Mutant drums, and eleven kits. Never more CPU than the Cyc engines.</li>
 </ol>
-<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.38.1" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.38.1" target="_blank" rel="noopener">v1.38.1 release</a>. See <a href="#source-code">Source code</a>.</p>
+<p><strong>Source code (GPL-3.0):</strong> the complete source for this release is in <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.39" target="_blank" rel="noopener"><code>source/DelugeFirmware</code></a>, pinned to the exact commit the bin was built from, and as a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.39" target="_blank" rel="noopener">v1.39 release</a>. See <a href="#source-code">Source code</a>.</p>
 <p><strong>On the web:</strong> <a href="/bribeluge/">feature overview</a> and this <a href="/bribeluge/manual/">manual</a> at thisisbribery.com.</p>
 <p><strong>Support:</strong> find it useful? <a href="https://ko-fi.com/thisisbribery" target="_blank" rel="noopener">Buy me a coffee on Ko-fi</a>.</p>
 <p><strong>Start here:</strong> <a href="#download">Download</a> · <a href="#install">Install</a> · <strong>Reference:</strong> <a href="#quick-reference">Quick reference</a> · <a href="#about">About</a> · <a href="#changelog">Changelog</a> · <a href="#design-and-credit">Design and credit</a> · <a href="#source-code">Source code</a></p>
 <p>Names in <strong>bold capitals</strong> in brackets are what the 7-segment display shows.</p>
 <h2 id="download"><a class="m-anchor" href="#download" aria-hidden="true" tabindex="-1">#</a>Download</h2>
-<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.38.1.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.38.1.bin</code></a></p>
-<p>SHA-256: <code>831bc5b29911e879d69282768ef4f1dc391ab83b97a1c31322bd2ecfae5d309d</code></p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.39.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.39.bin</code></a></p>
+<p>SHA-256: <code>22db3316687da71debad8d1b12e09d4ebb9dad28dde51a1e67158aa595399713</code></p>
 <p>Presets (optional), copied to the same place on the SD card:</p>
 <ul>
-<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN kits are built into the firmware.</li>
+<li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN and TRIBE kits are built into the firmware.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/WAVE" target="_blank" rel="noopener"><code>presets/SYNTHS/WAVE</code></a> to <code>SYNTHS/WAVE</code>. These play the free <strong>BVKER Custom Wavetables</strong> pack, which isn't included here: download it from <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">bvker.com/free-serum-wavetables</a> and unzip it into <code>SAMPLES/WAVETABLES</code>, so the card has <code>SAMPLES/WAVETABLES/BVKER - Custom Wavetables/Analog</code> and the other folders. From v1.33 the WAVE presets are a new set with new names: delete the old ones from <code>SYNTHS/WAVE</code> first. From v1.36 their <strong>CUSTOM 3</strong> sets LFO 1's sweep of the wavetable position (it was Feedback): copy them over the old ones.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/DX7" target="_blank" rel="noopener"><code>presets/SYNTHS/DX7</code></a> to <code>SYNTHS/DX7</code>: 288 DX7 voices in <code>LEAD</code>, <code>BASS</code>, <code>PAD</code>, <code>KEYS</code>, <code>BELL</code> and <code>MISC</code>. From v1.36, 9 of them that played off C are retuned: copy them over the old ones.</li>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/SYNTHS/BRINGS" target="_blank" rel="noopener"><code>presets/SYNTHS/BRINGS</code></a> to <code>SYNTHS/BRINGS</code>. If your card has <code>SYNTHS/BRIB</code> from v1.26, rename it to <code>BRINGS</code>.</li>
@@ -203,7 +205,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="install"><a class="m-anchor" href="#install" aria-hidden="true" tabindex="-1">#</a>Install</h2>
 <ol>
-<li>Copy <code>deluge-bribes-v1.38.1.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
+<li>Copy <code>deluge-bribes-v1.39.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
 <li>Turn the Deluge off.</li>
 <li>Hold <strong>SHIFT</strong> and switch the Deluge on. Let go once it starts loading the new firmware.</li>
 </ol>
@@ -472,6 +474,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong>Cyc engines (new in v1.8):</strong> <strong>Cyc Kik</strong> (<strong>KIK</strong>), <strong>Cyc Snr</strong> (<strong>SNR</strong>), <strong>Cyc Metal</strong> (<strong>CMTL</strong>), <strong>Cyc Perc</strong> (<strong>PERC</strong>), <strong>Cyc Tone</strong> (<strong>TONE</strong>), <strong>Cyc Chord</strong> (<strong>CHRD</strong>), <strong>Vtg Snr</strong> (<strong>VSNR</strong>) and <strong>clap eng</strong> (<strong>CLAP</strong>). Modelled on the Model:Cycles' six machines and the Syntakt's SD VINTAGE and CP VINTAGE, with the same knobs and starting values.</li>
 <li><strong>GIN</strong> (<strong>GIN</strong>, new in v1.13): the drum voice from SquareWave Studio's GIN for the OP-1, built on Eric Lewis's libpo32, a PO-32 style drum synth. A tone with a pitch sweep, LFO or noise modulator, and a filtered noise layer with its own envelope, mixed, driven and EQ'd. See <a href="#gin">GIN</a>.</li>
 <li><strong>ULTRAKIK</strong> (<strong>ULTRAKIK</strong>, new in v1.21): a kick engine. One swept oscillator into a wavefolder, four kinds of drive, grit, a click and a clean sub, with sixteen presets. See <a href="#ultrakik">ULTRAKIK</a>.</li>
+<li><strong>TRIBE</strong> (<strong>TRIBE KICK</strong> to <strong>TRIBE COWBELL</strong>): an 808 / 909 drum machine, eight voices with an 808 &gt; 909 knob each. See <a href="#30-tribe">TRIBE</a>.</li>
 </ul>
 <h3 id="making-a-drum-synth-kit"><a class="m-anchor" href="#making-a-drum-synth-kit" aria-hidden="true" tabindex="-1">#</a>Making a drum synth kit</h3>
 <ol>
@@ -482,27 +485,28 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong>Cycles</strong> (<strong>CYCL</strong>): the Model:Cycles' usual six tracks, from the bottom: <strong>KIK</strong>, <strong>SNR</strong>, <strong>METAL</strong>, <strong>TONE</strong>, <strong>PERC</strong> and <strong>CHORD</strong>, playing at the note as the Cycles does at its default tune.</li>
 <li><strong>LXR</strong> (<strong>LXR</strong>): seven LXR voice rows, from the bottom: <strong>KICK</strong>, <strong>SNARE</strong>, <strong>CH</strong> (closed hat), <strong>OH</strong> (open hat), <strong>LTOM</strong>, <strong>HTOM</strong> and <strong>CYM</strong>. The two hat rows choke each other.</li>
 <li><strong>GIN</strong> (<strong>GIN</strong>): eight GIN rows, from the bottom: <strong>KICK</strong>, <strong>SNR</strong>, <strong>HAT1</strong>, <strong>HAT2</strong>, <strong>PERC1</strong>, <strong>PERC2</strong>, <strong>CLAP</strong> and <strong>OTHER</strong>, on the 808 kit. The two hats choke each other, and each row is tuned to its sound.</li>
+<li><strong>TRIBE</strong> (<strong>TRIBE</strong>): eight TRIBE rows, from the bottom: <strong>KICK</strong>, <strong>SNARE</strong>, <strong>CH</strong>, <strong>OH</strong>, <strong>RIM</strong>, <strong>TOM</strong>, <strong>CLAP</strong> and <strong>CYM</strong>, on the TRIBE kit. The two hats choke each other. See <a href="#30-tribe">TRIBE</a>.</li>
 <li><strong>ULTRAKIK (single row only)</strong> (<strong>UKIK</strong>) and <strong>XIA (single row only)</strong> (<strong>XIA</strong>): put that engine on the kit's selected row only, and open <strong>SYNTH MODE</strong> on it so you can pick another engine from there. On a track that isn't a kit yet, a sample kit is made first.</li>
 </ul>
 </li>
 </ol>
 <p>Vtg Snr, clap eng, DXIA and DIIA are picked per row in SYNTH MODE.</p>
-<p>The rows an LXR, Cycles or GIN kit makes are its <strong>preset rows</strong> (new in v1.12). Their audition pads are softly coloured by the engine each plays: blue for the Cyc engines, orange for the LXR voices, green for DXIA and DIIA, pink for GIN (brighter on the selected row).</p>
+<p>The rows an LXR, Cycles, GIN or TRIBE kit makes are its <strong>preset rows</strong> (new in v1.12). Their audition pads are softly coloured by the engine each plays: blue for the Cyc engines, orange for the LXR voices, green for DXIA and DIIA, pink for GIN and ULTRAKIK, red for TRIBE (brighter on the selected row).</p>
 <ul>
 <li><strong>Adding rows:</strong> tap an empty audition pad above or below the preset rows and a new row appears there with <strong>SYNTH MODE</strong> open, to make it any engine, <strong>Sample</strong> or FM. Holding the empty pad and pressing <strong>LOAD</strong>, <strong>SYNTH</strong>, <strong>MIDI</strong> or <strong>CV</strong> works as on any kit. Added rows aren't coloured.</li>
 <li><strong>Swapping kit type:</strong> once rows have been added, a preset kit can't be swapped for another kit (the added rows would lose their sounds): the screen shows <strong>CANT</strong>. Without added rows, the swap keeps the pattern on the rows the new kit fills.</li>
 </ul>
 <h3 id="kit-presets"><a class="m-anchor" href="#kit-presets" aria-hidden="true" tabindex="-1">#</a>Kit presets</h3>
-<p>On an LXR, Cycles or GIN kit, <strong>SHIFT + KIT</strong> opens <strong>Kit presets</strong> (<strong>PRST</strong>): the kit files in <code>KITS/LXR</code>, <code>KITS/CYCLES</code> or <code>KITS/GIN</code> on the card.</p>
+<p>On an LXR, Cycles, GIN or TRIBE kit, <strong>SHIFT + KIT</strong> opens <strong>Kit presets</strong> (<strong>PRST</strong>): the kit files in <code>KITS/LXR</code>, <code>KITS/CYCLES</code>, <code>KITS/GIN</code> or <code>KITS/TRIBE</code> on the card.</p>
 <ol>
 <li>Turn <strong>SELECT</strong>. Each preset plays on the preset rows straight away, pattern running. Notes, added rows and the other rows stay as they are, and the audition pads still play the rows.</li>
 <li><strong>SELECT</strong> (or <strong>KIT</strong>) keeps the one showing. <strong>BACK</strong> puts the kit back as it was and goes up to the Kit / LXR / Cycles / GIN menu: its own type goes back into the presets, another swaps the kit.</li>
 </ol>
-<p>The list is <strong>Default</strong> (the rows as SHIFT + KIT makes them) and then the presets in name order. On a GIN kit, Default is replaced by GIN's sixteen built in kits, so there's nothing to copy to the card. It opens on the preset the kit is on (kept with the kit when you save), or <strong>Current</strong> if it's on none of them.</p>
+<p>The list is <strong>Default</strong> (the rows as SHIFT + KIT makes them) and then the presets in name order. On a GIN kit, Default is replaced by GIN's sixteen built in kits (on a TRIBE kit, TRIBE's eleven), so there's nothing to copy to the card. It opens on the preset the kit is on (kept with the kit when you save), or <strong>Current</strong> if it's on none of them.</p>
 <ul>
 <li><strong>Cycles presets:</strong> sixteen kits of my own, bank E of my Model:Cycles kits, converted for the Cyc engines: copy <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> to <code>KITS/CYCLES</code> on the card.</li>
 <li><strong>LXR presets:</strong> sixteen kits by <strong>Hrtl</strong> from the free <a href="https://www.ericasynths.lv/news/fresh-kits-and-patterns-lxr-02-hrtl/" target="_blank" rel="noopener">LXR-02 pack Erica Synths released in 2022</a>, converted for the drum synth: copy <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/LXR</code> on the card. Close to the originals rather than identical (see the folder's README).</li>
-<li><strong>Making presets:</strong> a preset is an ordinary kit file. Set the kit up, press <strong>SAVE</strong>, go into <code>KITS/LXR</code>, <code>KITS/CYCLES</code> or <code>KITS/GIN</code> (made the first time you open the list) and save, over an existing preset or under a new name. Only the preset rows are read back. <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/tools/lxr_to_deluge.py" target="_blank" rel="noopener"><code>tools/lxr_to_deluge.py</code></a> converts LXR-02 .SND kits.</li>
+<li><strong>Making presets:</strong> a preset is an ordinary kit file. Set the kit up, press <strong>SAVE</strong>, go into <code>KITS/LXR</code>, <code>KITS/CYCLES</code>, <code>KITS/GIN</code> or <code>KITS/TRIBE</code> (made the first time you open the list) and save, over an existing preset or under a new name. Only the preset rows are read back. <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/tools/lxr_to_deluge.py" target="_blank" rel="noopener"><code>tools/lxr_to_deluge.py</code></a> converts LXR-02 .SND kits.</li>
 <li><strong>Turning SELECT in the clip</strong> (new in v1.19) steps to the next or previous preset in the same list and keeps it, without opening the list. It goes round at the ends.</li>
 <li><strong>Picking LXR, Cycles or GIN</strong> in the New kit menu (new in v1.19) opens that kit's presets on the top one: the first preset in its folder, or Default if there's none (GIN: its first built in kit).</li>
 <li>Swapping sounds clears the undo history.</li>
@@ -544,6 +548,10 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <tr>
 <td>ULTRAKIK</td>
 <td>ULTRAKIK (starts on its ULTRA preset, at C2 on a kit row)</td>
+</tr>
+<tr>
+<td><a href="#30-tribe">TRIBE</a></td>
+<td>TRIBE kick, snare, hat, rim, tom, clap, cymbal, cowbell (each starts as it sits in the TRIBE kit)</td>
 </tr>
 <tr>
 <td><a href="#21-bribering-mode">BRIBERING MODE</a></td>
@@ -1572,7 +1580,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <p>With one set, a new track of that type starts on the instrument's top preset that isn't already on another track: the first in <code>KITS/LXR</code>, <code>KITS/CYCLES</code> or the synth type's folder, LEAD first (see <a href="#13-synth-browser">Synth browser</a>). If there's none, you get a blank one: the kit as SHIFT + KIT makes it, or a blank synth of that kind. A GIN track starts on GIN's first built in kit.</p>
 <ul>
 <li><strong>Counts as a new track:</strong> a new clip in song view, a new arranger track, the <strong>KIT</strong> or <strong>SYNTH</strong> button on a clip that has never been that type (one that has goes back to what it had), and the synth a new song starts with.</li>
-<li><strong>Then:</strong> turning SELECT on a synth steps through its folder as usual, and on an LXR, Cycles or GIN kit through that kit's presets (see <a href="#kit-presets">Kit presets</a>). SHIFT + KIT and SHIFT + SYNTH still open the full pickers.</li>
+<li><strong>Then:</strong> turning SELECT on a synth steps through its folder as usual, and on an LXR, Cycles, GIN or TRIBE kit through that kit's presets (see <a href="#kit-presets">Kit presets</a>). SHIFT + KIT and SHIFT + SYNTH still open the full pickers.</li>
 <li>Both settings start on <strong>OFF</strong>, so new tracks are stock until you change them.</li>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
@@ -2551,6 +2559,171 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li>Songs and presets save it (<code>modFXType</code> = <code>freqShift</code>). Other firmware loads it as no Mod FX.</li>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
+<h2 id="30-tribe"><a class="m-anchor" href="#30-tribe" aria-hidden="true" tabindex="-1">#</a>30. TRIBE</h2>
+<p>An 808 / 909 drum machine as a drum synth engine: eight voices (kick, snare, clap, rim, tom, hat, cymbal and cowbell), each with an <strong>808 &gt; 909</strong> knob that runs smoothly from the way the 808 makes that sound to the way the 909 makes it. The kick goes from the 808's boom to the 909's swept VCO and click on one knob, with no engine change. Every other knob is centred on the real machine: at 64 it does what the 808 or 909 (or the blend the 808 &gt; 909 knob points at) does, and turning it down or up goes past what either machine could. All synthesised, no samples, the 909's hats and cymbals included.</p>
+<p>Both ends of every voice are fitted to recordings of a real 808 and a real 909 at known knob settings: their envelope, their spectrum over time and their pitch. On top sit extras after Hexinverter's Mutant drums: the BD9's wave switch and square sub on the kick, and the Mutant Snare's snappy resonance.</p>
+<h3 id="getting-it-going"><a class="m-anchor" href="#getting-it-going" aria-hidden="true" tabindex="-1">#</a>Getting it going</h3>
+<ul>
+<li><strong>A kit:</strong> in clip view on an empty clip, press <strong>SHIFT + KIT</strong> and pick <strong>TRIBE</strong> (<strong>TRIBE</strong>). Eight rows, from the bottom: <strong>KICK</strong>, <strong>SNARE</strong>, <strong>CH</strong>, <strong>OH</strong>, <strong>RIM</strong>, <strong>TOM</strong>, <strong>CLAP</strong>, <strong>CYM</strong>. The two hats choke each other and the kick feeds the sidechain. With <a href="#15-gate-out">Gate out</a> the kick, snare and hats fire gates 1 to 4.</li>
+<li><strong>Kits:</strong> turn <strong>SELECT</strong> in the clip (or <strong>SHIFT + KIT</strong> for the list) to step through the eleven kits built in. Your own TRIBE kits saved to <code>KITS/TRIBE</code> come after them.</li>
+<li><strong>One voice on any row:</strong> <strong>SYNTH MODE</strong> has <strong>TRIBE KICK</strong>, <strong>SNARE</strong>, <strong>HAT</strong>, <strong>RIM</strong>, <strong>TOM</strong>, <strong>CLAP</strong>, <strong>CYMBAL</strong> and <strong>COWBELL</strong>. Each starts as it sits in the TRIBE kit. On a synth track a TRIBE voice plays at the note, so the kick and tom play bass lines.</li>
+<li><strong>Every new kit track:</strong> set <strong>Defaults &gt; Clip type &gt; Kit</strong> to TRIBE (see <a href="#14-instrument-picker">Instrument Picker</a>).</li>
+<li>TRIBE rows are tinted red.</li>
+</ul>
+<h3 id="the-knobs"><a class="m-anchor" href="#the-knobs" aria-hidden="true" tabindex="-1">#</a>The knobs</h3>
+<p>The same knobs and pads as the Cyc engines. <strong>Gold knobs:</strong> Custom 2 is <strong>808 &gt; 909</strong>, Custom 3 is <strong>Tone</strong>, mod depth / mod rate are <strong>Sweep</strong> / <strong>Sweep time</strong>, attack / release are <strong>Drive</strong> / <strong>Decay</strong>. All twelve are parameters: lockable, automatable and patchable.</p>
+<markdown-accessiblity-table><div class="m-table"><table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Pad</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>808 &gt; 909</strong></td>
+<td>MOD1, row 6</td>
+<td>0 is the 808, 127 the 909, everything between a clean blend. The level stays put as you turn it, so it's safe to automate</td>
+</tr>
+<tr>
+<td><strong>Tone</strong></td>
+<td>MOD1, row 7</td>
+<td>Brightness. Kick: below 64 a softer click and a purer sine, above 64 the wave goes triangle then square (the BD9's WAVE switch). Snare: the 808's head balance, the 909's snappy brightness. Cymbal: low band against high</td>
+</tr>
+<tr>
+<td><strong>Sweep</strong></td>
+<td>MOD1, row 4</td>
+<td>Pitch drop depth (clap: spacing between bursts)</td>
+</tr>
+<tr>
+<td><strong>Sweep time</strong></td>
+<td>MOD1, row 5</td>
+<td>How long the drop takes, the 909's TUNE (clap: number of bursts, 1 to 8)</td>
+</tr>
+<tr>
+<td><strong>Drive</strong></td>
+<td>MOD1, row 2</td>
+<td>Soft clip after the envelopes</td>
+</tr>
+<tr>
+<td><strong>Attack</strong></td>
+<td>MOD1, row 8</td>
+<td>The transient: click, stick or pulse. Velocity drives it too</td>
+</tr>
+<tr>
+<td><strong>Noise</strong></td>
+<td>MOD2, row 1</td>
+<td>The noise layer: snappy on the snare, skin on the tom, sizzle on the hats, tail on the clap, clang on the cowbell. Kick: <strong>Sub</strong>, a square sub oscillator, off at 0</td>
+</tr>
+<tr>
+<td><strong>Noise tone</strong></td>
+<td>MOD2, row 2</td>
+<td>Its colour (cymbal and cowbell: resonance). Kick: <strong>Sub tone</strong>, dark to raw</td>
+</tr>
+<tr>
+<td><strong>Noise decay</strong></td>
+<td>MOD2, row 3</td>
+<td>Its length (cymbal: low band decay). Kick: <strong>Sub octave</strong>, in thirds of the knob: two octaves down, one, or on the note</td>
+</tr>
+<tr>
+<td><strong>Spread</strong></td>
+<td>MOD2, row 4</td>
+<td>Kick: Hold, the boom held open. Tom: overtone above 64. Clap: humanise. Others: the tuning between their parts</td>
+</tr>
+<tr>
+<td><strong>Character</strong></td>
+<td>MOD2, row 5</td>
+<td>Kick: fold. Snare: <strong>resonance</strong>, the snappy's filter ringing up to a pitched ring. Clap: resonance. Tom: bend up or down for syndrum zaps, 64 none. Rim: clave at 127. Hat, cymbal, cowbell: ring mod</td>
+</tr>
+<tr>
+<td><strong>Decay</strong></td>
+<td>MOD1, row 1</td>
+<td>The main decay, a sixth to six times the machine's; 127 holds while the note does. On the hats one knob runs from the 808's closed hat (about 8) to its open hat (64)</td>
+</tr>
+<tr>
+<td><strong>Punch</strong></td>
+<td>MOD2, row 6</td>
+<td>On / off: a transient compressor, the peak stays and the body right after it comes up</td>
+</tr>
+<tr>
+<td><strong>Crush</strong></td>
+<td>MOD2, row 7</td>
+<td>Sample rate and bit depth down, past the 909's 6-bit sound</td>
+</tr>
+</tbody>
+</table></div></markdown-accessiblity-table>
+<p>Pitch (MOD1, row 3) is the Deluge's own transpose. The kick, snare and tom put their body on the note; the others move their whole sound with it, like the tuning trimmer inside the machine. Both machines' kicks sit at 49 Hz, so the kits play them on G1.</p>
+<p><strong>Accent:</strong> every TRIBE row has a velocity cable to Attack, as well as to level. Accented steps hit harder rather than just louder, as on the real machines.</p>
+<h3 id="kits"><a class="m-anchor" href="#kits" aria-hidden="true" tabindex="-1">#</a>Kits</h3>
+<markdown-accessiblity-table><div class="m-table"><table>
+<thead>
+<tr>
+<th>Kit</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TRIBE</strong></td>
+<td>The hybrid: an 808 body with some 909 punch on the kick, a 909 snare, 808 clap, rim and tom, 909-leaning hats and cymbal</td>
+</tr>
+<tr>
+<td><strong>808</strong></td>
+<td>Every voice at the 808 end, the cowbell in for the cymbal</td>
+</tr>
+<tr>
+<td><strong>909</strong></td>
+<td>Every voice at the 909 end</td>
+</tr>
+<tr>
+<td><strong>MIAMI</strong></td>
+<td>The long 808 boom, a bright snappy snare, clave, a conga, cowbell</td>
+</tr>
+<tr>
+<td><strong>TECHNO</strong></td>
+<td>A driven 909 kick tuned long, a dark square sub on its note under it, tight bright hats, a ride</td>
+</tr>
+<tr>
+<td><strong>HOUSE</strong></td>
+<td>The 909 with Punch on the kick, a looser clap, an open hat for the offbeats, a crash</td>
+</tr>
+<tr>
+<td><strong>ELECTRO</strong></td>
+<td>A short droopy 808 kick, a high snappy snare, a syndrum zap on the tom, cowbell</td>
+</tr>
+<tr>
+<td><strong>TRAP</strong></td>
+<td>An 808 that holds and rings with a sub an octave under it, a cracking hybrid snare, wide clap, rapid 909 hats</td>
+</tr>
+<tr>
+<td><strong>HARDGROOVE</strong></td>
+<td>Everything 909 and driven, a square sub growling under the kick, the snare's snappy ringing, hats crushed a little</td>
+</tr>
+<tr>
+<td><strong>LOFI</strong></td>
+<td>Half way between the machines and through the crusher</td>
+</tr>
+<tr>
+<td><strong>INDUSTRIAL</strong></td>
+<td>Past both machines: a square kick folded and subbed, a self-ringing snare, ring modulated metal, driven hard</td>
+</tr>
+</tbody>
+</table></div></markdown-accessiblity-table>
+<h3 id="how-to-approach-it"><a class="m-anchor" href="#how-to-approach-it" aria-hidden="true" tabindex="-1">#</a>How to approach it</h3>
+<ol>
+<li>Play the <strong>808</strong>, <strong>909</strong> and <strong>TRIBE</strong> kits to hear both machines and the blend.</li>
+<li>On each row set <strong>808 &gt; 909</strong> first, then shape it with <strong>Decay</strong> and <strong>Tone</strong>. Most classic sounds need nothing else.</li>
+<li>Leave the rest at 64 until you want something new, then reach for the extras: the kick's sub and square wave, the snare's resonance, the tom's bend, ring mod on the metal.</li>
+<li>Automate it: 808 &gt; 909 across a section, Decay on the open hat, the kick's Sweep time, the tom's Bend.</li>
+</ol>
+<h3 id="good-to-know-17"><a class="m-anchor" href="#good-to-know-17" aria-hidden="true" tabindex="-1">#</a>Good to know</h3>
+<ul>
+<li>No TRIBE voice uses more CPU than its Cyc counterpart (kick against Cyc Kik, snare against Cyc Snr, clap against clap eng, tom and rim against Cyc Perc, hat, cymbal and cowbell against Cyc Metal) at any setting, with Punch, Drive and modulation on or off. The metal voices run at about a third of Cyc Metal.</li>
+<li>Every voice peaks about 1.5 dB under full scale at its centred knobs, at any 808 &gt; 909 setting.</li>
+<li>The 909 never had a cowbell: TRIBE's 909 end of it is built the 909's way. The 909 cymbal's long tail is set by ear, as the recordings stop short.</li>
+</ul>
+<p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="quick-reference"><a class="m-anchor" href="#quick-reference" aria-hidden="true" tabindex="-1">#</a>Quick reference</h2>
 <markdown-accessiblity-table><div class="m-table"><table>
 <thead>
@@ -2641,15 +2814,15 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <td>New kit: choose <strong>Kit</strong> (samples), <strong>Cycles</strong> (the six Cyc engines), <strong>LXR</strong> (the seven LXR voices), <strong>GIN</strong> (eight GIN sounds), or <strong>ULTRAKIK</strong> or <strong>XIA</strong> on the selected row only</td>
 </tr>
 <tr>
-<td><strong>SHIFT + KIT on an LXR, Cycles or GIN kit</strong></td>
+<td><strong>SHIFT + KIT on an LXR, Cycles, GIN or TRIBE kit</strong></td>
 <td>Kit presets: turn SELECT to play each preset on the kit's rows, SELECT to keep, BACK to go back (Drum synth)</td>
 </tr>
 <tr>
-<td><strong>Turn SELECT on an LXR, Cycles or GIN kit</strong></td>
+<td><strong>Turn SELECT on an LXR, Cycles, GIN or TRIBE kit</strong></td>
 <td>Step to the kit's next or previous preset and keep it (Instrument Picker, new in v1.19)</td>
 </tr>
 <tr>
-<td><strong>Tap an empty audition pad on an LXR, Cycles or GIN kit</strong></td>
+<td><strong>Tap an empty audition pad on an LXR, Cycles, GIN or TRIBE kit</strong></td>
 <td>Add a row there and open SYNTH MODE to choose its sound (Drum synth)</td>
 </tr>
 <tr>
@@ -2868,6 +3041,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <p>Newest first: what changed in each release, why, and what it taught me.</p>
 <ul>
 <li>
+<p><strong>v1.39: TRIBE.</strong> A new drum engine: an 808 / 909 drum machine with eight voices, each running from the 808 to the 909 on one knob, every other knob centred on the real machine, extras after Hexinverter's Mutant BD9 and Mutant Snare, and eleven kits. Built on v1.38.1. <em>Why:</em> one engine for every 808 and 909 sound on the Cycles layout, as close to the real machines as possible, and never heavier than the Cyc engines. <em>Learned:</em> the published numbers were off in places. Measured against recordings, the 808 kick sweeps rather than steps and sighs down two semitones as it rings, the 909's TUNE only sets how fast its sweep falls, and both kicks settle at 49 Hz.</p>
+</li>
+<li>
 <p><strong>v1.38.1: WAVE panel fix.</strong> <em>Fixed:</em> moves made on the companion's WAVE panel never reached the Deluge. Dragging the table or turning a control showed the new place while your finger was on it, then sprang back to where it was. Every control on the panel was affected, position, sweeps, envelopes, filter and the rest; the BRUNO106 and BROPHET panels were fine. <em>Why:</em> the Deluge only applied the tablet's panel moves when a BRUNO106 or BROPHET move was waiting, and the WAVE panel was never added to that check. <em>Learned:</em> the tablet holds a moved control for a moment, then shows what the Deluge says, so a move the Deluge ignores looks like a spring back, not like nothing happening.</p>
 </li>
 <li>
@@ -3039,12 +3215,13 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <li><strong>The LXR presets</strong> are sixteen kits by <strong>Hrtl</strong>, released free by Erica Synths for the LXR-02 (<a href="https://www.ericasynths.lv/news/fresh-kits-and-patterns-lxr-02-hrtl/" target="_blank" rel="noopener">Fresh kits and patterns for the LXR-02 from Hrtl!</a>, <a href="https://soundcloud.com/hrtl" target="_blank" rel="noopener">Hrtl on SoundCloud</a>), ten kits by <strong>EntropiaLabs</strong> from <a href="https://github.com/mcamaradev/ELABS-RLX-02-LXR02-CLONE-VST" target="_blank" rel="noopener">ELABS RLX</a> (GPL-3.0), both converted for the drum synth, and sixteen kits made for this build. Credit for those sounds goes to Hrtl and EntropiaLabs.</li>
 <li><strong>BRIBELUGE COMPANION</strong> is an original design for this build: a web page on Web MIDI, and SysEx messages the firmware sends next to the community firmware's display mirror.</li>
 <li><strong>The drum synth's</strong> layout, controls and Deluge integration were designed for this build. Its kick / tom, snare and cymbal / hat voices are a modified version of the drum voices in the open source LXR-02 firmware by Erica Synths (GPL-3.0). DXIA and DIIA were written from scratch, from the manuals and published descriptions of Noise Engineering's BIA and IIA modules, first for the Elektron Model:Cycles and then ported to the Deluge. The Cyc engines are original code, modelled on how the Model:Cycles and Syntakt machines respond, measured knob by knob; no Elektron code or data is used.</li>
+<li><strong>TRIBE</strong> is original code for this build. Both ends of every voice were fitted, by rendering and measuring, to free recordings of a real TR-808 (Michael Fischer, 1994) and TR-909 (Rob Roy, 1995); the recordings were only measured and nothing of them is included. It was checked against open source models of both machines (9W9, Drum9, iO-808, Niner), with no code from them, and its extras follow the published descriptions of Hexinverter's Mutant BD9, Mutant Bassdrum and Mutant Snare.</li>
 <li><strong>GIN's</strong> voice is ported from the MIT licensed synthesis core of <a href="https://github.com/squarewave-studio/op1-mods" target="_blank" rel="noopener">GIN by SquareWave Studio</a> and <a href="https://github.com/ericlewis/libpo32" target="_blank" rel="noopener">libpo32 by Eric Lewis</a>, with their copyright and licence notices kept in the source. The sixteen GIN kits, the controls and the Deluge integration were made for this build; GIN's own factory kits are not used.</li>
 <li><strong>The ideas behind the swing, pattern and fill features were inspired by the Stolperbeats Eurorack module by <a href="https://makingsoundmachines.com/stolperbeats/" target="_blank" rel="noopener">Making Sound Machines</a>,</strong> which shuffles beats on tuplet grids and stores patterns in banks. None of its firmware, timing tables, factory timings (Trip, Shake, Push and Clave) or factory patterns are used or included here.</li>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="not-affiliated-or-endorsed"><a class="m-anchor" href="#not-affiliated-or-endorsed" aria-hidden="true" tabindex="-1">#</a>Not affiliated or endorsed</h2>
-<p>This is an independent, unofficial project. It is not affiliated with, endorsed by or supported by <strong>Making Sound Machines</strong>, <strong>Synthstrom Audible</strong>, <strong>Erica Synths</strong>, <strong>Hrtl</strong>, <strong>EntropiaLabs</strong>, <strong>Elektron</strong>, <strong>Roland</strong>, <strong>SquareWave Studio</strong>, <strong>Teenage Engineering</strong>, <strong>Sonic Charge</strong>, <strong>Mutable Instruments</strong>, <strong>Native Instruments</strong>, <strong>Noise Engineering</strong>, <strong>Cmajor Software</strong>, <strong>Sequential</strong>, <strong>Karl LaRocca (Ultramaster KR-106)</strong>, <strong>dsp.coffee</strong>, <strong>Michigan Synth Works</strong> or <strong>BVKER</strong>. Stolperbeats is a product of Making Sound Machines, the Deluge is a product of Synthstrom Audible, the LXR-02 is a product of Erica Synths, the Model:Cycles and Syntakt are products of Elektron, the TB-303 and Juno-106 are products of Roland, the OP-1 and PO-32 are products of Teenage Engineering, Rings is a product of Mutable Instruments, Pro-53 is a product of Native Instruments, the Prophet-5 is a product of Sequential, the Kali is a product of dsp.coffee, and the Sealegs is a product of Michigan Synth Works. All trademarks belong to their owners. No rights to the Erica Synths, LXR or LXR-02 trademarks are granted.</p>
+<p>This is an independent, unofficial project. It is not affiliated with, endorsed by or supported by <strong>Making Sound Machines</strong>, <strong>Synthstrom Audible</strong>, <strong>Erica Synths</strong>, <strong>Hrtl</strong>, <strong>EntropiaLabs</strong>, <strong>Elektron</strong>, <strong>Roland</strong>, <strong>SquareWave Studio</strong>, <strong>Teenage Engineering</strong>, <strong>Sonic Charge</strong>, <strong>Mutable Instruments</strong>, <strong>Native Instruments</strong>, <strong>Noise Engineering</strong>, <strong>Cmajor Software</strong>, <strong>Sequential</strong>, <strong>Karl LaRocca (Ultramaster KR-106)</strong>, <strong>dsp.coffee</strong>, <strong>Michigan Synth Works</strong>, <strong>Hexinverter</strong> or <strong>BVKER</strong>. Stolperbeats is a product of Making Sound Machines, the Deluge is a product of Synthstrom Audible, the LXR-02 is a product of Erica Synths, the Model:Cycles and Syntakt are products of Elektron, the TB-303, Juno-106, TR-808 and TR-909 are products of Roland, the Mutant drum modules are products of Hexinverter, the OP-1 and PO-32 are products of Teenage Engineering, Rings is a product of Mutable Instruments, Pro-53 is a product of Native Instruments, the Prophet-5 is a product of Sequential, the Kali is a product of dsp.coffee, and the Sealegs is a product of Michigan Synth Works. All trademarks belong to their owners. No rights to the Erica Synths, LXR or LXR-02 trademarks are granted.</p>
 <p>Use it at your own risk, and please don't contact Making Sound Machines, Synthstrom Audible, Erica Synths, Elektron, Roland, SquareWave Studio, Teenage Engineering, Mutable Instruments, Native Instruments, Noise Engineering, Cmajor Software, Sequential, Karl LaRocca or BVKER for help with this build.</p>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="source-code"><a class="m-anchor" href="#source-code" aria-hidden="true" tabindex="-1">#</a>Source code</h2>
