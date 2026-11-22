@@ -57,7 +57,6 @@ body = rep(body, '<div class="headtext">\n      <h1>',
   '      <div class="bx-mega bx-new-only sbx-mega2" data-fit aria-hidden="true"><span class="bx-fit sbx-swap"><span class="sbx-v">VISUALISER</span><span class="sbx-c">CREATOR</span></span></div>\n'
   '      <h1>')
 # section labels (attributes only)
-body = rep(body, '<section class="card panel" aria-label="Controls">', '<section class="card panel" aria-label="Controls" data-bx-label="Controls">')
 body = rep(body, '<section class="card">\n    <div class="barhead"><h2 id="barTitle">', '<section class="card" data-bx-label="Grid">\n    <div class="barhead"><h2 id="barTitle">')
 body = rep(body, '<details class="card sources" id="bankCard">\n    <summary>', '<details class="card sources" id="bankCard">\n    <summary data-bx-label="Banks">')
 body = rep(body, '<section class="card" id="halfCard">', '<section class="card" id="halfCard" data-bx-label="Close-up">')

@@ -53,10 +53,10 @@ def run(url, mode, log):
 
         # 1. Timings, Shuffle, Feel, presets, kit, Linear
         pg.click('[data-timing="Shake"]'); pg.click('#detents button:nth-child(4)')
-        pg.click('#feels .feel-item:nth-child(3) .lampbtn')
+        pg.click('#feelDrop summary'); pg.click('#feels .feel-item:nth-child(3) .lampbtn')
         pg.select_option('#loopSel','5')
         snap("shake3_flam_funk")
-        pg.click('[data-timing="CLSTR"]'); pg.click('#detents button:nth-child(6)')
+        pg.select_option('.tmore', 'CLSTR'); pg.click('#detents button:nth-child(6)')
         pg.click('#kits button:nth-child(3)')   # kit change starts audio
         pg.click('#linear button:nth-child(2)')
         snap("clstr5_linear")
@@ -118,7 +118,7 @@ def run(url, mode, log):
         pg.set_input_files('#bankFile', bf)
         snap("bank_imported")
         pg.click('#modeSw [data-mode="0"]')
-        pg.click('[data-timing="BRB1"]')
+        pg.select_option('.tmore', 'BRB1')
         snap("mine_timing")
         # 6. play for a moment, then stop
         pg.click('#play'); pg.wait_for_timeout(700)

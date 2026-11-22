@@ -74,11 +74,6 @@ details.card>summary .sum-sub{display:inline-block;margin-top:6px;font:13px var(
 .halfhead{margin-bottom:12px;gap:8px 16px;align-items:baseline}
 .halfsub{font:600 clamp(15px,1.35vw,18px)/1.4 var(--bx-sans);color:var(--mine);max-width:70ch}
 
-/* the controls section */
-.panel{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-areas:"head head" "timing feel" "timing readout";gap:14px clamp(24px,4vw,64px)}
-body.creating .panel{grid-template-areas:"head head" "feel readout"}
-.panel::before{grid-area:head;margin:0}
-
 /* the half-bar section: rule in amber-pink, teal in the creator */
 #halfCard{--hl:var(--bx-pink);border:0;border-top:2px solid var(--hl);box-shadow:none;
   background:linear-gradient(180deg,color-mix(in srgb,var(--hl) 7%,transparent),transparent 220px)}
@@ -137,9 +132,18 @@ body.creating #halfCard{--hl:var(--mine)}
 .lampbtn{font-family:var(--sbx-mono);font-weight:700;letter-spacing:.1em;color:color-mix(in srgb,var(--lamp,var(--muted)) 55%,var(--muted));
   border:1px solid color-mix(in srgb,var(--lamp,var(--line)) 45%,var(--line));background:color-mix(in srgb,var(--lamp,#000) 7%,#000);box-shadow:none}
 .lampbtn:hover{background:color-mix(in srgb,var(--lamp,#000) 18%,#000);color:var(--text)}
-.lampbtn[aria-pressed=true]{color:#000;border-color:var(--lamp);background:var(--lamp);box-shadow:0 0 18px 0 color-mix(in srgb,var(--lamp) 50%,transparent)}
+.lampbtn[aria-pressed=true],.lampbtn.on{color:#000;border-color:var(--lamp);background:var(--lamp);box-shadow:0 0 18px 0 color-mix(in srgb,var(--lamp) 50%,transparent)}
 /* the alt tables wear the site pink; your own Timings keep the creator teal */
-.tgroup.alt .lampbtn[style*="#45c472"]{--lamp:var(--bx-pink)!important}
+.timings .alt{--lamp:var(--bx-pink)}
+.timings .lampbtn{height:32px;font-size:11.5px}
+.tmore option,.tmore optgroup{background:#000;color:var(--text)}
+/* Feel menu: the lit tab is its face, the four tabs and the Timing readout open under it */
+.feeldrop #feelNow{height:46px;min-width:120px;font-size:12.5px;letter-spacing:.14em}
+.feeldrop .caret{border-color:var(--bx-pink)}
+.feeldrop>summary:hover #feelNow{filter:brightness(1.12)}
+.feeldrop>summary:focus-visible{outline:2px solid var(--bx-pink);outline-offset:3px}
+.feelpop{background:#000;border:2px solid var(--bx-pink);border-radius:0;padding:16px 18px;box-shadow:0 18px 50px rgba(0,0,0,.7),0 0 24px var(--bx-pink-glow)}
+.feelpop .feels .lampbtn{height:38px}
 
 /* sliders */
 .knob input::-webkit-slider-runnable-track{height:2px;border-radius:0;background:var(--line)}
@@ -252,9 +256,7 @@ td.mono,#tbl td{font-family:var(--sbx-mono)}
 :focus-visible{outline-color:var(--bx-pink)}
 
 @media (max-width:760px){
-  .panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "timing" "feel" "readout"}
   .detents button{min-width:40px;height:44px;font-size:18px}
-  body.creating .panel{grid-template-areas:"head" "feel" "readout"}
   .sbx-mega2{width:82%}
   .about-body{columns:1}
   .trow{grid-template-columns:minmax(0,1fr)}
