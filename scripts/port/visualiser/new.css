@@ -54,14 +54,14 @@ body.creating .modesw button{color:var(--mine)}
 body.creating .modesw button+button{border-left-color:var(--mine)}
 
 /* ---------- sections, not cards ---------- */
-.card{background:none;border:0;border-top:2px solid var(--bx-pink);margin:0;padding:clamp(24px,3.6vw,52px) var(--sbx-gut) clamp(26px,3.6vw,52px);counter-increment:sbx}
-.card::before{content:counter(sbx,decimal-leading-zero) " / " attr(data-bx-label);display:block;font:600 12px/1 var(--sbx-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--bx-pink);margin:0 0 clamp(14px,2vw,22px)}
+.card{background:none;border:0;border-top:2px solid var(--bx-pink);margin:0;padding:clamp(18px,2.4vw,34px) var(--sbx-gut) clamp(20px,2.6vw,36px);counter-increment:sbx}
+.card::before{content:counter(sbx,decimal-leading-zero) " / " attr(data-bx-label);display:block;font:600 12px/1 var(--sbx-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--bx-pink);margin:0 0 clamp(10px,1.4vw,16px)}
 details.card::before{content:none}
 details.card{padding-top:0;padding-bottom:0}
-details.card>summary{flex-wrap:wrap;padding:clamp(24px,3vw,40px) 0;gap:10px 14px;align-items:baseline}
+details.card>summary{flex-wrap:wrap;padding:clamp(18px,2.4vw,32px) 0;gap:10px 14px;align-items:baseline}
 details.card>summary::before{content:counter(sbx,decimal-leading-zero) " / " attr(data-bx-label);flex:0 0 100%;font:600 12px/1 var(--sbx-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--bx-pink)}
-details.card[open]>summary{padding-bottom:clamp(14px,2vw,22px)}
-details.card[open]{padding-bottom:clamp(26px,3.6vw,52px)}
+details.card[open]>summary{padding-bottom:clamp(10px,1.4vw,16px)}
+details.card[open]{padding-bottom:clamp(20px,2.6vw,36px)}
 details.card>summary b{font-weight:900;font-size:clamp(28px,4.4vw,60px);line-height:.9;letter-spacing:-.035em;text-transform:uppercase}
 details.card>summary .sum-sub{display:inline-block;margin-top:6px;font:13px var(--sbx-mono);letter-spacing:.02em;color:var(--muted)}
 .sources .chev{width:14px;height:14px;border-color:var(--bx-pink);border-width:0 3px 3px 0;align-self:center}
@@ -71,11 +71,12 @@ details.card>summary .sum-sub{display:inline-block;margin-top:6px;font:13px var(
 .barhead h2,.halfhead h2{font-weight:900;font-size:clamp(26px,3.4vw,48px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase;margin:0}
 .barhead{align-items:center;gap:10px 14px;margin-bottom:14px}
 .status{font:12.5px var(--sbx-mono);color:var(--muted)}
-.halfhead{margin-bottom:16px;gap:8px 16px;align-items:baseline}
-.halfsub{font:600 12.5px var(--sbx-mono);color:var(--mine)}
+.halfhead{margin-bottom:12px;gap:8px 16px;align-items:baseline}
+.halfsub{font:600 clamp(15px,1.35vw,18px)/1.4 var(--bx-sans);color:var(--mine);max-width:70ch}
 
 /* the controls section */
-.panel{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-areas:"head head" "timing feel" "knob side" "readout readout";gap:18px clamp(24px,4vw,64px)}
+.panel{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-areas:"head head" "timing feel" "timing readout";gap:14px clamp(24px,4vw,64px)}
+body.creating .panel{grid-template-areas:"head head" "feel readout"}
 .panel::before{grid-area:head;margin:0}
 
 /* the half-bar section: rule in amber-pink, teal in the creator */
@@ -98,7 +99,7 @@ body.creating #halfCard{--hl:var(--mine)}
 .tcap{font-size:10px;letter-spacing:.14em;border-top-color:var(--line)}
 .ro-k{font-size:10.5px;margin-bottom:4px}
 .ro-v{font-size:14px}
-.readout{border-top:1px solid var(--line);padding-top:16px}
+.readout{border:0;padding:0}
 .row-desc,.linear-desc,.hint,.legend,.toolnote,.barnote,.modnote,.sdhelp{color:var(--muted)}
 .mono,.ro-v.mono{font-family:var(--sbx-mono)}
 #shufv{color:var(--bx-pink)!important;font-weight:700;margin-left:6px}
@@ -146,11 +147,18 @@ body.creating #halfCard{--hl:var(--mine)}
 .knob input::-webkit-slider-thumb{width:18px;height:18px;border-radius:0;background:var(--bx-pink);border:0;box-shadow:0 0 14px var(--bx-pink-glow);margin-top:-8px}
 .knob input::-moz-range-thumb{width:18px;height:18px;border-radius:0;background:var(--bx-pink);border:0;box-shadow:0 0 14px var(--bx-pink-glow)}
 .knob::before{border-radius:0}
-.detents span{font-family:var(--sbx-mono);font-size:12px}
-.detents span.on{color:var(--bx-pink)}
+/* Shuffle on the transport row: the loudest control on the page */
+.knob .ctl-label{font:800 13px var(--sbx-mono);letter-spacing:.2em;color:var(--bx-pink)}
+.knob::before{inset:-8px -10px}
+.detents{border:2px solid var(--bx-pink)}
+.detents button{font:800 20px var(--sbx-mono);min-width:46px;height:46px;color:var(--bx-pink);letter-spacing:0}
+.detents button+button{border-left:1px solid color-mix(in srgb,var(--bx-pink) 40%,var(--line))}
+.detents button:hover{background:color-mix(in srgb,var(--bx-pink) 16%,transparent);color:var(--text)}
+.detents button[aria-pressed=true]{background:var(--bx-pink);color:#000;box-shadow:0 0 22px var(--bx-pink-glow)}
 .tempo{font-family:var(--sbx-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
 .tempo input{accent-color:var(--bx-pink)}
 #bpmv{letter-spacing:.04em;color:var(--text)}
+.transport .btn{padding:8px 14px}
 
 /* drum presets and your beat */
 .bbtn{border:1px solid var(--line);color:var(--text);font-size:12.5px;padding:3px 10px}
@@ -161,11 +169,26 @@ body.creating #halfCard{--hl:var(--mine)}
 .mine:hover{background:color-mix(in srgb,var(--bx-pink) 14%,transparent)}
 .mine[aria-pressed=true]{background:var(--bx-pink);color:#000;box-shadow:0 0 18px var(--bx-pink-glow)}
 
+/* Drum loops, Make your own beat, Choose your kit */
+.pick-label{font:800 12.5px var(--sbx-mono);letter-spacing:.2em;color:var(--bx-pink)}
+.loopsel{border-radius:0;background:#000;color:var(--text);border:2px solid var(--bx-pink);font:700 15px var(--sbx-mono);letter-spacing:.04em;height:46px;min-width:240px;padding:0 12px}
+.loopsel:focus-visible{outline:2px solid var(--bx-pink);outline-offset:2px}
+.pickers .mine{height:46px;font-size:12.5px;font-weight:700;padding:0 18px}
+.kits{border:2px solid var(--bx-pink)}
+.kits button{font:800 18px var(--sbx-mono);min-width:72px;height:42px;color:var(--bx-pink);letter-spacing:.04em}
+.kits button+button{border-left:1px solid color-mix(in srgb,var(--bx-pink) 40%,var(--line))}
+.kits button:hover{background:color-mix(in srgb,var(--bx-pink) 16%,transparent);color:var(--text)}
+.kits button[aria-pressed=true]{background:var(--bx-pink);color:#000;box-shadow:0 0 22px var(--bx-pink-glow)}
+.transport .tempo input{width:96px}
+#bankPlay[aria-pressed=true]{background:var(--bx-pink);color:#000}
+
 /* bar tabs */
 .btab{border:1px solid var(--line);font-family:var(--sbx-mono)}
 .btab .mk.on{fill:var(--text)}
 .btab[aria-pressed=true]{border-color:var(--bx-pink);color:var(--text);box-shadow:inset 0 0 0 1px var(--bx-pink)}
 .btab.playing::after{background:var(--bx-pink);border-radius:0}
+.btab.addbar{border-color:var(--bx-pink);color:var(--bx-pink);opacity:.6;box-shadow:none}
+.btab.addbar:hover{opacity:1}
 .follow{font-family:var(--sbx-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .follow input{accent-color:var(--bx-pink)}
 
@@ -198,6 +221,14 @@ body.creating #halfCard{--hl:var(--mine)}
 
 /* creator */
 #creatorrow .ctl-label{color:var(--mine)}
+#creatorrow{border-top-color:var(--line)}
+.clevels .seg{border-color:var(--mine)}
+.clevels .seg button{font:700 13px var(--sbx-mono);color:var(--mine)}
+.clevels .seg button+button{border-left-color:color-mix(in srgb,var(--mine) 45%,var(--line))}
+.clevels .seg button[aria-pressed=true]{background:var(--mine);color:#000}
+.clevels .clinfo{font:12px var(--sbx-mono);letter-spacing:.04em}
+.tblwrap>summary{font:600 11px var(--sbx-mono);letter-spacing:.14em;text-transform:uppercase}
+.tblwrap>summary:hover{color:var(--mine)}
 .cname{background:#000;border:1px solid var(--line);font-family:var(--sbx-mono)}
 .cname:focus{border-color:var(--mine)}
 .cbadge{font-family:var(--sbx-mono);font-size:10.5px;letter-spacing:.1em}
@@ -221,7 +252,9 @@ td.mono,#tbl td{font-family:var(--sbx-mono)}
 :focus-visible{outline-color:var(--bx-pink)}
 
 @media (max-width:760px){
-  .panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "timing" "feel" "knob" "side" "readout"}
+  .panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "timing" "feel" "readout"}
+  .detents button{min-width:40px;height:44px;font-size:18px}
+  body.creating .panel{grid-template-areas:"head" "feel" "readout"}
   .sbx-mega2{width:82%}
   .about-body{columns:1}
   .trow{grid-template-columns:minmax(0,1fr)}
