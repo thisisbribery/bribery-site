@@ -31,7 +31,12 @@ You may use KALI SMASH to make, perform, record, release and sell music and soun
 
 ### Commercial exception for dsp.coffee
 
-dsp.coffee, the maker of the Kali, may use, copy, change and distribute Bribery's KALI SMASH work for any purpose, including commercial use, for example by shipping KALI SMASH or parts of it as official Kali firmware or on Kali modules they sell. This permission is for dsp.coffee only and can't be passed on, except to users as part of dsp.coffee's own products.
+dsp.coffee, the maker of the Kali, may use, copy, change and distribute Bribery's KALI SMASH work in official Kali firmware and software and on Kali units they sell, including for commercial purposes, free of charge, on two conditions:
+
+1. **Credit.** Every release that includes it credits Bribery by name with a link to https://thisisbribery.com, visibly: in the release or firmware notes, and in the manual or product page wherever the feature is described. For example: "KALI SMASH by Bribery (thisisbribery.com)". The `Required Notice:` line stays with the code.
+2. **Notice.** dsp.coffee tells Bribery in writing (email, or a message through https://thisisbribery.com) before the first release that includes it.
+
+This permission is for dsp.coffee only and can't be passed on, except to users as part of dsp.coffee's own products. It does not cover selling Bribery's work as a separate paid product, feature or add-on, using it without the credit above, presenting it as someone else's work, exclusive rights, or using it in other products. Those need a separate written agreement with Bribery, which may include payment. A release that doesn't meet the two conditions above isn't covered by this permission.
 
 ## Commercial licence
 

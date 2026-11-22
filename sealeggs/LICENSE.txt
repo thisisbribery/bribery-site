@@ -30,7 +30,12 @@ You may use Seal Eggs to make, perform, record, release and sell music and sound
 
 ### Commercial exception for Intellijel
 
-Intellijel, the maker of the Sealegs, may use, copy, change and distribute Bribery's Seal Eggs work for any purpose, including commercial use, for example by including Seal Eggs modes in official Sealegs firmware. This permission is for Intellijel only and can't be passed on, except to users as part of Intellijel's own products.
+Intellijel, the maker of the Sealegs, may use, copy, change and distribute Bribery's Seal Eggs work in official Sealegs firmware and software and on Sealegs units they sell, including for commercial purposes, free of charge, on two conditions:
+
+1. **Credit.** Every release that includes it credits Bribery by name with a link to https://thisisbribery.com, visibly: in the release or firmware notes, and in the manual or product page wherever the feature is described. For example: "Seal Eggs modes by Bribery (thisisbribery.com)". The `Required Notice:` line stays with the code.
+2. **Notice.** Intellijel tells Bribery in writing (email, or a message through https://thisisbribery.com) before the first release that includes it.
+
+This permission is for Intellijel only and can't be passed on, except to users as part of Intellijel's own products. It does not cover selling Bribery's work as a separate paid product, feature or add-on, using it without the credit above, presenting it as someone else's work, exclusive rights, or using it in other products. Those need a separate written agreement with Bribery, which may include payment. A release that doesn't meet the two conditions above isn't covered by this permission.
 
 ## Commercial licence
 
