@@ -755,6 +755,189 @@ html[data-mode="classic"] main{padding-bottom:72px}
 #wavet .bsecs.b2 .bitems{justify-content:space-around}
 @media (max-width:900px){#wavet .wtmain{flex-direction:column} #wavet .wtside .bsecs{flex-direction:row;flex-wrap:wrap}}
 
+
+/* ===================================================================================================================
+   Drum engine panels (TRIBE, CYC, LXR, GIN). Shared: bigger knobs as on BROPHET, a big knob (.big), stepped knobs,
+   an LED ring knob (LXR), and the kit row strip along the bottom (tap a row = select it on the Deluge).
+   =================================================================================================================== */
+.cpanel.dk{--bh:58px;--kw:50px;--ks:42px;padding:12px 12px 10px;position:relative;overflow:hidden}
+.cpanel.dk .bsec{flex:1 0 auto}
+.cpanel.dk .bitems{justify-content:space-around}
+.cpanel.dk .bctl{width:var(--kw)}
+.cpanel.dk .bl,.cpanel.dk .bv{font-size:10.5px;height:15px;line-height:15px}
+.cpanel.dk .bsec > .bt{font-size:11px}
+.cpanel.dk .bk{width:var(--kw);height:var(--bh)}
+.cpanel.dk .bk .ring,.cpanel.dk .bk .leds{left:calc((var(--kw) - var(--ks)) / 2);top:6px;width:var(--ks);height:var(--ks)}
+.cpanel.dk .bk .ring{-webkit-mask:radial-gradient(circle,transparent calc(var(--ks) / 2 - 4px),#000 calc(var(--ks) / 2 - 3.5px));
+  mask:radial-gradient(circle,transparent calc(var(--ks) / 2 - 4px),#000 calc(var(--ks) / 2 - 3.5px))}
+.cpanel.dk .bk .dial{left:calc((var(--kw) - var(--ks)) / 2 + 6px);top:12px;width:calc(var(--ks) - 12px);height:calc(var(--ks) - 12px)}
+.cpanel.dk .bk .dial i{top:2px;width:3px;height:10px;margin-left:-1.5px}
+.cpanel.dk .bctl.big{--kw:78px;--ks:68px;--bh:82px}
+.cpanel.dk .bctl.big .bl,.cpanel.dk .bctl.big .bv{font-size:11.5px}
+.cpanel.dk .bctl.big .bk .dial i{height:16px;width:4px;margin-left:-2px}
+.cpanel.dk .bk .leds{position:absolute;display:none;border-radius:50%}
+.cpanel.dk .bbs{flex-direction:row;flex-wrap:wrap;gap:4px;height:auto;min-height:var(--bh);align-content:center;justify-content:center;max-width:124px}
+.cpanel.dk .bctl.wide{width:auto;min-width:var(--kw)}
+.cpanel.dk .bb{width:36px;height:30px;font-size:9.5px;padding-top:3px;gap:2px}
+.cpanel.dk .bb svg{width:22px;height:9px}
+.cpanel.dk .bhint{position:relative}
+/* The kit's rows: a strip of keys, the selected one lit */
+.cpanel.dk .vstrip{display:flex;gap:6px;margin-top:10px;position:relative}
+.cpanel.dk .vk{flex:1 1 0;min-width:0;height:46px;padding:5px 2px 0;border-radius:5px;display:flex;flex-direction:column;align-items:center;gap:5px;
+  font:800 10.5px var(--mono);letter-spacing:.08em;background:var(--key,#2a2a2e);color:var(--keyink,#eee);box-shadow:0 2px 0 rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+.cpanel.dk .vk span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cpanel.dk .vk i{display:block;width:9px;height:9px;border-radius:50%;background:var(--ledoff,#3b1210);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+.cpanel.dk .vk.on i{background:var(--ledon,#ff3b2f);box-shadow:0 0 8px var(--ledon,#ff3b2f)}
+.cpanel.dk .vk:active{transform:translateY(1px)}
+
+/* ---- TRIBE: an 808 on the left, a 909 on the right, MORPH on the seam ---- */
+#tribe{background:linear-gradient(90deg,#1b1a18 0,#23221f 41%,#55534f 47%,#9c9da0 53%,#cfd0d2 59%,#dcdddf 100%);
+  border-color:#3d3c39;color:#e9dcc0;--tick:#5d5a54}
+#tribe .thead{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;margin:0 2px 10px}
+#tribe .tl{font:700 10px var(--mono);letter-spacing:.2em;color:#d9c8a0;text-transform:uppercase;line-height:1.5}
+#tribe .tl b{display:block;font:800 11px var(--mono);letter-spacing:.24em;color:#f07a2c}
+#tribe .tword{font:900 italic 44px/0.9 var(--sans);letter-spacing:.14em;padding:0 6px 0 14px;
+  background:linear-gradient(90deg,#f3e8cc 0 47%,#ff1fd6 47% 53%,#1d1e21 53%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#tribe .tr{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+#tribe .tvoice{font:800 13px var(--mono);letter-spacing:.2em;background:#1d1e21;color:#ff8a3a;padding:4px 10px;border-radius:4px}
+#tribe .trow{font:700 10px var(--mono);letter-spacing:.16em;color:#3a3b3f}
+#tribe .tgrid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+#tribe .tside{display:flex;flex-direction:column;gap:6px}
+#tribe .tside .bsecs + .bsecs{margin-top:0}
+#tribe .tmid{display:flex;flex-direction:column;justify-content:center}
+/* 808 half: dark panel, cream knobs, cream and orange lettering */
+#tribe .s808{--sec:rgba(10,10,9,.55);--secb:#3a3732;--tbar:#121110;--ink2:#f3e8cc;--lab:#e6d7b6;--val:#a39579;--acc1:#f07a2c;--acc2:#e2402c;
+  --hot:#ffb347;--glow:rgba(255,160,60,.55);--tick:#6a645a;--pointer:#3a2a1e;
+  --knob:radial-gradient(circle at 50% 38%,#fbf6e6 0 32%,#e6dcc0 34% 60%,#c3b593 63% 78%,#8f8266 80%)}
+/* 909 half: silver panel, black knobs, graphite lettering, orange rules */
+#tribe .s909{--sec:rgba(236,237,239,.6);--secb:#a9abaf;--tbar:#c5c7ca;--ink2:#1f2023;--lab:#2a2b2f;--val:#5e6065;--acc1:#ff7a1a;--acc2:#ff7a1a;
+  --hot:#e8590c;--glow:rgba(255,122,26,.55);--tick:#86888c;--pointer:#f4f4f2;
+  --knob:radial-gradient(circle at 50% 38%,#4a4b4f 0 26%,#222326 29% 70%,#0d0d0f 73%)}
+#tribe .s909 .bb{--btn:linear-gradient(#f4f4f3,#d2d3d5);--btnink:#222}
+#tribe .tmid .bsec{background:none;border:0;padding:0 2px}
+#tribe .tmid .bsec > .bt{background:none;border:0;color:#f6f2e8;font-size:12px;letter-spacing:.3em;margin-bottom:2px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+#tribe .tmid{--lab:#fff;--val:#fff6e0;--hot:#ffd08a;--tick:#f6f2e8;--pointer:#fff;--glow:rgba(255,200,120,.7);
+  --knob:radial-gradient(circle at 50% 38%,#fbf6e6 0 18%,#e6dcc0 20% 34%,#2a2b2e 37% 70%,#0d0d0f 73%)}
+#tribe .tmid .bctl.big .bk::before,#tribe .tmid .bctl.big .bk::after{position:absolute;bottom:-1px;font:800 10px var(--mono);letter-spacing:.06em}
+#tribe .tmid .bctl.big .bk::before{content:"808";left:-6px;color:#f3e8cc}
+#tribe .tmid .bctl.big .bk::after{content:"909";right:-6px;color:#1d1e21}
+#tribe .tmid .bctl.big .bv{font-size:13px;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+#tribe .tmid .bctl.big .bl{display:none}
+#tribe .vk{--ledoff:#3a1611}
+#tribe .vk:nth-child(1){--key:#d63a2b;--keyink:#fff3e6}
+#tribe .vk:nth-child(2){--key:#ec6c2a;--keyink:#fff3e6}
+#tribe .vk:nth-child(3){--key:#f2a52e;--keyink:#2a1a0a}
+#tribe .vk:nth-child(4){--key:#efe1ba;--keyink:#2a1a0a}
+#tribe .vk:nth-child(5){--key:#ecedef;--keyink:#1f2023}
+#tribe .vk:nth-child(6){--key:#d4d5d8;--keyink:#1f2023}
+#tribe .vk:nth-child(7){--key:#b9bbbf;--keyink:#1f2023}
+#tribe .vk:nth-child(8){--key:#9c9ea3;--keyink:#111}
+#tribe .vk{--ledon:#ff3b2f}
+#tribe .vk:nth-child(n+5){--ledon:#ff7a1a}
+#tribe .bhint{display:table;margin:8px auto 0;padding:2px 10px;border-radius:9px;background:rgba(20,20,22,.72);color:#e6d7b6}
+
+/* ---- CYC: bone and grey, as the drum machine it's inspired by ---- */
+#cyc{background:linear-gradient(#ebe7dd,#e1dccf);border-color:#c4bdac;color:#2a2926;box-shadow:inset 0 1px 0 #f7f4ee,0 1px 0 #0006;
+  --sec:#e6e1d5;--secb:#cbc4b3;--tbar:transparent;--ink2:#2a2926;--lab:#3c3a35;--val:#7a766c;--acc1:#2a2926;--acc2:#ff6a2a;
+  --hot:#e5531a;--glow:rgba(255,106,42,.55);--tick:#9e988b;--pointer:#2a2926;
+  --knob:radial-gradient(circle at 50% 36%,#e9e6df 0 36%,#cfcbc2 40% 64%,#a9a59c 67% 80%,#7f7b72 82%);
+  --btn:linear-gradient(#f4f1ea,#d9d4c8);--btnink:#2a2926}
+#cyc .bsec{box-shadow:inset 0 1px 0 #f5f2eb}
+#cyc .bsec > .bt{border-bottom:1px solid var(--secb);background:none;letter-spacing:.24em}
+#cyc .bsec.red > .bt{color:#d9531c;border-bottom-color:#ebb79a}
+#cyc .bb.on i{background:#ff6a2a;border-color:#ff9a66;box-shadow:0 0 7px #ff6a2a}
+#cyc .bb i{background:#d8cfc0;border-color:#b9ae9c}
+#cyc .chead{display:flex;align-items:flex-end;gap:16px;margin:0 2px 10px}
+#cyc .cword{font:300 40px/0.85 var(--sans);letter-spacing:.32em;color:#2a2926}
+#cyc .cword b{font-weight:800}
+#cyc .csub{font:700 10px var(--mono);letter-spacing:.2em;color:#7a766c;text-transform:uppercase;line-height:1.5}
+#cyc .csub b{display:block;color:#2a2926;font-size:12px;letter-spacing:.24em}
+#cyc .cmach{margin-left:auto;display:flex;gap:9px}
+#cyc .cmach span{display:flex;flex-direction:column;align-items:center;gap:4px;font:700 9.5px var(--mono);letter-spacing:.08em;color:#8a857a}
+#cyc .cmach span i{width:7px;height:7px;border-radius:50%;background:#d3cabb;box-shadow:inset 0 0 0 1px #b5ab99}
+#cyc .cmach span.on{color:#2a2926}
+#cyc .cmach span.on i{background:#ff6a2a;box-shadow:0 0 6px #ff6a2a}
+#cyc .vk{--key:linear-gradient(#d9d5cc,#c6c1b6);--keyink:#2a2926;--ledoff:#bdb3a2;--ledon:#ff6a2a;border-radius:7px;box-shadow:0 2px 0 #a49d8f,inset 0 1px 0 #efebe3}
+#cyc .bhint{color:#7a766c}
+
+/* ---- LXR: black, pink LED rings ---- */
+#lxr{background:radial-gradient(120% 140% at 50% 0,#121214,#070708 70%);border-color:#1f1f23;color:#e8e8ec;
+  --sec:#0d0d0f;--secb:#1f1f23;--tbar:#0d0d0f;--ink2:#f5f5f7;--lab:#c9c9cf;--val:#ff5ccf;--acc1:#ff1fa8;--acc2:#ff1fa8;
+  --hot:#ff8ad8;--glow:rgba(255,40,170,.65);--pointer:#ff2fb4;--led:#ff2fb4;
+  --knob:radial-gradient(circle at 50% 36%,#3a3a3e 0 22%,#1c1c1f 26% 70%,#0b0b0c 73%)}
+#lxr .bsec > .bt{border-bottom:1px solid #ff1fa855;color:#f5f5f7;letter-spacing:.26em}
+#lxr .bk .ring{display:none}
+#lxr .bk .leds{display:block;
+  background:conic-gradient(from -150deg,var(--led) 0 calc(var(--f,0) * 300deg),#3a0f2c calc(var(--f,0) * 300deg) 300deg,transparent 300deg);
+  -webkit-mask:repeating-conic-gradient(from -151deg,#000 0 6deg,transparent 6deg 15deg),radial-gradient(circle,transparent calc(var(--ks) / 2 - 5px),#000 calc(var(--ks) / 2 - 4.5px));
+  -webkit-mask-composite:source-in;
+  mask:repeating-conic-gradient(from -151deg,#000 0 6deg,transparent 6deg 15deg) intersect,radial-gradient(circle,transparent calc(var(--ks) / 2 - 5px),#000 calc(var(--ks) / 2 - 4.5px));
+  filter:drop-shadow(0 0 3px rgba(255,47,180,.75))}
+#lxr .bb{--btn:linear-gradient(#1f1f22,#121214);--btnink:#d9d9de;border-color:#000}
+#lxr .bb i{background:#2a0b20;border-color:#3d1030}
+#lxr .bb.on i{background:#ff2fb4;border-color:#ff7fd2;box-shadow:0 0 8px #ff2fb4}
+#lxr .lhead{display:flex;align-items:center;gap:16px;margin:0 2px 10px}
+#lxr .lword{font:900 42px/0.9 var(--sans);letter-spacing:.08em;color:#ff2fb4;text-shadow:0 0 10px rgba(255,47,180,.8),0 0 26px rgba(255,47,180,.35)}
+#lxr .lsub{font:700 10px var(--mono);letter-spacing:.22em;color:#8d8d94;text-transform:uppercase;line-height:1.5}
+#lxr .lsub b{display:block;color:#f5f5f7;font-size:12px}
+#lxr .leng{margin-left:auto;display:flex;gap:6px}
+#lxr .leng span{font:800 10px var(--mono);letter-spacing:.12em;padding:6px 10px;border-radius:5px;background:#141416;color:#9a9aa2;display:flex;align-items:center;gap:7px;box-shadow:inset 0 0 0 1px #26262a}
+#lxr .leng span i{width:7px;height:7px;border-radius:50%;background:#3a0f2c}
+#lxr .leng span.on{color:#fff}
+#lxr .leng span.on i{background:#ff2fb4;box-shadow:0 0 7px #ff2fb4}
+#lxr .vk{--key:linear-gradient(#1c1c1f,#101012);--keyink:#d9d9de;--ledoff:#3a0f2c;--ledon:#ff2fb4;box-shadow:0 2px 0 #000,inset 0 0 0 1px #26262a}
+#lxr .bhint{color:#6d6d74}
+
+/* ---- GIN: machined gunmetal, aluminium knobs with a thin ice-blue value arc, a black glass scope ---- */
+#gin{border:1px solid #3d4249;color:#e8ecf0;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.016) 0 1px,transparent 1px 2px,rgba(0,0,0,.03) 2px 3px),
+    linear-gradient(180deg,#363a40 0,#272a2f 48%,#1e2024 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),inset 0 -1px 0 rgba(0,0,0,.5),0 10px 24px rgba(0,0,0,.45);
+  --sec:rgba(8,10,12,.32);--secb:rgba(255,255,255,.06);--tbar:transparent;--ink2:#e8ecf0;--lab:#a7b0ba;--val:#8fdcff;--acc1:#8fdcff;--acc2:#8fdcff;
+  --hot:#d4f2ff;--glow:rgba(143,220,255,.35);--pointer:#16181b;--arc:#8fdcff;
+  --knob:radial-gradient(circle,transparent 0 54%,rgba(0,0,0,.22) 55% 58%,transparent 59%),
+    conic-gradient(from 20deg,#f2f4f6,#99a0a8 12%,#e4e7ea 25%,#8a9199 38%,#eef0f2 50%,#99a0a8 62%,#dfe2e6 75%,#8a9199 88%,#f2f4f6);
+  --btn:linear-gradient(#30343a,#202327);--btnink:#c9d1d9}
+#gin .bsec{border:1px solid var(--secb);border-radius:6px;box-shadow:inset 0 1px 2px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.04)}
+#gin .bsec > .bt{background:none;border:0;text-align:left;padding:6px 10px 2px;font:600 10px var(--mono);letter-spacing:.3em;color:#8d97a2;display:flex;align-items:center;gap:8px}
+#gin .bsec > .bt::before{content:"";width:10px;height:1px;background:var(--arc);opacity:.8}
+#gin .bk .ring{display:none}
+#gin .bk .leds{display:block;
+  background:conic-gradient(from -150deg,var(--arc) 0 calc(var(--f,0) * 300deg),rgba(255,255,255,.08) calc(var(--f,0) * 300deg) 300deg,transparent 300deg);
+  -webkit-mask:radial-gradient(circle,transparent calc(var(--ks) / 2 - 2.5px),#000 calc(var(--ks) / 2 - 2px));
+  mask:radial-gradient(circle,transparent calc(var(--ks) / 2 - 2.5px),#000 calc(var(--ks) / 2 - 2px));
+  filter:drop-shadow(0 0 2px rgba(143,220,255,.45))}
+#gin .bk .dial{left:calc((var(--kw) - var(--ks)) / 2 + 5px);top:11px;width:calc(var(--ks) - 10px);height:calc(var(--ks) - 10px);
+  box-shadow:0 0 0 1px #0d0e10,0 4px 7px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.7)}
+#gin .bk .dial i{width:3px;margin-left:-1.5px;top:2px;height:12px;border-radius:1.5px;background:#0c0d0f;box-shadow:0 1px 0 rgba(255,255,255,.5)}
+#gin .bctl.drag .bk .dial{box-shadow:0 0 0 1px #0d0e10,0 4px 7px rgba(0,0,0,.6),0 0 12px var(--glow)}
+#gin .bb{border-radius:4px;border:1px solid #0d0e10;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 1px 0 #000;padding-top:5px;gap:4px;font-weight:600;letter-spacing:.06em}
+#gin .bb i{width:14px;height:2px;border-radius:1px;background:#2b333b;border:0}
+#gin .bb.on i{background:#8fdcff;box-shadow:0 0 6px rgba(143,220,255,.8)}
+#gin .bb.on{color:#eef6fb}
+#gin .ghead{display:flex;align-items:center;gap:18px;margin:2px 4px 12px}
+#gin .gword{font:200 50px/0.9 var(--sans);letter-spacing:.42em;margin-right:-.42em;
+  background:linear-gradient(180deg,#f5f7f9 0,#c7cdd4 55%,#8e97a1 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#gin .gsub{font:600 10px var(--mono);letter-spacing:.24em;color:#7f8a95;text-transform:uppercase;line-height:1.6;border-left:1px solid #474d55;padding-left:14px}
+#gin .gsub b{display:block;color:#e8ecf0;font-size:12px;font-weight:700}
+#gin .glcd{margin-left:auto;width:270px;height:66px;border-radius:6px;position:relative;overflow:hidden;
+  background:linear-gradient(rgba(143,220,255,.05) 1px,transparent 1px) 0 0/100% 11px,linear-gradient(90deg,rgba(143,220,255,.05) 1px,transparent 1px) 0 0/15px 100%,
+    linear-gradient(#07090b,#0c1014);
+  box-shadow:0 0 0 1px #0b0c0e,0 0 0 2px #454b53,inset 0 2px 8px rgba(0,0,0,.8)}
+#gin .glcd::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.07),transparent 40%);pointer-events:none}
+#gin .glcd svg{position:absolute;inset:0;width:100%;height:100%}
+#gin .glcd .t,#gin .glcd .t2,#gin .glcd .t3{position:absolute;font:600 8.5px var(--mono);letter-spacing:.18em;color:#5f7c8c}
+#gin .glcd .t{left:8px;top:5px}
+#gin .glcd .t2{left:calc(66% + 8px);top:5px}
+#gin .glcd .t3{left:8px;bottom:4px;color:#8fdcff;opacity:.85}
+#gin .gtone{filter:drop-shadow(0 0 2px rgba(143,220,255,.7))}
+#gin .vk{--key:linear-gradient(#2c3035,#1e2125);--keyink:#aab3bd;--ledoff:#2b333b;--ledon:#8fdcff;border-radius:5px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 1px 0 #000,0 0 0 1px #121417}
+#gin .vk i{width:18px;height:2px;border-radius:1px}
+#gin .vk.on{--keyink:#f2f6f9}
+#gin .bhint{color:#7f8a95}
+/* Tablet widths: a little smaller so each half of TRIBE (and every row) fits on one line */
+@media (max-width:1180px){.cpanel.dk{--kw:44px;--ks:38px}.cpanel.dk .bctl.big{--kw:70px;--ks:60px;--bh:74px}}
 </style>
 <style>
 /* Two-way knobs: drag the knob grid and the gold knobs to turn them on the Deluge */
@@ -861,6 +1044,10 @@ html[data-mode="classic"] main{padding-bottom:72px}
       <div id="bruno" class="cpanel"></div>
       <div id="brophet" class="cpanel p8"></div>
       <div id="wavet" class="cpanel"></div>
+      <div id="tribe" class="cpanel dk"></div>
+      <div id="cyc" class="cpanel dk"></div>
+      <div id="lxr" class="cpanel dk"></div>
+      <div id="gin" class="cpanel dk"></div>
       <div id="gold" class="frame" style="display:none"><div class="label">Gold knobs</div><div class="goldgrid"></div></div>
       <div id="special" class="frame" style="display:none"><div class="label"></div><div class="sbody"></div></div>
       <div id="knobs"></div>
@@ -904,7 +1091,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v25 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v26 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -916,7 +1103,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 // 9 <hi> <lo> launch or stop a session clip, 10 <section> launch a section, 13 <id> <hi> <lo> move a BRUNO106 panel
 // control, 14 <id> <hi> <lo> a BROPHET one.
 // In: 0x42 STATE, 0x43 KIT_ROWS, 0x44 TEXT, 0x45 PICKER, 0x46 BROWSER, 0x47 BROWSER_SEL, 0x48 WAVEFORM, 0x49 PLAYHEAD,
-// 0x4A PARAMS, 0x4B TRANSPORT, 0x4C OUTPUTS, 0x4D CLIPS, 0x4E ARRANGER, 0x4F ARRANGER_POS, 0x56 PANEL (BRUNO106 / BROPHET / WAVE), 0x57 WTABLE, 0x58 WTPOS.
+// 0x4A PARAMS, 0x4B TRANSPORT, 0x4C OUTPUTS, 0x4D CLIPS, 0x4E ARRANGER, 0x4F ARRANGER_POS, 0x56 PANEL (BRUNO106 / BROPHET / WAVE / TRIBE / CYC / LXR / GIN), 0x57 WTABLE, 0x58 WTPOS.
 // Display mirror: 00 <2 keep alive | 3 force | 4 swap 7SEG/OLED> out, 0x41 7-seg digits / 0x40 OLED frame in.
 var HDR = [0xF0, 0x00, 0x21, 0x7B, 0x01, 0x02];
 
@@ -2208,6 +2395,305 @@ wavet.wireViews = function () {
 };
 window.addEventListener("resize", wtDraw);
 
+// ---- Drum engine panels: TRIBE (an 808 left, a 909 right, MORPH on the seam), CYC (bone and grey), LXR (black, pink
+// LED rings) and GIN (machined gunmetal, a scope of its tone and noise). PANEL 4-7: the selected kit row's engine (or
+// a synth in that SYNTH MODE), then its voice and the kit's rows of that engine. A move goes out as
+// 03 14 <panel> <id> <hi> <lo>; a row key as 03 15 <row>, which selects that row so the panel follows it.
+WAVE_SVG.sine = '<svg viewBox="0 0 26 10"><path d="M1 5 Q4 -2.5 7 5 T13 5 T19 5 T25 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+WAVE_SVG.square = WAVE_SVG.pulse;
+WAVE_SVG.noise = '<svg viewBox="0 0 26 10"><path d="M1 5 L3 2 L5 8 L7 3 L9 7 L11 1 L13 6 L15 4 L17 9 L19 2 L21 6 L23 3 L25 5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>';
+var basePanelReadout = panelReadout;
+panelReadout = function (kind, p, P) {
+  var f = p / PANEL_MAX, k;
+  switch (kind) {
+  case "pan": k = Math.round((f - 0.5) * 50); return k === 0 ? "C" : (k < 0 ? "L" + -k : "R" + k); // As the Deluge, 25 each way
+  case "tune": k = Math.round(f * 96) - 48; return (k > 0 ? "+" : "") + k + "st"; // Osc 1 transpose, 48 each way
+  }
+  return basePanelReadout(kind, p, P);
+};
+
+function DrumPanel(o) {
+  Panel.call(this, o);
+  this.kind = o.kind; this.layout = o.layout; this.deco = o.deco || ""; this.secEls = {};
+  this.rows = []; this.sel = -1; this.rowsKey = ""; this.variant = -1;
+}
+DrumPanel.prototype = Object.create(Panel.prototype);
+DrumPanel.prototype.constructor = DrumPanel;
+DrumPanel.prototype.send = function (id, p) {
+  var P = this;
+  P.dirty[id] = p;
+  if (P.timer) return;
+  P.timer = setTimeout(function () {
+    P.timer = 0;
+    var d = P.dirty; P.dirty = {};
+    Object.keys(d).forEach(function (k) { var q = d[k]; tx([0x03, 0x14, P.kind, +k, (q >> 7) & 0x7F, q & 0x7F]); });
+  }, 25);
+};
+// Knobs: c.big, c.steps + c.names (a stepped knob reading out names), and --f on the knob for an LED ring or arc
+DrumPanel.prototype.knob = function (c) {
+  var col = this.column(c);
+  if (c.big) col.classList.add("big");
+  var k = document.createElement("div"); k.className = "bk";
+  k.innerHTML = '<div class="leds"></div><div class="ring"></div><div class="dial"><i></i></div>';
+  k.setAttribute("role", "slider"); k.setAttribute("aria-label", c.n); k.setAttribute("aria-valuemin", 0);
+  k.setAttribute("aria-valuemax", c.steps || PANEL_MAX);
+  col.querySelector(".bw").appendChild(k);
+  this.dragger(k, col, c, c.steps || 0, function () { return c.steps ? Math.max(70, c.steps * 16) : 180; });
+  this.els[c.id] = { kind: c.k, type: "knob", steps: c.steps || 0, names: c.names, col: col, el: k, dial: k.querySelector(".dial"), out: col.querySelector(".bv") };
+  return col;
+};
+DrumPanel.prototype.draw = function (id) {
+  var e = this.els[id], v = this.v[id]; if (!e || v < 0) return;
+  if (e.type !== "knob") Panel.prototype.draw.call(this, id);
+  else {
+    var f = e.steps ? v / e.steps : v / PANEL_MAX;
+    e.el.style.setProperty("--a", (f * 300 - 150).toFixed(1));
+    e.el.style.setProperty("--f", f.toFixed(4));
+    e.out.textContent = e.names ? (e.names[v] || "") : panelReadout(e.kind, v, this);
+    e.el.setAttribute("aria-valuenow", v);
+  }
+  if (this.afterDraw) this.afterDraw(id);
+};
+// Its own layout (data-row="n" holds the sections of row n), and the kit's rows as keys along the bottom
+DrumPanel.prototype.build = function () {
+  var P = this;
+  var layout = P.layout || '<div class="bsecs" data-row="1"></div><div class="bsecs b2" data-row="2"></div><div class="bsecs b3" data-row="3"></div><div class="bsecs b4" data-row="4"></div>';
+  P.root.innerHTML = P.deco + P.head + layout + '<div class="vstrip"></div><div class="bhint"></div>';
+  P.root.querySelector(".bhint").textContent = P.hint;
+  P.els = {}; P.secEls = {}; P.rowsKey = "";
+  P.sections.forEach(function (sec) {
+    var el = document.createElement("div"); el.className = "bsec" + (sec.red ? " red" : "") + (sec.cls ? " " + sec.cls : "");
+    el.innerHTML = '<div class="bt"></div><div class="bitems"></div>';
+    el.querySelector(".bt").textContent = sec.t.toUpperCase();
+    if (sec.key) P.secEls[sec.key] = el.querySelector(".bt");
+    var items = el.querySelector(".bitems");
+    sec.c.forEach(function (c) {
+      items.appendChild(c.k === "sw" ? P.slide(c) : c.b ? P.buttons(c) : c.knob ? P.knob(c) : P.slider(c));
+    });
+    P.root.querySelector('[data-row="' + (sec.row || 1) + '"]').appendChild(el);
+  });
+  P.built = true;
+};
+DrumPanel.prototype.setRows = function (rows, sel) {
+  var P = this, box = P.root.querySelector(".vstrip");
+  var key = rows.map(function (r) { return r.row + ":" + r.name; }).join("|");
+  if (key !== P.rowsKey) {
+    P.rowsKey = key;
+    box.innerHTML = "";
+    rows.forEach(function (r, i) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "vk";
+      b.innerHTML = "<i></i><span></span>"; b.querySelector("span").textContent = r.name || "ROW " + (r.row + 1);
+      b.onclick = function () { P.pickRow(i); };
+      box.appendChild(b);
+    });
+  }
+  box.style.display = rows.length ? "" : "none";
+  P.rows = rows; P.sel = sel;
+  Array.prototype.forEach.call(box.querySelectorAll(".vk"), function (b, j) { b.classList.toggle("on", j === sel); });
+};
+// Tap a row: the Deluge selects it, and the panel comes back as that voice
+DrumPanel.prototype.pickRow = function (i) {
+  var r = this.rows[i]; if (!r) return;
+  tx([0x03, 0x15, r.row]);
+  Array.prototype.forEach.call(this.root.querySelectorAll(".vk"), function (b, j) { b.classList.toggle("on", j === i); });
+};
+// Each control's name, where it depends on the voice
+DrumPanel.prototype.relabel = function (names, titles) {
+  var P = this;
+  Object.keys(names || {}).forEach(function (id) { var e = P.els[id]; if (e) e.col.querySelector(".bl").textContent = names[id]; });
+  Object.keys(titles || {}).forEach(function (k) { if (P.secEls[k]) P.secEls[k].textContent = titles[k].toUpperCase(); });
+};
+// The row being edited: its name (or the voice's), and its place in the kit
+DrumPanel.prototype.voiceName = function (fallback) {
+  var r = this.rows[this.sel];
+  return r && r.name ? r.name : fallback;
+};
+var DKN = true; // knob
+
+/* TRIBE */
+var TRIBE_VOICES = ["kick", "snare", "clap", "tom", "rim", "hat", "cymbal", "cowbell"]; // The engine's order
+function tribeNames(e) { // As the firmware's tribeKnobName
+  return {
+    2: e === "clap" ? "Spacing" : "Sweep", 3: e === "clap" ? "Bursts" : "Sweep t",
+    5: { kick: "Sub", snare: "Snappy", clap: "Tail", cowbell: "Clang" }[e] || "Noise",
+    6: e === "kick" ? "Sub tone" : e === "clap" ? "Tail tone" : (e === "cymbal" || e === "cowbell") ? "Reso" : "Tone",
+    7: e === "kick" ? "Sub oct" : e === "clap" ? "Tail dcy" : e === "cymbal" ? "Low dcy" : e === "cowbell" ? "Clang dcy" : "Decay",
+    8: { kick: "Hold", tom: "Overtone", clap: "Humanise" }[e] || "Spread",
+    9: { kick: "Fold", snare: "Reso", clap: "Reso", tom: "Bend", rim: "Clave" }[e] || "Ring mod"
+  };
+}
+function tribeTitles(e) { return { noise: { kick: "Sub", snare: "Snappy", clap: "Tail", cowbell: "Clang" }[e] || "Noise" }; }
+var tribe = new DrumPanel({
+  root: $("tribe"), kind: 4, n: 21,
+  head: '<div class="thead"><div class="tl"><b>808 · 909</b>Morphing rhythm voice</div><div class="tword">TRIBE</div>' +
+    '<div class="tr"><span class="trow"></span><span class="tvoice"></span></div></div>',
+  layout: '<div class="tgrid"><div class="tside"><div class="bsecs" data-row="1"></div><div class="bsecs" data-row="2"></div></div>' +
+    '<div class="tmid" data-row="5"></div>' +
+    '<div class="tside"><div class="bsecs" data-row="3"></div><div class="bsecs" data-row="4"></div></div></div>',
+  hint: "MORPH sweeps the voice from its 808 to its 909. Tap a row below to edit that voice.",
+  sections: [
+    { t: "Pitch", cls: "s808", row: 1, c: [{ id: 2, n: "Sweep", k: "ctl", knob: DKN }, { id: 3, n: "Sweep t", k: "ctl", knob: DKN }] },
+    { t: "Attack", cls: "s808", red: true, row: 1, c: [{ id: 4, n: "Attack", k: "ctl", knob: DKN },
+      { n: "", b: [{ id: 12, l: "PUNCH" }], mode: "toggle" }] },
+    { t: "Noise", key: "noise", cls: "s808", row: 2, c: [{ id: 5, n: "Noise", k: "ctl", knob: DKN }, { id: 6, n: "Tone", k: "ctl", knob: DKN },
+      { id: 7, n: "Decay", k: "ctl", knob: DKN }] },
+    { t: "Voice", cls: "s808", red: true, row: 2, c: [{ id: 8, n: "Spread", k: "ctl", knob: DKN }, { id: 9, n: "Char", k: "ctl", knob: DKN }] },
+    { t: "Morph", row: 5, c: [{ id: 0, n: "808 > 909", k: "ctl", knob: DKN, big: true }] },
+    { t: "Tone", cls: "s909", row: 3, c: [{ id: 1, n: "Tone", k: "ctl", knob: DKN }] },
+    { t: "Amp", cls: "s909", row: 3, c: [{ id: 11, n: "Decay", k: "ctl", knob: DKN }, { id: 10, n: "Drive", k: "ctl", knob: DKN },
+      { id: 13, n: "Crush", k: "ctl", knob: DKN }] },
+    { t: "Out", cls: "s909", row: 4, c: [{ id: 14, n: "Tune", k: "tune", knob: DKN }, { id: 15, n: "Level", k: "std", knob: DKN },
+      { id: 16, n: "Pan", k: "pan", knob: DKN }] },
+    { t: "Filter", cls: "s909", row: 4, c: [{ id: 17, n: "LPF", k: "std", knob: DKN }, { id: 18, n: "HPF", k: "std", knob: DKN }] },
+    { t: "Send", cls: "s909", row: 4, c: [{ id: 19, n: "Delay", k: "std", knob: DKN }, { id: 20, n: "Reverb", k: "std", knob: DKN }] }
+  ]
+});
+tribe.voice = function (m) {
+  var e = TRIBE_VOICES[m.variant] || "kick";
+  tribe.relabel(tribeNames(e), tribeTitles(e));
+  tribe.root.querySelector(".tvoice").textContent = tribe.voiceName(e.toUpperCase());
+  tribe.root.querySelector(".trow").textContent = tribe.sel >= 0 && tribe.rows[tribe.sel] ? "ROW " + (tribe.rows[tribe.sel].row + 1) : "";
+};
+
+/* CYC */
+var CYC_MACHINES = ["KIK", "SNR", "METAL", "PERC", "TONE", "CHORD", "VTG", "CLAP"]; // The engine's order
+function cycNames(e) {
+  return e === "VTG" ? { 0: "Inharm", 1: "Freq cx", 2: "P sweep", 3: "Mod env" }
+    : e === "CLAP" ? { 0: "Body chr", 1: "Balance", 2: "Spc crn", 3: "Body env" }
+    : { 0: "Color", 1: "Shape", 2: "Sweep", 3: "Contour" };
+}
+var cyc = new DrumPanel({
+  root: $("cyc"), kind: 5, n: 14,
+  head: '<div class="chead"><div class="cword"><b>CYC</b></div><div class="csub"><b></b>FM percussion machine</div>' +
+    '<div class="cmach">' + CYC_MACHINES.map(function (m) { return '<span data-m="' + m + '"><i></i>' + m + "</span>"; }).join("") + "</div></div>",
+  hint: "The four machine knobs change job with the machine. Tap a track below to edit it.",
+  sections: [
+    { t: "Machine", row: 1, c: [{ id: 0, n: "Color", k: "ctl", knob: DKN, big: true }, { id: 1, n: "Shape", k: "ctl", knob: DKN, big: true },
+      { id: 2, n: "Sweep", k: "ctl", knob: DKN, big: true }, { id: 3, n: "Contour", k: "ctl", knob: DKN, big: true }] },
+    { t: "Amp", red: true, row: 1, c: [{ id: 4, n: "Decay", k: "ctl", knob: DKN }, { id: 5, n: "Drive", k: "ctl", knob: DKN },
+      { n: "", b: [{ id: 6, l: "PUNCH" }], mode: "toggle" }] },
+    { t: "Track", row: 2, c: [{ id: 7, n: "Pitch", k: "tune", knob: DKN }, { id: 8, n: "Level", k: "std", knob: DKN }, { id: 9, n: "Pan", k: "pan", knob: DKN }] },
+    { t: "Filter", row: 2, c: [{ id: 10, n: "LPF", k: "std", knob: DKN }, { id: 11, n: "HPF", k: "std", knob: DKN }] },
+    { t: "Send", red: true, row: 2, c: [{ id: 12, n: "Delay", k: "std", knob: DKN }, { id: 13, n: "Reverb", k: "std", knob: DKN }] }
+  ]
+});
+cyc.voice = function (m) {
+  var e = CYC_MACHINES[m.variant] || "KIK";
+  cyc.relabel(cycNames(e));
+  cyc.root.querySelector(".csub b").textContent = cyc.voiceName(e);
+  Array.prototype.forEach.call(cyc.root.querySelectorAll(".cmach span"), function (s) { s.classList.toggle("on", s.getAttribute("data-m") === e); });
+};
+
+/* LXR: a layout per voice, as the firmware's drumLayouts */
+var LXR_VOICES = ["KICK / TOM", "SNARE", "CYM / HAT"];
+var WAVES5 = { b: [{ w: "sine", a: "Sine" }, { w: "tri", a: "Triangle" }, { w: "saw", a: "Saw" }, { w: "square", a: "Square" }, { w: "noise", a: "Noise" }], mode: "radio", vals: [0, 1, 2, 3, 4] };
+function lxrWave(id, n) { var c = { id: id, n: n }; for (var k in WAVES5) c[k] = WAVES5[k]; return c; }
+var TRANSIENTS = ["SNAP", "OFFS", "CL1", "CL2", "CL3", "CL4", "CL5", "CL6", "CL7", "CL8", "CL9", "CL10", "CL11", "CL12"];
+var LXR_END = [
+  { t: "Transient", red: true, row: 2, c: [{ id: 12, n: "Type", k: "ctl", knob: DKN, steps: 13, names: TRANSIENTS },
+    { id: 13, n: "Level", k: "ctl", knob: DKN }, { id: 14, n: "Speed", k: "ctl", knob: DKN }] },
+  { t: "Amp", row: 2, c: [{ id: 0, n: "Decay", k: "ctl", knob: DKN }, { id: 1, n: "Drive", k: "ctl", knob: DKN }] },
+  { t: "Out", red: true, row: 2, c: [{ id: 16, n: "Level", k: "std", knob: DKN }, { id: 17, n: "Pan", k: "pan", knob: DKN },
+    { id: 18, n: "LPF", k: "std", knob: DKN }, { id: 19, n: "HPF", k: "std", knob: DKN }, { id: 20, n: "Delay", k: "std", knob: DKN }, { id: 21, n: "Reverb", k: "std", knob: DKN }] }
+];
+var LXR_LAYOUTS = [
+  [ // Kick / tom
+    { t: "Osc", row: 1, c: [lxrWave(8, "Wave"), { id: 2, n: "Tune", k: "tune", knob: DKN }, { id: 9, n: "Mode", b: [{ l: "FM" }, { l: "MIX" }], mode: "radio", vals: [0, 1] }] },
+    { t: "Pitch env", red: true, row: 1, c: [{ id: 3, n: "Amount", k: "ctl", knob: DKN }, { id: 4, n: "Decay", k: "ctl", knob: DKN }, { id: 7, n: "Curve", k: "ctl", knob: DKN }] },
+    { t: "Mod", row: 1, c: [{ id: 5, n: "FM amt", k: "ctl", knob: DKN }, { id: 6, n: "Pitch", k: "ctl", knob: DKN }, { id: 11, n: "Fine", k: "ctl64", knob: DKN }, lxrWave(10, "Wave")] }
+  ].concat(LXR_END),
+  [ // Snare
+    { t: "Osc", row: 1, c: [lxrWave(8, "Wave"), { id: 2, n: "Tune", k: "tune", knob: DKN }] },
+    { t: "Pitch env", red: true, row: 1, c: [{ id: 3, n: "Amount", k: "ctl", knob: DKN }, { id: 4, n: "Decay", k: "ctl", knob: DKN }, { id: 7, n: "Curve", k: "ctl", knob: DKN }] },
+    { t: "Noise", row: 1, c: [{ id: 5, n: "Mix", k: "ctl", knob: DKN }, { id: 9, n: "Rate", k: "ctl", knob: DKN },
+      { id: 10, n: "Filter", b: [{ l: "LP" }, { l: "HP" }, { l: "BP" }, { l: "OFF" }], mode: "radio", vals: [0, 1, 2, 3] },
+      { id: 6, n: "Cutoff", k: "ctl", knob: DKN }, { id: 11, n: "Reso", k: "ctl", knob: DKN }] }
+  ].concat(LXR_END),
+  [ // Cymbal / hat
+    { t: "Osc", row: 1, c: [lxrWave(8, "Wave"), { id: 2, n: "Tune", k: "tune", knob: DKN }] },
+    { t: "Mod 1", red: true, row: 1, c: [{ id: 5, n: "FM amt", k: "ctl", knob: DKN }, { id: 10, n: "Pitch", k: "ctl", knob: DKN }, { id: 11, n: "Fine", k: "ctl64", knob: DKN }, lxrWave(9, "Wave")] },
+    { t: "Mod 2", row: 1, c: [{ id: 6, n: "FM amt", k: "ctl", knob: DKN }, { id: 7, n: "Pitch", k: "ctl", knob: DKN }, lxrWave(15, "Wave")] }
+  ].concat(LXR_END)
+];
+var lxr = new DrumPanel({
+  root: $("lxr"), kind: 6, n: 22,
+  head: '<div class="lhead"><div class="lword">LXR</div><div class="lsub"><b></b>Digital drum synthesis</div>' +
+    '<div class="leng">' + LXR_VOICES.map(function (v, i) { return '<span data-e="' + i + '"><i></i>' + v + "</span>"; }).join("") + "</div></div>",
+  hint: "The layout follows the row's voice: kick and toms, snare, or cymbals and hats. Tap a row below to edit it.",
+  sections: LXR_LAYOUTS[0]
+});
+lxr.voice = function (m) {
+  lxr.root.querySelector(".lsub b").textContent = lxr.voiceName(["KICK", "SNARE", "CYM"][m.variant] || "");
+  Array.prototype.forEach.call(lxr.root.querySelectorAll(".leng span"), function (s) { s.classList.toggle("on", +s.getAttribute("data-e") === m.variant); });
+};
+// A new voice is a new layout: rebuilt before its values are shown, every control drawn fresh
+lxr.prepare = function (m) {
+  if (m.variant === lxr.variant) return;
+  lxr.variant = m.variant;
+  lxr.sections = LXR_LAYOUTS[m.variant] || LXR_LAYOUTS[0];
+  if (lxr.built) { lxr.build(); lxr.open = false; for (var i = 0; i < lxr.n; i++) lxr.v[i] = -1; }
+};
+
+/* GIN */
+var gin = new DrumPanel({
+  root: $("gin"), kind: 7, n: 22,
+  head: '<div class="ghead"><div class="gword">GIN</div><div class="gsub"><b></b>Tone + noise percussion</div>' +
+    '<div class="glcd"><span class="t">TONE</span><span class="t2">NOISE</span><span class="t3"></span>' +
+    '<svg viewBox="0 0 200 56" preserveAspectRatio="none"><path d="M132 6 V50" stroke="rgba(143,220,255,.18)" stroke-dasharray="2 3"/>' +
+    '<path class="gtone" fill="none" stroke="#a6e4ff" stroke-width="1.5" vector-effect="non-scaling-stroke"/>' +
+    '<path class="gnoise" fill="none" stroke="#e8ecf0" stroke-width="1" opacity=".6" vector-effect="non-scaling-stroke"/></svg></div></div>',
+  hint: "A tone and a noise burst, mixed. Tap a row below to edit that sound.",
+  sections: [
+    { t: "Tone", row: 1, c: [{ id: 0, n: "Wave", b: [{ w: "sine", a: "Sine" }, { w: "tri", a: "Triangle" }, { w: "saw", a: "Saw" }], mode: "radio", vals: [0, 1, 2] },
+      { id: 1, n: "Attack", k: "ctl", knob: DKN }, { id: 2, n: "Decay", k: "ctl", knob: DKN }] },
+    { t: "Pitch mod", row: 1, c: [{ id: 3, n: "Mode", b: [{ l: "DCY" }, { l: "SIN" }, { l: "NSE" }], mode: "radio", vals: [0, 1, 2] },
+      { id: 4, n: "Rate", k: "ctl", knob: DKN }, { id: 5, n: "Amount", k: "ctl64", knob: DKN }] },
+    { t: "Mix", row: 1, c: [{ id: 6, n: "Tone>Nse", k: "ctl", knob: DKN }] },
+    { t: "Noise", row: 2, c: [{ id: 7, n: "Filter", b: [{ l: "LP" }, { l: "HP" }, { l: "BP" }, { l: "OFF" }], mode: "radio", vals: [0, 1, 2, 3] },
+      { id: 8, n: "Freq", k: "ctl", knob: DKN }, { id: 9, n: "Reso", k: "ctl", knob: DKN },
+      { id: 10, n: "Env", b: [{ l: "EXP" }, { l: "LIN" }, { l: "MOD" }], mode: "radio", vals: [0, 1, 2] },
+      { id: 11, n: "Attack", k: "ctl", knob: DKN }, { id: 12, n: "Decay", k: "ctl", knob: DKN }] },
+    { t: "Out", row: 3, c: [{ id: 13, n: "Drive", k: "ctl", knob: DKN }, { id: 14, n: "Decay", k: "ctl64", knob: DKN },
+      { id: 15, n: "Tune", k: "tune", knob: DKN }, { id: 18, n: "Level", k: "std", knob: DKN }, { id: 19, n: "Pan", k: "pan", knob: DKN }] },
+    { t: "EQ", row: 3, c: [{ id: 16, n: "Freq", k: "ctl", knob: DKN }, { id: 17, n: "Gain", k: "ctl64", knob: DKN }] },
+    { t: "Send", row: 3, c: [{ id: 20, n: "Delay", k: "std", knob: DKN }, { id: 21, n: "Reverb", k: "std", knob: DKN }] }
+  ]
+});
+// The scope: the tone's wave, bent by its pitch mod, then the noise burst's envelope
+function ginLcd() {
+  if (!gin.built) return;
+  var w = Math.max(0, gin.v[0]), mm = Math.max(0, gin.v[3]), amt = (gin.v[5] / PANEL_MAX - 0.5) * 2, dec = 0.15 + Math.max(0, gin.v[2]) / PANEL_MAX * 0.85, d = "", nd = "";
+  for (var x = 0; x <= 120; x += 1) {
+    var t = x / 120, jit = (Math.sin(x * 12.9898) * 43758.5453 % 1 + 1) % 1 - 0.5;
+    var ph = t * 7 * (1 + (mm === 0 ? amt * (1 - t) : mm === 1 ? amt * 0.3 * Math.sin(t * 18) : amt * 0.4 * jit));
+    var fr = ((ph % 1) + 1) % 1, s = w === 0 ? Math.sin(fr * 2 * Math.PI) : w === 1 ? 1 - 4 * Math.abs(fr - 0.5) : 1 - 2 * fr;
+    var y = 30 - s * 18 * Math.exp(-t / dec * 2.2);
+    d += (x ? "L" : "M") + (6 + x).toFixed(1) + " " + y.toFixed(1);
+  }
+  var ndec = 0.1 + Math.max(0, gin.v[12]) / PANEL_MAX * 0.9;
+  for (var x2 = 0; x2 <= 60; x2 += 2) {
+    var e2 = Math.exp(-x2 / 60 / ndec * 2.5), y2 = 30 + ((x2 / 2) % 2 ? 1 : -1) * (4 + (Math.sin(x2 * 78.233) * 43758.5453 % 1 + 1) % 1 * 12) * e2;
+    nd += (x2 ? "L" : "M") + (134 + x2) + " " + y2.toFixed(1);
+  }
+  gin.root.querySelector(".gtone").setAttribute("d", d);
+  gin.root.querySelector(".gnoise").setAttribute("d", nd);
+  gin.root.querySelector(".glcd .t3").textContent = (["SINE", "TRI", "SAW"][w] || "") + " · MOD " + (["DECAY", "SINE", "NOISE"][mm] || "") +
+    " · MIX " + Math.round(Math.max(0, gin.v[6]) / PANEL_MAX * 127);
+}
+gin.afterDraw = function (id) { if (id === 0 || id === 2 || id === 3 || id === 5 || id === 6 || id === 12) ginLcd(); };
+gin.voice = function () { gin.root.querySelector(".gsub b").textContent = gin.voiceName("GIN"); ginLcd(); };
+
+var DRUM_PANELS = { 4: tribe, 5: cyc, 6: lxr, 7: gin };
+function showDrumPanels(m) {
+  [tribe, cyc, lxr, gin].forEach(function (P) {
+    if (m.which !== P.kind) { P.show(null); return; }
+    if (P.prepare) P.prepare(m);
+    P.show(m);
+    P.setRows(m.rows || [], m.sel);
+    P.voice(m);
+  });
+}
+
 // PANEL: which engine panel, if any
 function showPanel(m) {
   bruno.show(m.which === 1 ? m : null);
@@ -2222,7 +2708,8 @@ function showPanel(m) {
     wavet.wireViews();
   }
   if (wavet.open) wtDraw();
-  $("track").classList.toggle("panel-on", bruno.open || brophet.open || wavet.open);
+  showDrumPanels(m);
+  $("track").classList.toggle("panel-on", bruno.open || brophet.open || wavet.open || tribe.open || cyc.open || lxr.open || gin.open);
 }
 
 // ---- Gold knobs: each mod button's pair, the lit one glowing. Tapping a pair presses its mod button.
@@ -2909,11 +3396,20 @@ function parse(d) {
   }
   if (kind === 0x54) return { kind: "diag", text: readName(d, 8).text };
   if (kind === 0x56) {
-    // Which panel: 0 none, 1 BRUNO106, 2 BROPHET, 3 WAVE
-    var bp = { kind: "panel", which: d[8], open: d[8] >= 1 && d[8] <= 3, v: [] };
+    // Which panel: 0 none, 1 BRUNO106, 2 BROPHET, 3 WAVE, 4 TRIBE, 5 CYC, 6 LXR, 7 GIN
+    var bp = { kind: "panel", which: d[8], open: d[8] >= 1 && d[8] <= 7, v: [] };
     if (!bp.open) return bp;
     for (var bq = 0, bn = d[9]; bq < bn && 11 + bq * 2 < d.length; bq++) bp.v.push((d[10 + bq * 2] << 7) | d[11 + bq * 2]);
-    bp.ok = d[10 + bp.v.length * 2] === 0xF7;
+    var bj = 10 + bp.v.length * 2;
+    if (bp.which >= 4) {
+      // The drum panels: the voice, then the kit's rows of that engine (note row index and name) and which is edited
+      bp.variant = d[bj]; bp.rows = [];
+      var brc = d[bj + 1]; bp.sel = d[bj + 2] === 127 ? -1 : d[bj + 2]; bj += 3;
+      for (var br = 0; br < brc && bj < d.length; br++) {
+        var brn = readName(d, bj + 1); bp.rows.push({ row: d[bj], name: brn.text }); bj = brn.next;
+      }
+    }
+    bp.ok = d[bj] === 0xF7;
     return bp;
   }
   if (kind === 0x57) {
