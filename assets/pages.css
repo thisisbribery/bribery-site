@@ -83,6 +83,15 @@
 .bx-list li b{color:var(--bx-ink)}
 .bx-note{border-left:3px solid var(--bx-orange);padding:4px 0 4px 16px;margin:24px 0 0;max-width:68ch;color:#cfc8cd}
 .bx-note b{color:var(--bx-orange)}
+.bx-card-after{margin-top:clamp(28px,4vw,48px)}
+.bx-tree{margin:14px 0 0;padding:18px 20px;border:1px solid var(--bx-line);overflow-x:auto;font:500 clamp(13px,1.2vw,15px)/1.5 var(--bx-mono);color:var(--bx-muted)}
+.bx-tree b{color:var(--bx-pink);font-weight:700}
+.bx-tree i{font-style:normal;opacity:.7}
+.bx-know{list-style:none;margin:14px 0 0;padding:0;max-width:62ch;color:#cfc8cd}
+.bx-know li{padding:12px 0;border-bottom:1px solid var(--bx-line)}
+.bx-know li:first-child{padding-top:0}
+.bx-know b{color:var(--bx-ink)}
+.bx-know a{color:var(--bx-pink)}
 code.bx-code{font:600 .9em var(--bx-mono);color:var(--bx-teal);word-break:break-all}
 
 /* pink call-to-action band */

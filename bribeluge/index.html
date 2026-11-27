@@ -227,14 +227,47 @@
   <section class="bx-section" id="install" style="padding-top:0">
     <div class="bx-sec-head">
       <h2>Install</h2>
-      <p>Three steps from the SD card. To go back, install an official firmware file the same way.</p>
+      <p>One zip holds the firmware and every preset. Four steps with the SD card.</p>
     </div>
     <ol class="bx-steps">
-      <li><div><a href="#download" data-bx-download style="color:var(--bx-pink)">Download the latest <b>.bin</b></a> and copy it to the top level of the Deluge's SD card. Remove any other <b>.bin</b> files from the top level.</div></li>
-      <li><div>Turn the Deluge off.</div></li>
-      <li><div>Hold <b>SHIFT</b> and switch the Deluge on. Let go once it starts loading the new firmware.</div></li>
+      <li><div><a href="#download" data-bx-download style="color:var(--bx-pink)">Download Bribeluge</a> and unzip it. Inside are the firmware <b>.bin</b>, a <b>PRESETS</b> folder and these steps as <b>INSTALL.txt</b>.</div></li>
+      <li><div><b>Firmware.</b> Put the Deluge's SD card in your computer. Copy the <b>.bin</b> to the top level of the card, beside the KITS, SYNTHS and SONGS folders. Remove any other <b>.bin</b> files from the top level.</div></li>
+      <li id="presets"><div><b>Presets.</b> Open <b>KITS</b> on the card and drag <b>CYCLES</b> and <b>LXR</b> into it from the zip's <b>PRESETS/KITS</b>. Then open <b>SYNTHS</b> on the card and drag <b>BRINGS</b>, <b>BROPHET</b>, <b>BRUNO106</b>, <b>DX7</b> and <b>WAVE</b> into it from <b>PRESETS/SYNTHS</b>.</div></li>
+      <li><div>Put the card back in the Deluge with it switched off. Hold <b>SHIFT</b> and switch it on. Let go once it starts loading the new firmware.</div></li>
     </ol>
-    <p class="bx-note"><b>Status: experimental.</b> Made on a 7-segment Deluge; the OLED screens haven't been checked on hardware. Back up your SD card before installing. Optional preset folders (kits, wavetables, DX7, BRINGS, BROPHET, BRUNO106) are listed in the <a href="/bribeluge/manual/#download" style="color:var(--bx-pink)">download notes</a>.</p>
+    <div class="bx-split bx-card-after">
+      <div>
+        <h3>The card when you're done</h3>
+        <pre class="bx-tree" aria-label="Folders on the SD card after installing">SD card
+&#9500;&#9472; deluge-bribes-<span data-bx-bin-version>v1.39.1</span>.bin
+&#9500;&#9472; KITS
+&#9474;  &#9500;&#9472; <b>CYCLES</b>
+&#9474;  &#9500;&#9472; <b>LXR</b>
+&#9474;  &#9492;&#9472; <i>your own kits</i>
+&#9500;&#9472; SYNTHS
+&#9474;  &#9500;&#9472; <b>BRINGS</b>
+&#9474;  &#9500;&#9472; <b>BROPHET</b>
+&#9474;  &#9500;&#9472; <b>BRUNO106</b>
+&#9474;  &#9500;&#9472; <b>DX7</b>
+&#9474;  &#9500;&#9472; <b>WAVE</b>
+&#9474;  &#9492;&#9472; <i>your own synths</i>
+&#9492;&#9472; SAMPLES
+   &#9492;&#9472; WAVETABLES
+      &#9492;&#9472; <i>BVKER - Custom Wavetables</i></pre>
+      </div>
+      <div>
+        <h3>Worth knowing</h3>
+        <ul class="bx-know">
+          <li><b>Go one level in.</b> Don't drag the zip's KITS or SYNTHS folder onto the card itself. On a Mac that replaces the card's whole folder, and your own kits and synths go with it.</li>
+          <li><b>Updating.</b> Delete those seven preset folders from the card first, then copy the new ones: presets get retuned and renamed between versions. If you saved your own presets inside one, move them out first and put them back after.</li>
+          <li><b>WAVE presets</b> play the free <a href="https://bvker.com/free-serum-wavetables/" target="_blank" rel="noopener">BVKER Custom Wavetables</a> pack, which isn't mine to include. Unzip it into <b>SAMPLES/WAVETABLES</b> on the card. Everything else works without it.</li>
+          <li><b>Built in.</b> The GIN and TRIBE kits and the ULTRAKIK kicks are in the firmware: nothing to copy.</li>
+          <li><b>Finding them.</b> SHIFT + SYNTH for the <a href="/bribeluge/manual/#13-synth-browser">synth browser</a>, SHIFT + KIT for <a href="/bribeluge/manual/#kit-presets">kit presets</a>.</li>
+          <li><b>Just the firmware?</b> The download window also has the .bin on its own. To go back, install an official firmware file the same way.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="bx-note"><b>Status: experimental.</b> Made on a 7-segment Deluge; the OLED screens haven't been checked on hardware. Back up your SD card before installing.</p>
   </section>
 
   <section class="bx-section" id="about" style="padding-top:0">
@@ -256,14 +289,14 @@
   </section>
 
   <section class="bx-section bx-band" id="download">
-    <a class="bx-dl-hit" href="#download" data-bx-download aria-label="Download the latest Bribeluge firmware">
+    <a class="bx-dl-hit" href="#download" data-bx-download aria-label="Download the latest Bribeluge firmware and presets">
       <div class="bx-sec-head">
         <h2>Download</h2>
-        <p>Bribeluge <span data-bx-bin-version>v1.39.1</span> for the Synthstrom Deluge. One .bin, free.</p>
+        <p>Bribeluge <span data-bx-bin-version>v1.39.1</span> for the Synthstrom Deluge. Firmware and presets in one zip, free.</p>
       </div>
     </a>
     <div class="bx-band-body">
-      <p>Leave your name and email (and a link to your music if you like, so I can check it out), and the firmware downloads straight away. I'll only ever contact you about updates to Bribeluge and other creative projects or tech builds.</p>
+      <p>Leave your name and email (and a link to your music if you like, so I can check it out), and the zip downloads straight away: the firmware, every preset, and the steps for putting them on the SD card. I'll only ever contact you about updates to Bribeluge and other creative projects or tech builds.</p>
       <div class="bx-ctas">
         <a class="bx-btn bx-ink bx-solid bx-dl-big" href="#download" data-bx-download>Download <span data-bx-bin-version>v1.39.1</span> &#8595;</a>
         <a class="bx-btn bx-ink" data-bx-support href="#" target="_blank" rel="noopener">Support</a>
@@ -290,7 +323,7 @@
         <p class="bx-news-more"><a href="/bribeluge/manual/#changelog">Full changelog in the manual &#8594;</a></p>
       </div>
     </details>
-    <p class="bx-dl-small">Optional preset folders and the full GPL source are listed in the <a href="/bribeluge/manual/#download">manual</a>. Bribeluge is free software under the GPL-3.0, like the Deluge firmware it is built on: the complete source of every release, with the community firmware's full history and contributors, is at <a href="https://github.com/thisisbribery/DelugeFirmware" target="_blank" rel="noopener">github.com/thisisbribery/DelugeFirmware</a>.</p>
+    <p class="bx-dl-small">Where each preset folder goes on the card is under <a href="#install">Install</a>, and in INSTALL.txt in the zip. Bribeluge is free software under the GPL-3.0, like the Deluge firmware it is built on: the complete source of every release, with the community firmware's full history and contributors, is at <a href="https://github.com/thisisbribery/DelugeFirmware" target="_blank" rel="noopener">github.com/thisisbribery/DelugeFirmware</a>.</p>
   </section>
 
   <section class="bx-section" id="credit">
