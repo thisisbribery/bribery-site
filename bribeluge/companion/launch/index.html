@@ -756,6 +756,14 @@ html[data-mode="classic"] main{padding-bottom:72px}
 @media (max-width:900px){#wavet .wtmain{flex-direction:column} #wavet .wtside .bsecs{flex-direction:row;flex-wrap:wrap}}
 
 </style>
+<style>
+/* Two-way knobs: drag the knob grid and the gold knobs to turn them on the Deluge */
+#knobs .knob:not(.switch):not(.cant),#special .knob:not(.switch):not(.cant){touch-action:none;cursor:ns-resize;user-select:none;-webkit-user-select:none}
+#knobs .knob.drag,#special .knob.drag{border-color:var(--pink);box-shadow:0 0 12px var(--pink-glow)}
+.gcol .knob{pointer-events:auto;touch-action:none;cursor:ns-resize;user-select:none;-webkit-user-select:none}
+.gcol .knob.none{pointer-events:none}
+.gcol .knob.drag{outline:1px solid var(--gold);box-shadow:0 0 12px var(--gold-glow)}
+</style>
 </head>
 <body data-bx-page="companion" data-bx-no-top>
 <div id="bar"><div class="barin">
@@ -896,7 +904,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v24 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v25 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1570,12 +1578,9 @@ function showParams(p) {
       // Two words too long for a knob label at this size; the rest stay as the Deluge's English titles
       b.querySelector(".kn").textContent = k.name; // Exactly as the Deluge names it
       b.title = k.name;
-      b.onclick = function () {
-        if (b.classList.contains("cant")) return; // Its pad would only say CANT
-        b.classList.add("tapped"); tx([0x03, 0x07, k.x, k.y]);
-      };
+      knobTouch(b, knobKey(k));
       groups[k.group].querySelector(".kgrid").appendChild(b);
-      knobEls[k.x + "," + k.y + "," + k.group] = b;
+      knobEls[knobKey(k)] = b;
     });
     // The engine's controls and switches go in the bright frame above; the standard sections below
     var hasSpecial = false;
@@ -1589,20 +1594,110 @@ function showParams(p) {
     special.style.display = hasSpecial ? "" : "none";
     special.querySelector(".label").textContent = groupName(7);
   }
-  p.knobs.forEach(function (k) {
-    var b = knobEls[k.x + "," + k.y + "," + k.group]; if (!b) return;
-    var key = k.pos + ":" + k.bipolar + ":" + k.value + ":" + k.open + ":" + k.cant + ":" + k.text;
-    if (b.getAttribute("data-k") === key) return;
-    b.setAttribute("data-k", key);
-    if (k.isSwitch) {
-      b.querySelector(".sw").textContent = k.text;
-    } else {
-      b.querySelector(".ks").innerHTML = knobSvg(k.pos, k.bipolar);
-      b.querySelector(".kv").textContent = (k.bipolar && k.value > 0 ? "+" : "") + k.value;
-    }
-    b.className = "knob" + (k.isSwitch ? " switch" : "") + (k.open ? " open" : "") + (k.cant ? " cant" : "");
-    b.title = k.cant ? "Not available on this sound (the Deluge would say CANT)" : "";
+  p.knobs.forEach(function (k) { knobDev[knobKey(k)] = k; renderKnob(knobKey(k)); });
+}
+
+// ---- The knob grid, both ways. Drag a knob up or down to turn it on the Deluge (03 10 <group> <x> <y> <hi> <lo>, a
+// 14-bit position); tap it to open its setting there, as before. Tap a switch to step it to its next choice. PARAMS
+// brings the Deluge's word back: while a knob is held (and briefly after) its echo is ignored, so it doesn't fight the
+// finger, then it shows what the Deluge last said.
+var KNOB_MAX = 16383, KNOB_TRAVEL = 180, knobDev = {}, knobHold = {}, knobLocal = {}, knobDirty = {}, knobTimer = 0;
+function knobKey(k) { return k.x + "," + k.y + "," + k.group; }
+function knobHeld(key) { return knobHold[key] === Infinity || (knobHold[key] || 0) > performance.now(); }
+function renderKnob(key) {
+  var b = knobEls[key], k = knobDev[key]; if (!b || !k) return;
+  var held = knobHeld(key) && !k.isSwitch;
+  var dk = (held ? "held" : k.pos + ":" + k.value) + ":" + k.bipolar + ":" + k.open + ":" + k.cant + ":" + k.text;
+  if (b.getAttribute("data-k") === dk) return;
+  b.setAttribute("data-k", dk);
+  if (k.isSwitch) b.querySelector(".sw").textContent = k.text;
+  else if (!held) {
+    b.querySelector(".ks").innerHTML = knobSvg(k.pos, k.bipolar);
+    b.querySelector(".kv").textContent = (k.bipolar && k.value > 0 ? "+" : "") + k.value;
+  }
+  b.className = "knob" + (k.isSwitch ? " switch" : "") + (k.open ? " open" : "") + (k.cant ? " cant" : "") +
+    (b.classList.contains("drag") ? " drag" : "");
+  b.title = k.cant ? "Not available on this sound (the Deluge would say CANT)"
+    : k.isSwitch ? "Tap to switch" : "Drag up or down to turn, tap to open it on the Deluge";
+}
+// PARAMS positions are 0-127: the standard scale has its middle at 64, an engine control (wide) runs 0-127 straight
+function knobToPanel(k) { return k.wide ? Math.round(k.pos / 127 * KNOB_MAX) : (k.pos >= 127 ? KNOB_MAX : k.pos * 128); }
+function knobFromPanel(k, p) { return k.wide ? Math.round(p / KNOB_MAX * 127) : Math.min(127, Math.round(p / 128)); }
+// What the Deluge shows there: its 0-50, pan's -25 to 25, start offset's -512 to 512, an engine control's 0-127
+function knobShown(k, p) {
+  if (k.wide) return Math.round(p / KNOB_MAX * 127);
+  if (k.bipolar) return k.group === 0 ? Math.floor((p - 8192) / 16) : Math.round((p - 8192) / 16384 * 50);
+  return Math.round(p / 16384 * 50);
+}
+function knobSend(k, p) {
+  knobDirty[knobKey(k)] = [k.group, k.x, k.y, p];
+  if (knobTimer) return;
+  knobTimer = setTimeout(function () { // At most every 25 ms, the latest position of each knob moved
+    knobTimer = 0;
+    var d = knobDirty; knobDirty = {};
+    Object.keys(d).forEach(function (key) { var q = d[key]; tx([0x03, 0x10, q[0], q[1], q[2], (q[3] >> 7) & 0x7F, q[3] & 0x7F]); });
+  }, 25);
+}
+function knobRelease(key, ms) {
+  knobHold[key] = performance.now() + ms;
+  setTimeout(function () { if (!knobHeld(key)) renderKnob(key); }, ms + 20);
+}
+function knobTouch(b, key) {
+  var drag = null, dragEnd = 0;
+  b.addEventListener("pointerdown", function (e) {
+    var k = knobDev[key];
+    if (!k || k.isSwitch || k.cant || (e.pointerType === "mouse" && e.button !== 0)) return;
+    e.preventDefault();
+    try { b.setPointerCapture(e.pointerId); } catch (err) { /* Pointer already gone: moves still reach it */ }
+    var start = knobHeld(key) && knobLocal[key] !== undefined ? knobLocal[key] : knobToPanel(k);
+    drag = { pid: e.pointerId, y: e.clientY, p: start, moved: false };
+    knobLocal[key] = start;
   });
+  b.addEventListener("pointermove", function (e) {
+    if (!drag || e.pointerId !== drag.pid) return;
+    var k = knobDev[key]; if (!k) return;
+    if (!drag.moved) {
+      if (Math.abs(e.clientY - drag.y) < 6) return; // Still a tap
+      drag.moved = true; drag.y = e.clientY;
+      knobHold[key] = Infinity; b.classList.add("drag"); renderKnob(key);
+    }
+    var p = Math.round(Math.max(0, Math.min(KNOB_MAX, drag.p - (e.clientY - drag.y) / KNOB_TRAVEL * KNOB_MAX)));
+    if (p === knobLocal[key]) return;
+    knobLocal[key] = p;
+    var v = knobShown(k, p);
+    b.querySelector(".ks").innerHTML = knobSvg(knobFromPanel(k, p), k.bipolar);
+    b.querySelector(".kv").textContent = (k.bipolar && v > 0 ? "+" : "") + v;
+    knobSend(k, p);
+  });
+  function end(e) {
+    if (!drag || e.pointerId !== drag.pid) return;
+    var moved = drag.moved;
+    drag = null;
+    if (!moved) return; // A tap: the click opens it
+    dragEnd = performance.now();
+    b.classList.remove("drag");
+    knobRelease(key, 600);
+  }
+  b.addEventListener("pointerup", end);
+  b.addEventListener("pointercancel", end);
+  b.addEventListener("lostpointercapture", end);
+  b.addEventListener("pointerleave", function (e) { if (drag && !b.hasPointerCapture(e.pointerId)) end(e); });
+  b.onclick = function () {
+    var k = knobDev[key];
+    if (!k || k.cant || performance.now() - dragEnd < 400) return; // Its pad would only say CANT; or a drag ended here
+    if (k.isSwitch) {
+      // Step through its choices (the Deluge sends its range as highest * 16 + lowest; older firmware: on / off)
+      var hi = k.value >> 4, lo = k.value & 15;
+      if (hi <= 0) { hi = 1; lo = 0; }
+      var now = knobHeld(key) && knobLocal[key] !== undefined ? knobLocal[key] : k.pos;
+      var next = now + 1 > hi ? lo : Math.max(lo, now + 1);
+      knobLocal[key] = next; knobHold[key] = performance.now() + 400;
+      b.classList.add("tapped"); setTimeout(function () { b.classList.remove("tapped"); }, 250);
+      tx([0x03, 0x10, k.group, k.x, k.y, 0, next & 0x7F]);
+      return;
+    }
+    b.classList.add("tapped"); tx([0x03, 0x07, k.x, k.y]);
+  };
 }
 
 // ---- Engine panels: BRUNO106 (sliders, as the Juno it comes from) and BROPHET (knobs, as the Prophet). Both ways:
@@ -2149,10 +2244,12 @@ function showGold(g) {
         var k = document.createElement("div"); k.className = "knob";
         k.innerHTML = '<span class="gtag"></span><span class="ks"></span><span class="kv"></span><span class="kn"></span>';
         k.querySelector(".gtag").textContent = tag;
+        goldTouch(k, b, w);
         col.appendChild(k);
       }
       (function (button, el) {
-        el.onclick = function () { tx([0x03, 0x0C, button]); };
+        // Tap a pair to press its mod button (not at the end of a drag on one of its knobs)
+        el.onclick = function () { if (performance.now() - goldDragEnd >= 400) tx([0x03, 0x0C, button]); };
       })(b, col);
       grid.appendChild(col); goldCols.push(col);
     }
@@ -2162,16 +2259,88 @@ function showGold(g) {
     colEl.classList.toggle("on", g.mode === c);
     var knobsEl = colEl.querySelectorAll(".knob");
     for (var u = 0; u < 2; u++) {
-      var e = g.knobs[c * 2 + u], el2 = knobsEl[u];
-      var key = e.pos + ":" + e.bipolar + ":" + e.value + ":" + e.none + ":" + e.name;
-      if (el2.getAttribute("data-k") === key) continue;
-      el2.setAttribute("data-k", key);
-      el2.querySelector(".ks").innerHTML = knobSvg(e.none ? 0 : e.pos, e.bipolar, "#e3b04b");
-      el2.querySelector(".kv").textContent = e.none ? "" : (e.bipolar && e.value > 0 ? "+" : "") + e.value;
-      el2.querySelector(".kn").textContent = e.name; // As the Deluge's OLED names it
-      el2.classList.toggle("none", e.none);
+      goldDev[c * 2 + (1 - u)] = g.knobs[c * 2 + u];
+      renderGold(c, 1 - u);
     }
   }
+}
+// ---- Gold knobs, both ways: drag one up or down to turn it on the Deluge (03 11 <button> <knob> <hi> <lo>, the knob
+// position plus 8192, 1 = upper knob). The Deluge takes it as that knob turned, after pressing its mod button if another
+// was lit. Echo hold as the knob grid. A patch cable's position covers -100% to +100% (flag 2): -192 to 64.
+var goldDev = [], goldHold = [], goldLocal = [], goldDirty = {}, goldTimer = 0, goldDragEnd = 0;
+function goldEl(button, which) { return goldCols ? goldCols[button].querySelectorAll(".knob")[1 - which] : null; }
+function goldHeld(i) { return goldHold[i] === Infinity || (goldHold[i] || 0) > performance.now(); }
+function goldRange(e) { return e.cable ? [-192, 64] : [-64, 64]; }
+function goldKnobPos(e) { return e.cable ? Math.round(e.pos * 256 / 127) - 192 : e.pos - 64; }
+function goldDraw(el, e, kp) {
+  var pos = e.cable ? Math.round((kp + 192) * 127 / 256) : Math.min(127, kp + 64);
+  var v = Math.round((kp + 64) / 128 * 50) - (e.bipolar && !e.cable ? 25 : 0); // As the Deluge shows it
+  el.querySelector(".ks").innerHTML = knobSvg(pos, e.bipolar, "#e3b04b");
+  el.querySelector(".kv").textContent = (e.bipolar && v > 0 ? "+" : "") + v;
+}
+function renderGold(button, which) {
+  var i = button * 2 + which, e = goldDev[i], el = goldEl(button, which); if (!e || !el) return;
+  var held = goldHeld(i) && !e.none;
+  var key = (held ? "held" : e.pos + ":" + e.value) + ":" + e.bipolar + ":" + e.cable + ":" + e.none + ":" + e.name;
+  if (el.getAttribute("data-k") === key) return;
+  el.setAttribute("data-k", key);
+  if (!held) {
+    el.querySelector(".ks").innerHTML = knobSvg(e.none ? 0 : e.pos, e.bipolar, "#e3b04b");
+    el.querySelector(".kv").textContent = e.none ? "" : (e.bipolar && e.value > 0 ? "+" : "") + e.value;
+  }
+  el.querySelector(".kn").textContent = e.name; // As the Deluge's OLED names it
+  el.classList.toggle("none", e.none);
+  el.title = e.none ? "" : "Drag up or down to turn";
+}
+function goldSend(i, kp) {
+  goldDirty[i] = kp;
+  if (goldTimer) return;
+  goldTimer = setTimeout(function () {
+    goldTimer = 0;
+    var d = goldDirty; goldDirty = {};
+    Object.keys(d).forEach(function (k) { var q = d[k] + 8192; tx([0x03, 0x11, k >> 1, k & 1, (q >> 7) & 0x7F, q & 0x7F]); });
+  }, 25);
+}
+function goldTouch(el, button, which) {
+  var i = button * 2 + which, drag = null;
+  el.addEventListener("pointerdown", function (ev) {
+    var e = goldDev[i];
+    if (!e || e.none || (ev.pointerType === "mouse" && ev.button !== 0)) return;
+    ev.preventDefault();
+    try { el.setPointerCapture(ev.pointerId); } catch (err) { /* Pointer already gone: moves still reach it */ }
+    var start = goldHeld(i) && goldLocal[i] !== undefined ? goldLocal[i] : goldKnobPos(e);
+    drag = { pid: ev.pointerId, y: ev.clientY, kp: start, moved: false };
+    goldLocal[i] = start;
+  });
+  el.addEventListener("pointermove", function (ev) {
+    if (!drag || ev.pointerId !== drag.pid) return;
+    var e = goldDev[i]; if (!e) return;
+    if (!drag.moved) {
+      if (Math.abs(ev.clientY - drag.y) < 6) return; // Still a tap: the column presses the mod button
+      drag.moved = true; drag.y = ev.clientY;
+      goldHold[i] = Infinity; el.classList.add("drag"); renderGold(button, which);
+    }
+    var r = goldRange(e);
+    var kp = Math.round(Math.max(r[0], Math.min(r[1], drag.kp - (ev.clientY - drag.y) / KNOB_TRAVEL * (r[1] - r[0]))));
+    if (kp === goldLocal[i]) return;
+    goldLocal[i] = kp;
+    goldDraw(el, e, kp);
+    goldSend(i, kp);
+  });
+  function end(ev) {
+    if (!drag || ev.pointerId !== drag.pid) return;
+    var moved = drag.moved;
+    drag = null;
+    if (!moved) return;
+    goldDragEnd = performance.now();
+    el.classList.remove("drag");
+    goldHold[i] = performance.now() + 600;
+    setTimeout(function () { if (!goldHeld(i)) renderGold(button, which); }, 620);
+  }
+  el.addEventListener("pointerup", end);
+  el.addEventListener("pointercancel", end);
+  el.addEventListener("lostpointercapture", end);
+  el.addEventListener("pointerleave", function (ev) { if (drag && !el.hasPointerCapture(ev.pointerId)) end(ev); });
 }
 
 // ---- Transport
@@ -2774,7 +2943,8 @@ function parse(d) {
     if (!gd.open) return gd;
     var gi = 10;
     for (var gq = 0; gq < 16; gq++) {
-      var ge = { bipolar: (d[gi] & 1) !== 0, none: (d[gi] & 4) !== 0, pos: d[gi + 1], value: ((d[gi + 2] << 7) | d[gi + 3]) - 8192 };
+      var ge = { bipolar: (d[gi] & 1) !== 0, cable: (d[gi] & 2) !== 0, none: (d[gi] & 4) !== 0, pos: d[gi + 1],
+        value: ((d[gi + 2] << 7) | d[gi + 3]) - 8192 };
       var gn = readName(d, gi + 4); ge.name = gn.text; gi = gn.next;
       gd.knobs.push(ge);
     }
