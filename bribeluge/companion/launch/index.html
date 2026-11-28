@@ -1196,6 +1196,42 @@ html[data-mode="classic"] body:not(.stock) .bx-mode-float{left:calc(var(--navw) 
 @media (prefers-reduced-motion:reduce){.navflash{animation:none}}
 @media (max-width:700px){:root{--navw:58px} #nav{padding:8px 4px} #nav button{font-size:9.5px;min-height:38px;letter-spacing:.04em} #nav .nhead{font-size:9px}}
 </style>
+<style>
+/* The Deluge's menu, whole page: a column per open level */
+#menu .phead{gap:8px;flex-wrap:wrap}
+#menu .mcrumbs{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-right:auto;min-width:0}
+#menu .mcrumbs button{all:unset;cursor:pointer;font:700 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 4px}
+#menu .mcrumbs button:hover{color:var(--ink)}
+#menu .mcrumbs button.last{color:var(--accent)}
+#menu .mcrumbs b{color:var(--line);font-weight:400}
+#menu .mcols{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px;align-items:flex-start}
+#menu .mcol{flex:0 0 240px;scroll-snap-align:end;border:1px solid var(--line);border-radius:12px;background:var(--soft);display:flex;flex-direction:column;min-width:0}
+#menu .mcol.cur{border-color:var(--accent);box-shadow:0 0 14px var(--pink-glow)}
+#menu .mtitle{font:700 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:10px 12px 8px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#menu .mcol.cur .mtitle{color:var(--accent)}
+#menu .mlist{overflow-y:auto;max-height:max(300px,calc(100vh - 330px));padding:4px}
+#menu .mi{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:8px;width:100%;min-height:42px;padding:6px 10px;border-radius:8px;
+  cursor:pointer;font:600 15px/1.2 var(--sans);color:var(--ink);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#menu .mi span{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#menu .mi i{font-style:normal;color:var(--muted);font-weight:700}
+#menu .mi:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+#menu .mi.path{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+#menu .mi.sel{background:var(--accent);color:#000}
+#menu .mi.sel i{color:#000}
+#menu .mi.tapped{outline:2px solid var(--teal);outline-offset:-2px}
+#menu .mval{font:800 40px/1.1 var(--sans);letter-spacing:-.02em;padding:14px 12px 6px;word-break:break-word}
+#menu .msteps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px}
+#menu .msteps button{padding:12px 0;font-size:16px}
+#menu .mopts{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;padding:4px 10px 10px;overflow-y:auto;max-height:max(220px,calc(100vh - 470px))}
+#menu .mopts button{padding:10px 6px;font-size:13px;background:var(--panel);color:var(--ink);border:1px solid var(--line);overflow-wrap:anywhere}
+#menu .mopts button.sel{background:var(--accent);color:#000;border-color:var(--accent)}
+#menu .mcol.leaf{flex-basis:320px}
+#menu .mhint{color:var(--muted);font-size:13px;margin:8px 2px 0}
+html[data-mode="new"] #menu .mcol,html[data-mode="new"] #menu .mi,html[data-mode="new"] #menu .mopts button{border-radius:0}
+html[data-mode="new"] #menu .mi{font:700 14px/1.2 var(--mono);letter-spacing:.04em;text-transform:uppercase}
+#nav button.mnav{font-size:10px;letter-spacing:.04em;min-height:38px}
+@media (max-width:700px){#menu .mcol{flex-basis:78%} #menu .mcol.leaf{flex-basis:88%} #menu .mval{font-size:30px}}
+</style>
 </head>
 <body data-bx-page="companion" data-bx-no-top>
 <nav id="nav" aria-label="Sections"><div class="nhead">NAV</div></nav>
@@ -1261,6 +1297,16 @@ html[data-mode="classic"] body:not(.stock) .bx-mode-float{left:calc(var(--navw) 
       </div>
       <p class="hint">Tap to select, like turning the select knob. Tap it again, or Load, to press select.</p>
       <div id="browserList"></div>
+    </section>
+
+    <section id="menu" class="card panel">
+      <div class="phead">
+        <div class="mcrumbs" id="menuCrumbs"></div>
+        <button class="secondary" id="mBack">Back</button>
+        <button class="secondary" id="mExit">Close menu</button>
+      </div>
+      <div class="mcols" id="menuCols"></div>
+      <p class="mhint">Tap anything at any level to go straight there. The Deluge follows.</p>
     </section>
 
     <section id="wave" class="card panel">
@@ -1349,7 +1395,7 @@ html[data-mode="classic"] body:not(.stock) .bx-mode-float{left:calc(var(--navw) 
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v32 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v33 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1815,7 +1861,7 @@ function keepMain() { if (stageNow === "track" && performance.now() < mainUntil)
 // is lit as the page scrolls. A menu, browser, waveform or song view on the stage is listed above them.
 var NAV_KNOB = { "Oscillators": "OSC", "Filters": "FILTER", "Envelope 1": "ENV 1", "Envelope 2": "ENV 2", "Voice": "VOICE",
   "Effects": "FX", "LFOs": "LFO" };
-var NAV_STAGE = { picker: "MENU", browser: "BROWSE", wave: "WAVE", song: "SONG" };
+var NAV_STAGE = { menu: "MENU", picker: "PICK", browser: "BROWSE", wave: "WAVE", song: "SONG" };
 var navKey = "", navEls = [], navPinned = null, navPinUntil = 0, navRaf = 0;
 function shown(el) { return !!el && el.style.display !== "none" && el.getClientRects().length > 0; }
 // The sections the track has, in page order (measured with the track showing, else by what it holds)
@@ -1838,7 +1884,7 @@ var navTimer = 0; // A timer, not a frame: it still runs while the tab is in the
 function navSoon() { if (!navTimer) navTimer = setTimeout(function () { navTimer = 0; navBuild(); navSpy(); }, 30); }
 function navBuild() {
   var nav = $("nav"), secs = navSections(), away = stageNow !== "track";
-  var key = (away ? stageNow : "") + "|" + secs.map(function (s) { return s.key + "=" + s.label; }).join(",");
+  var key = (away ? stageNow : "") + (stageNow === "menu" ? menuNavKey() : "") + "|" + secs.map(function (s) { return s.key + "=" + s.label; }).join(",");
   nav.classList.toggle("away", away);
   if (key === navKey) { navEls.forEach(function (n, i) { if (secs[i]) n.sec = secs[i]; }); return; }
   navKey = key; navEls = [];
@@ -1848,6 +1894,7 @@ function navBuild() {
     sb.textContent = NAV_STAGE[stageNow] || stageNow.toUpperCase();
     sb.title = "On the Deluge now"; sb.onclick = function () { pageTo(0, true); };
     nav.appendChild(sb);
+    if (stageNow === "menu") { addMenuNav(nav); }
     var sep = document.createElement("div"); sep.className = "nsep"; nav.appendChild(sep);
   }
   secs.forEach(function (s) {
@@ -1900,14 +1947,104 @@ function followKnob(b) {
   requestAnimationFrame(function () { showOnPage(b, true); });
 }
 
+// ---- Menu: the Deluge's open menu, every level side by side. Tap an entry at any level to go there (the Deluge
+// goes BACK up to that level, turns to it and presses SELECT: 03 25 <level> <entry> 1). A value has its own column.
+var menu = null; // { levels: [ {level, leaf, selected, title, items} ] }
+function menuOpen() { return !!(menu && menu.levels[0] && !menu.levels[0].leaf); }
+function showMenu(m) {
+  if (!m.open) menu = null;
+  else {
+    if (!menu) menu = { levels: [] };
+    menu.levels[m.level] = m;
+    menu.levels.length = m.levels;
+  }
+  updateStage();
+  if (menuOpen()) renderMenu();
+}
+function menuEsc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function menuGo(level, entry, enter) { tx([0x03, 0x19, level, entry, enter ? 1 : 0]); }
+function menuTurn(by) { by = Math.max(-63, Math.min(63, by)); if (by) tx([0x03, 0x1A, 64 + by]); }
+var menuColsKey = "";
+function renderMenu() {
+  var L = menu.levels, last = L.length - 1, crumbs = "", cols = "";
+  L.forEach(function (lv, k) {
+    if (!lv) return;
+    crumbs += (k ? "<b>/</b>" : "") + '<button type="button" data-k="' + k + '"' + (k === last ? ' class="last"' : "") + ">" + menuEsc(lv.title || "Menu") + "</button>";
+    var cur = k === last;
+    if (lv.leaf) {
+      var opts = lv.items.map(function (it, i) {
+        return '<button type="button" data-o="' + i + '"' + (i === lv.selected ? ' class="sel"' : "") + ">" + menuEsc(it.name) + "</button>";
+      }).join("");
+      cols += '<div class="mcol leaf' + (cur ? " cur" : "") + '"><div class="mtitle">' + menuEsc(lv.title) + '</div><div class="mval"></div>' +
+        '<div class="msteps"><button type="button" class="secondary" data-d="-10">-10</button><button type="button" class="secondary" data-d="-1">-</button>' +
+        '<button type="button" class="secondary" data-d="1">+</button><button type="button" class="secondary" data-d="10">+10</button></div>' +
+        (opts ? '<div class="mopts">' + opts + "</div>" : "") + "</div>";
+      return;
+    }
+    var items = lv.items.map(function (it, i) {
+      var cls = "mi" + (it.sub ? " sub" : "") + (i === lv.selected ? (cur ? " sel" : " path") : "");
+      return '<button type="button" class="' + cls + '" data-k="' + k + '" data-i="' + i + '"><span>' + menuEsc(it.name) + "</span>" + (it.sub ? "<i>&rsaquo;</i>" : "") + "</button>";
+    }).join("");
+    cols += '<div class="mcol' + (cur ? " cur" : "") + '"><div class="mtitle">' + menuEsc(lv.title || "Menu") + '</div><div class="mlist">' + items + "</div></div>";
+  });
+  $("menuCrumbs").innerHTML = crumbs;
+  var box = $("menuCols");
+  if (cols !== menuColsKey) {
+    menuColsKey = cols; box.innerHTML = cols;
+    // Each list shows its selected or open entry; the deepest column in view
+    Array.prototype.forEach.call(box.querySelectorAll(".mlist"), function (list) {
+      var on = list.querySelector(".mi.sel,.mi.path"); if (on) showInList(list, on);
+    });
+    box.scrollLeft = box.scrollWidth;
+  }
+  menuValue();
+}
+// The value being edited: what the Deluge shows for it (the readout)
+function menuValue() {
+  var el = $("menuCols").querySelector(".mval");
+  if (el) el.textContent = $("fullText").textContent || "-";
+}
+$("menuCols").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b || !menu) return;
+  if (b.hasAttribute("data-i")) { b.classList.add("tapped"); menuGo(+b.getAttribute("data-k"), +b.getAttribute("data-i"), true); return; }
+  if (b.hasAttribute("data-d")) { menuTurn(+b.getAttribute("data-d")); return; }
+  if (b.hasAttribute("data-o")) {
+    var lv = menu.levels[menu.levels.length - 1];
+    if (lv && lv.leaf && lv.selected >= 0) menuTurn(+b.getAttribute("data-o") - lv.selected);
+  }
+});
+$("menuCrumbs").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b || !menu) return;
+  var k = +b.getAttribute("data-k"), lv = menu.levels[k];
+  if (lv && !lv.leaf && k < menu.levels.length - 1) menuGo(k, Math.max(0, lv.selected), false);
+});
+$("mBack").onclick = function () { tx([0x03, 0x08, 3]); };
+$("mExit").onclick = function () { tx([0x03, 0x19, 127, 0, 0]); };
+// NAV: the menu's top level, so any section is one tap away
+function addMenuNav(nav) {
+  var root = menu && menu.levels[0], path = menu && menu.levels.length > 1 ? 1 : 0;
+  if (!root || root.leaf) return;
+  root.items.forEach(function (it, i) {
+    var b = document.createElement("button"); b.type = "button";
+    b.className = "mnav" + (i === root.selected ? " on" : "");
+    b.textContent = it.name; b.title = "Go to " + it.name;
+    b.onclick = function () { menuGo(0, i, true); };
+    nav.appendChild(b);
+  });
+}
+function menuNavKey() {
+  var root = menu && menu.levels[0];
+  return root ? "|m:" + root.selected + ":" + root.items.map(function (it) { return it.name; }).join(",") : "";
+}
+
 // ---- Stage: one panel at a time, by what the Deluge is doing. A menu or browser on top wins, then the waveform,
 // then the song views, then the track.
 var picker = null, browser = null, wave = null, transport = null;
 function updateStage() {
   var view = transport ? transport.view : 4;
-  var which = picker ? "picker" : browser ? "browser" : wave ? "wave" : (view >= 1 && view <= 3) ? "song" : "track";
+  var which = picker ? "picker" : browser ? "browser" : menuOpen() ? "menu" : wave ? "wave" : (view >= 1 && view <= 3) ? "song" : "track";
   leaveStage(which);
-  ["picker", "browser", "wave", "song", "track"].forEach(function (id) {
+  ["picker", "browser", "menu", "wave", "song", "track"].forEach(function (id) {
     var el = $(id), on = id === which;
     if (el.classList.contains("show") !== on) el.classList.toggle("show", on);
   });
@@ -1990,6 +2127,7 @@ function showText(t) {
   if (t.main && t.main !== main) raws.push(t.main);
   if (t.popup && t.popupText && t.popupText !== pop) raws.push(t.popupText);
   $("rawText").textContent = raws.length ? "7-seg: " + raws.join(" / ") : "";
+  if (menuOpen()) menuValue();
 }
 
 // ---- Waveform: the window the pads show, 12 tablet columns per pad column. Markers can be dragged in the sample
@@ -4275,6 +4413,18 @@ function parse(d) {
     wp.ok = d[wpj] === 0xF7;
     return wp;
   }
+  if (kind === 0x5A) {
+    // MENU: one open level of the Deluge's menu (see the firmware's hid_sysex.cpp)
+    var mn = { kind: "menu", open: d[8] === 1 };
+    if (!mn.open) { mn.ok = d[9] === 0xF7; return mn; }
+    mn.levels = d[9]; mn.level = d[10]; mn.leaf = (d[11] & 1) === 1; mn.selected = d[12] === 127 ? -1 : d[12];
+    var mt = readName(d, 14), mj = mt.next; mn.title = mt.text; mn.items = [];
+    for (var me = 0; me < d[13] && mj < d.length; me++) {
+      var mnm = readName(d, mj + 1); mn.items.push({ sub: (d[mj] & 1) === 1, name: mnm.text }); mj = mnm.next;
+    }
+    mn.ok = d[mj] === 0xF7;
+    return mn;
+  }
   if (kind === 0x55) {
     var gd = { kind: "gold", open: d[8] === 1, mode: d[9], knobs: [] };
     if (!gd.open) return gd;
@@ -4359,6 +4509,7 @@ function onMessage(ev) {
   switch (m.kind) {
   case "text": showText(m); return;
   case "picker": showPicker(m); return;
+  case "menu": showMenu(m); return;
   case "browser": showBrowser(m); return;
   case "browserSel": highlightBrowser(m.selected); return;
   case "wave": if (m.open) m.kind = m.kindCode; showWave(m); return;
