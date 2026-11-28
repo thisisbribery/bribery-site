@@ -159,12 +159,19 @@ code.bx-code{font:600 .9em var(--bx-mono);color:var(--bx-teal);word-break:break-
   .bx-news{align-items:flex-start}
 }
 
-/* Bribeluge: "Out now" bar at the very top, smooth-scrolls to #download */
+/* Bribeluge: "Out now" panel above A studio in a box: scrolling words behind a big button to #download */
 html:has(body[data-bx-page="bribeluge"]){scroll-behavior:smooth}
-@media (prefers-reduced-motion:reduce){html:has(body[data-bx-page="bribeluge"]){scroll-behavior:auto}}
-.bx-outnow{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:clamp(24px,4vw,48px);padding:16px clamp(16px,3vw,28px);background:var(--bx-pink);color:var(--bx-black);text-decoration:none;font:800 13px var(--bx-mono);letter-spacing:.16em;text-transform:uppercase}
-.bx-outnow b{font-weight:900;background:var(--bx-black);color:var(--bx-pink);padding:3px 8px}
-.bx-outnow i{font-style:normal;transition:transform .2s}
-.bx-outnow:hover span,.bx-outnow:focus-visible span{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
-.bx-outnow:hover i{transform:translateY(3px)}
-.bx-outnow:focus-visible{outline:2px solid var(--bx-black);outline-offset:-4px}
+.bx-outnow{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:clamp(24px,4vw,48px);height:clamp(130px,17vw,220px);background:var(--bx-pink);color:var(--bx-black);text-decoration:none}
+.bx-outnow-track{position:absolute;top:0;bottom:0;left:0;display:flex;align-items:center;width:max-content;animation:bx-outnow-scroll 30s linear infinite}
+.bx-outnow-track>span{flex:none;color:var(--bx-black);white-space:nowrap;font:900 clamp(48px,7.5vw,104px)/1 var(--bx-sans);letter-spacing:-.035em;text-transform:uppercase}
+.bx-outnow-track b{font-weight:900;opacity:.35;margin:0 .15em}
+@keyframes bx-outnow-scroll{to{transform:translateX(-50%)}}
+.bx-outnow-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.55em;padding:clamp(16px,2.2vw,28px) clamp(24px,3.6vw,52px);background:var(--bx-black);color:var(--bx-pink);font:900 clamp(20px,3vw,40px) var(--bx-mono);letter-spacing:.1em;text-transform:uppercase;box-shadow:0 0 0 clamp(6px,.9vw,12px) var(--bx-pink);transition:transform .15s}
+.bx-outnow-btn i{font-style:normal;display:inline-block;transition:transform .2s}
+.bx-outnow:hover .bx-outnow-btn,.bx-outnow:focus-visible .bx-outnow-btn{transform:scale(1.05)}
+.bx-outnow:hover .bx-outnow-btn i,.bx-outnow:focus-visible .bx-outnow-btn i{transform:translateY(4px)}
+.bx-outnow:focus-visible{outline:3px solid var(--bx-black);outline-offset:-6px}
+@media (prefers-reduced-motion:reduce){
+  html:has(body[data-bx-page="bribeluge"]){scroll-behavior:auto}
+  .bx-outnow-track{animation:none}
+}
