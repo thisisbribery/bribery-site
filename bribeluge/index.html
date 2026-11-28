@@ -53,12 +53,13 @@
     </div>
   </section>
 
-  <div class="bx-stats bx-stats-5">
-    <div class="bx-stat"><b>27</b><span>Drum synth voices</span></div>
-    <div class="bx-stat"><b>85</b><span>Drum kits</span></div>
-    <div class="bx-stat"><b>4</b><span>New synth engines</span></div>
-    <div class="bx-stat"><b>1,172</b><span>Synth presets</span></div>
-    <div class="bx-stat"><b>33</b><span>Feature sets</span></div>
+  <div class="bx-stats bx-stats-6">
+    <a class="bx-stat" href="#drums"><b>7</b><span>Drum machines</span></a>
+    <a class="bx-stat" href="#drums"><b>27</b><span>Drum synth voices</span></a>
+    <a class="bx-stat" href="#drums"><b>85</b><span>Drum kits</span></a>
+    <a class="bx-stat" href="#synths"><b>4</b><span>New synth engines</span></a>
+    <a class="bx-stat" href="#synths"><b>1,172</b><span>Synth presets</span></a>
+    <a class="bx-stat" href="#features"><b>33</b><span>Feature sets</span></a>
   </div>
 
   <section class="bx-section" id="features">
@@ -363,9 +364,14 @@
     sync();
   });
   Array.prototype.forEach.call(panels, function(p){ p.addEventListener("toggle", sync); });
-  // open the panel named in the URL hash (e.g. /bribeluge/#synths)
+  // open the panel named in the URL hash (e.g. /bribeluge/#synths), on load and from in-page links like the stats row
   var h = location.hash && document.getElementById(location.hash.slice(1));
   if (h && h.tagName === "DETAILS") h.open = true;
+  document.addEventListener("click", function(e){
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    var t = a && document.getElementById(a.getAttribute("href").slice(1));
+    if (t && t.tagName === "DETAILS") t.open = true;
+  });
   sync();
 })();
 </script>
