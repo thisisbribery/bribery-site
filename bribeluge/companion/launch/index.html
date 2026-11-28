@@ -873,33 +873,64 @@ html[data-mode="classic"] main{padding-bottom:72px}
 #cyc .vk{--key:linear-gradient(#d9d5cc,#c6c1b6);--keyink:#2a2926;--ledoff:#bdb3a2;--ledon:#ff6a2a;border-radius:7px;box-shadow:0 2px 0 #a49d8f,inset 0 1px 0 #efebe3}
 #cyc .bhint{color:#7a766c}
 
-/* ---- LXR: black, pink LED rings ---- */
-#lxr{background:radial-gradient(120% 140% at 50% 0,#121214,#070708 70%);border-color:#1f1f23;color:#e8e8ec;
-  --sec:#0d0d0f;--secb:#1f1f23;--tbar:#0d0d0f;--ink2:#f5f5f7;--lab:#c9c9cf;--val:#ff5ccf;--acc1:#ff1fa8;--acc2:#ff1fa8;
-  --hot:#ff8ad8;--glow:rgba(255,40,170,.65);--pointer:#ff2fb4;--led:#ff2fb4;
-  --knob:radial-gradient(circle at 50% 36%,#3a3a3e 0 22%,#1c1c1f 26% 70%,#0b0b0c 73%)}
-#lxr .bsec > .bt{border-bottom:1px solid #ff1fa855;color:#f5f5f7;letter-spacing:.26em}
+/* ---- LXR: hammered black powder coat, white silkscreen, white-capped knobs with pink LED rings, a red LED display,
+   pale pads, as the hardware drum machine ---- */
+#lxr{background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,0) 38%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='1' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .7  0 0 0 0 .7  0 0 0 0 .72  4.9 0 0 0 -3.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.034' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeDiffuseLighting surfaceScale='3.4' diffuseConstant='1' lighting-color='%23fff'%3E%3CfeDistantLight azimuth='235' elevation='55'/%3E%3C/feDiffuseLighting%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='.17' intercept='-.03'/%3E%3CfeFuncG type='linear' slope='.17' intercept='-.028'/%3E%3CfeFuncB type='linear' slope='.18' intercept='-.024'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),#161618;
+  background-size:auto,180px 180px,300px 300px,auto;border-color:#2c2c30;color:#efefef;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 0 70px rgba(0,0,0,.55),0 2px 0 #000;
+  --silk:rgba(238,238,238,.62);--sec:transparent;--secb:var(--silk);--tbar:transparent;--ink2:#f4f4f4;--lab:#ececec;--val:#ff5ccf;
+  --acc1:#ff1fa8;--acc2:#ff1fa8;--hot:#ff8ad8;--glow:rgba(255,40,170,.6);--pointer:#26262a;--led:#ff2fb4;
+  --knob:radial-gradient(circle at 50% 40%,#fff 0,#f1f1f1 26%,#d6d6d8 50%,#b9b9bd 57%,rgba(0,0,0,0) 59%),
+    radial-gradient(circle,rgba(0,0,0,0) 58%,rgba(255,255,255,.14) 60%,rgba(0,0,0,0) 64%),
+    repeating-conic-gradient(#303034 0 5deg,#18181a 5deg 10deg)}
+/* Groups outlined in silkscreen, the title sitting in the top line */
+#lxr .bsec{background:none;border:1px solid var(--silk);border-top:0;border-radius:8px;margin-top:9px;padding:0 6px 6px;box-shadow:none}
+#lxr .bsec > .bt{display:flex;align-items:center;gap:8px;height:18px;margin:-9px -7px 6px;padding:0;background:none;border:0;border-radius:0;
+  font:600 11px/18px var(--sans);letter-spacing:.2em;color:#f4f4f4}
+#lxr .bsec > .bt::before,#lxr .bsec > .bt::after{content:"";flex:1 1 10px;min-width:10px;height:9px;align-self:flex-end;border-top:1px solid var(--silk)}
+#lxr .bsec > .bt::before{border-left:1px solid var(--silk);border-top-left-radius:8px}
+#lxr .bsec > .bt::after{border-right:1px solid var(--silk);border-top-right-radius:8px}
+#lxr .bl{font-family:var(--sans);font-weight:600;letter-spacing:.08em;color:#ececec}
+#lxr .bv{color:#ff6fd4}
+/* Knobs: a white cap on a ribbed black skirt, a dark line on the cap, the LED ring round it */
 #lxr .bk .ring{display:none}
+#lxr .bk .dial{box-shadow:0 3px 4px rgba(0,0,0,.85),0 0 0 1px #000}
+#lxr .bk .dial i{top:21%;height:24%;width:2px;margin-left:-1px;border-radius:1px}
+#lxr .bctl.big .bk .dial i{top:20%;height:24%;width:3px;margin-left:-1.5px}
 #lxr .bk .leds{display:block;
-  background:conic-gradient(from -150deg,var(--led) 0 calc(var(--f,0) * 300deg),#3a0f2c calc(var(--f,0) * 300deg) 300deg,transparent 300deg);
+  background:conic-gradient(from -150deg,var(--led) 0 calc(var(--f,0) * 300deg),#3a1030 calc(var(--f,0) * 300deg) 300deg,transparent 300deg);
   -webkit-mask:repeating-conic-gradient(from -151deg,#000 0 6deg,transparent 6deg 15deg),radial-gradient(circle,transparent calc(var(--ks) / 2 - 5px),#000 calc(var(--ks) / 2 - 4.5px));
   -webkit-mask-composite:source-in;
   mask:repeating-conic-gradient(from -151deg,#000 0 6deg,transparent 6deg 15deg) intersect,radial-gradient(circle,transparent calc(var(--ks) / 2 - 5px),#000 calc(var(--ks) / 2 - 4.5px));
   filter:drop-shadow(0 0 3px rgba(255,47,180,.75))}
-#lxr .bb{--btn:linear-gradient(#1f1f22,#121214);--btnink:#d9d9de;border-color:#000}
-#lxr .bb i{background:#2a0b20;border-color:#3d1030}
-#lxr .bb.on i{background:#ff2fb4;border-color:#ff7fd2;box-shadow:0 0 8px #ff2fb4}
-#lxr .lhead{display:flex;align-items:center;gap:16px;margin:0 2px 10px}
-#lxr .lword{font:900 42px/0.9 var(--sans);letter-spacing:.08em;color:#ff2fb4;text-shadow:0 0 10px rgba(255,47,180,.8),0 0 26px rgba(255,47,180,.35)}
-#lxr .lsub{font:700 10px var(--mono);letter-spacing:.22em;color:#8d8d94;text-transform:uppercase;line-height:1.5}
-#lxr .lsub b{display:block;color:#f5f5f7;font-size:12px}
-#lxr .leng{margin-left:auto;display:flex;gap:6px}
-#lxr .leng span{font:800 10px var(--mono);letter-spacing:.12em;padding:6px 10px;border-radius:5px;background:#141416;color:#9a9aa2;display:flex;align-items:center;gap:7px;box-shadow:inset 0 0 0 1px #26262a}
-#lxr .leng span i{width:7px;height:7px;border-radius:50%;background:#3a0f2c}
+/* Buttons: pale grey caps, a pink LED */
+#lxr .bb{--btn:linear-gradient(#ececee,#bdbdc1);--btnink:#1c1c1e;border:1px solid #000;border-radius:6px;box-shadow:0 2px 0 #000,inset 0 1px 0 rgba(255,255,255,.8)}
+#lxr .bb i{background:#77777c;border-color:#5d5d62}
+#lxr .bb.on i{background:#ff2fb4;border-color:#ff8fd8;box-shadow:0 0 8px #ff2fb4}
+/* Head: the wordmark, the red LED display, the voice buttons */
+#lxr .lhead{display:flex;align-items:center;gap:18px;margin:0 2px 8px}
+#lxr .lbrand{display:flex;flex-direction:column;gap:3px}
+#lxr .lword{font:900 40px/0.9 var(--sans);letter-spacing:.06em;color:#f6f6f6;text-shadow:0 1px 0 #000}
+#lxr .lsub{font:600 10px var(--sans);letter-spacing:.24em;color:#e6e6e6;text-transform:uppercase}
+#lxr .ldisp{position:relative;flex:0 1 340px;min-width:150px;height:44px;padding:0 12px;border-radius:3px;display:flex;align-items:center;gap:10px;overflow:hidden;
+  background:linear-gradient(170deg,rgba(255,255,255,.07),rgba(255,255,255,0) 45%),#200605;
+  box-shadow:inset 0 0 0 1px #000,inset 0 2px 8px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.12)}
+#lxr .ldisp::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(0,0,0,0) 0.7px,rgba(20,2,2,.55) 1.2px);background-size:3px 3px}
+#lxr .ldisp b{font:700 18px var(--mono);letter-spacing:.14em;color:#ff5038;text-shadow:0 0 4px rgba(255,70,50,.95),0 0 12px rgba(255,50,30,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#lxr .ldisp em{margin-left:auto;font:700 10px var(--mono);font-style:normal;letter-spacing:.16em;color:#c2281c;text-shadow:0 0 5px rgba(255,60,40,.5);white-space:nowrap}
+#lxr .leng{margin-left:auto;display:flex;gap:14px}
+#lxr .leng span{display:flex;flex-direction:column;align-items:center;gap:6px;font:600 9.5px var(--sans);letter-spacing:.14em;color:#e6e6e6;white-space:nowrap}
+#lxr .leng span i{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 45% 35%,#f4f4f4,#bcbcc0 62%,#8e8e93);
+  box-shadow:0 2px 0 #000,0 0 0 1px #000}
 #lxr .leng span.on{color:#fff}
-#lxr .leng span.on i{background:#ff2fb4;box-shadow:0 0 7px #ff2fb4}
-#lxr .vk{--key:linear-gradient(#1c1c1f,#101012);--keyink:#d9d9de;--ledoff:#3a0f2c;--ledon:#ff2fb4;box-shadow:0 2px 0 #000,inset 0 0 0 1px #26262a}
-#lxr .bhint{color:#6d6d74}
+#lxr .leng span.on i{background:radial-gradient(circle at 45% 35%,#fff,#ffd6f0 45%,#ff6fd0);box-shadow:0 2px 0 #000,0 0 0 1px #000,0 0 12px rgba(255,47,180,.9)}
+/* The kit rows: pale square pads */
+#lxr .vk{--key:linear-gradient(#e2e2e4,#b6b6ba);--keyink:#18181a;--ledoff:#7a7a80;--ledon:#ff2fb4;border-radius:4px;font-family:var(--sans);font-weight:700;
+  box-shadow:0 2px 0 #000,0 0 0 1px #000,inset 0 1px 0 rgba(255,255,255,.85)}
+#lxr .vk.on{--key:linear-gradient(#fff,#e6e6ea);box-shadow:0 2px 0 #000,0 0 0 1px #000,inset 0 1px 0 #fff,0 0 14px rgba(255,255,255,.3)}
+#lxr .bhint{color:#a8a8ae}
+@media (max-width:900px){#lxr .lhead{flex-wrap:wrap} #lxr .ldisp{order:3;flex:1 1 100%}}
 
 /* ---- GIN: machined gunmetal, aluminium knobs with a thin ice-blue value arc, a black glass scope ---- */
 #gin{border:1px solid #3d4249;color:#e8ecf0;
@@ -1104,7 +1135,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v29 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v30 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -2749,13 +2780,14 @@ var LXR_LAYOUTS = [
 ];
 var lxr = new DrumPanel({
   root: $("lxr"), kind: 6, n: 22,
-  head: '<div class="lhead"><div class="lword">LXR</div><div class="lsub"><b></b>Digital drum synthesis</div>' +
+  head: '<div class="lhead"><div class="lbrand"><div class="lword">LXR</div><div class="lsub">Digital drum synth</div></div><div class="ldisp"><b></b><em></em></div>' +
     '<div class="leng">' + LXR_VOICES.map(function (v, i) { return '<span data-e="' + i + '"><i></i>' + v + "</span>"; }).join("") + "</div></div>",
   hint: "The layout follows the row's voice: kick and toms, snare, or cymbals and hats. Tap a row below to edit it.",
   sections: LXR_LAYOUTS[0]
 });
 lxr.voice = function (m) {
-  lxr.root.querySelector(".lsub b").textContent = lxr.voiceName(["KICK", "SNARE", "CYM"][m.variant] || "");
+  lxr.root.querySelector(".ldisp b").textContent = lxr.voiceName(["KICK", "SNARE", "CYM"][m.variant] || "");
+  lxr.root.querySelector(".ldisp em").textContent = ["DRUM", "SNARE", "METAL"][m.variant] || "";
   Array.prototype.forEach.call(lxr.root.querySelectorAll(".leng span"), function (s) { s.classList.toggle("on", +s.getAttribute("data-e") === m.variant); });
 };
 // A new voice is a new layout: rebuilt before its values are shown, every control drawn fresh
@@ -2912,16 +2944,26 @@ ART.cyc = function () {
   for (var k = 0; k < 8; k++) s += R(12 + k * 17.5, 66, 14.5, 16, "#cfcbc2", 3) + C(19.2 + k * 17.5, 70, 1.3, k === 0 ? "#ff6a2a" : "#b9ae9c");
   return s;
 };
-// LXR: black, pink LED rings round the knobs
+// LXR: the hardware in small, a hammered black plate, a red display, white-capped knobs with pink rings, pale pads
 ART.lxr = function () {
-  var s = R(6, 12, 148, 78, "#0b0b0c", 7, ' stroke="#26262a" stroke-width="1.2"') + svgText(14, 30, 15, "#ff2fb4", "LXR", ' font-weight="900" letter-spacing="1"');
-  var fs = [0.7, 0.35, 0.85, 0.5, 0.6, 0.25];
-  for (var i = 0; i < 6; i++) {
-    var cx = 62 + i * 15, cy = 24 + (i % 2) * 0;
-    s += C(cx, cy + 6, 5.4, "#1c1c1f") + L(arcPath(cx, cy + 6, 7.2, fs[i]), "#ff2fb4", 1.6) + L(arcPath(cx, cy + 6, 7.2, 1), "#3a0f2c", 1.6, ' opacity=".55"');
+  var s = '<defs><filter id="lxrHam" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">' +
+    '<feTurbulence type="fractalNoise" baseFrequency=".32" numOctaves="2" seed="11"/>' +
+    '<feDiffuseLighting surfaceScale="1.1" lighting-color="#fff"><feDistantLight azimuth="235" elevation="55"/></feDiffuseLighting>' +
+    '<feComponentTransfer><feFuncR type="linear" slope=".17" intercept="-.03"/><feFuncG type="linear" slope=".17" intercept="-.028"/>' +
+    '<feFuncB type="linear" slope=".18" intercept="-.024"/></feComponentTransfer><feComposite in2="SourceGraphic" operator="in"/></filter></defs>' +
+    R(6, 12, 148, 78, "#161618", 7, ' filter="url(#lxrHam)"') + R(6, 12, 148, 78, "none", 7, ' stroke="#2c2c30" stroke-width="1.2"') +
+    svgText(13, 29, 14, "#f6f6f6", "LXR", ' font-weight="900" letter-spacing=".5"');
+  s += R(48, 17, 62, 14, "#200605", 1.5, ' stroke="#000"') + svgText(52, 27, 7, "#ff5038", "BD LXR", ' style="font-family:ui-monospace,Menlo,monospace" font-weight="700" letter-spacing="1"');
+  for (var v = 0; v < 3; v++) s += C(121 + v * 11, 24, 3.2, v === 0 ? "#ffd6f0" : "#c4c4c8") + (v === 0 ? C(121, 24, 4.6, "none", ' stroke="#ff2fb4" stroke-width=".8" opacity=".8"') : "");
+  s += R(11, 37, 138, 23, "none", 3, ' stroke="#eeeeee" stroke-opacity=".55" stroke-width=".7"');
+  var fs = [0.7, 0.35, 0.85, 0.5, 0.6, 0.25, 0.45, 0.8];
+  for (var i = 0; i < 8; i++) {
+    var cx = 21 + i * 17, cy = 48.5;
+    s += L(arcPath(cx, cy, 6.6, 1), "#3a1030", 1) + L(arcPath(cx, cy, 6.6, fs[i]), "#ff2fb4", 1.1) +
+      C(cx, cy, 5, "#1c1c1e") + C(cx, cy - 0.4, 3.2, "#efefef") + L("M" + cx + " " + (cy - 3) + " V" + (cy - 1.4), "#26262a", 0.8);
   }
-  for (var j = 0; j < 6; j++) s += C(22 + j * 21, 50, 5.4, "#1c1c1f") + L(arcPath(22 + j * 21, 50, 7.2, fs[5 - j]), "#ff2fb4", 1.6);
-  for (var k = 0; k < 8; k++) s += R(12 + k * 17.5, 66, 14.5, 16, "#18181b", 2, ' stroke="#2a2a2e"') + C(19.2 + k * 17.5, 70, 1.3, k === 0 ? "#ff2fb4" : "#3a0f2c");
+  for (var k = 0; k < 8; k++) s += R(11 + k * 17.4, 66, 14.2, 17, k === 0 ? "#fafafa" : "#cfcfd2", 2, ' stroke="#000" stroke-width=".8"') +
+    C(18.1 + k * 17.4, 70, 1.3, k === 0 ? "#ff2fb4" : "#7a7a80");
   return s;
 };
 // GIN: machined gunmetal, a black glass scope of the tone and noise, aluminium knobs with an ice blue arc
