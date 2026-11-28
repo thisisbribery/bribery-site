@@ -1104,7 +1104,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v27 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v28 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1472,18 +1472,100 @@ function wantScreen(mode) {
 
 function tx(bytes) { if (output) output.send(HDR.concat(bytes, [0xF7])); }
 
+// ---- Follow the Deluge: when the hardware changes what the stage shows, put the right part of it on screen, so nothing
+// needs scrolling to find. A menu, browser, waveform or song view opens at the top, its selection in view. The track
+// remembers where it was: back from a menu with nothing changed, it returns there; a new kit, synth, preset, track or
+// engine panel starts at the top. A setting opened on the Deluge brings its knob into view.
+var stageNow = "track", trackSaved = null, settleUntil = 0, trackCore = "", trackFull = "", panelKind = 0;
+var restoreY = -1, lastTouchAt = 0;
+document.addEventListener("pointerdown", function () { lastTouchAt = performance.now(); }, true);
+// The user scrolling by hand cancels a restore still waiting for the page to grow back
+["wheel", "touchmove", "keydown"].forEach(function (ev) {
+  window.addEventListener(ev, function () { restoreY = -1; }, { passive: true });
+});
+function fingerOnPage() { return performance.now() - lastTouchAt < 900; }
+function pageTo(y, smooth) {
+  y = Math.max(0, Math.round(y));
+  if (Math.abs(window.scrollY - y) < 2) return;
+  try { window.scrollTo({ top: y, behavior: smooth ? "smooth" : "instant" }); } catch (e) { window.scrollTo(0, y); }
+}
+function barBottom() { var b = $("bar"); return b ? Math.max(0, b.getBoundingClientRect().bottom) : 0; }
+// Scroll the page as little as it takes to show el below the bar (its top first, when it is taller than the room)
+function showOnPage(el, smooth) {
+  if (!el || !el.getClientRects().length) return;
+  var r = el.getBoundingClientRect(), top = barBottom() + 8, bottom = window.innerHeight - 24, dy = 0;
+  if (r.top < top) dy = r.top - top;
+  else if (r.bottom > bottom) dy = Math.min(r.bottom - bottom, r.top - top);
+  if (dy) pageTo(window.scrollY + dy, smooth);
+}
+// Scroll a list inside itself only: a step at a time when the row is near, centred when it jumped out of sight
+function showInList(list, el) {
+  var lr = list.getBoundingClientRect(), r = el.getBoundingClientRect();
+  if (r.bottom <= lr.top || r.top >= lr.bottom) list.scrollTop += (r.top + r.height / 2) - (lr.top + lr.height / 2);
+  else if (r.top < lr.top) list.scrollTop += r.top - lr.top;
+  else if (r.bottom > lr.bottom) list.scrollTop += r.bottom - lr.bottom;
+}
+// What the track is: a change of core (track, kit or synth, engine, engine panel) means a new layout, so the top.
+// Full adds the preset name: a menu that changed it (a new kit, a loaded preset) also lands on the top.
+function trackKey(full) {
+  if (!state) return "";
+  var kit = state.outType === 1;
+  var core = [state.track, state.outType, kit ? "" : state.engine + "/" + state.synthMode].join(":");
+  return full ? core + ":" + (state.name || "") : core + ":" + panelKind;
+}
+// Before the stage swaps: hiding the track shrinks the page, which would clamp the place to remember
+function leaveStage(which) {
+  if (which !== stageNow && stageNow === "track") trackSaved = { y: window.scrollY, key: trackKey(true) };
+}
+function followStage(which) {
+  if (which === stageNow) return;
+  stageNow = which;
+  restoreY = -1;
+  if (which !== "track") { pageTo(0); return; }
+  if (trackSaved && trackSaved.key === trackKey(true)) {
+    pageTo(trackSaved.y);
+    if (window.scrollY < trackSaved.y - 2) restoreY = trackSaved.y; // Clamped: the panel is still on its way back
+    settleUntil = performance.now() + 1500; // A new kit's name can arrive just after the menu closes
+  } else { pageTo(0); settleUntil = 0; }
+  trackCore = trackKey(false); trackFull = trackKey(true);
+}
+// After each STATE or PANEL message
+function followTrack() {
+  var core = trackKey(false), full = trackKey(true), settling = performance.now() < settleUntil;
+  if (stageNow === "track") {
+    if (full !== trackFull && settling) { pageTo(0); settleUntil = 0; restoreY = -1; }
+    else if (core !== trackCore) {
+      // Just back from a menu, the panel coming back (or going while it redraws) is not a new layout
+      var panelOnly = core.replace(/:\d+$/, "") === trackCore.replace(/:\d+$/, "");
+      if (!(settling && panelOnly)) { pageTo(0); restoreY = -1; }
+    }
+    if (restoreY >= 0) {
+      if (!settling) restoreY = -1;
+      else { pageTo(restoreY); if (window.scrollY >= restoreY - 2) restoreY = -1; }
+    }
+  }
+  trackCore = core; trackFull = full;
+}
+// A setting opened on the Deluge: its knob into view (not when the finger opened it, it is under the finger)
+function followKnob(b) {
+  if (stageNow !== "track" || fingerOnPage()) return;
+  requestAnimationFrame(function () { showOnPage(b, true); });
+}
+
 // ---- Stage: one panel at a time, by what the Deluge is doing. A menu or browser on top wins, then the waveform,
 // then the song views, then the track.
 var picker = null, browser = null, wave = null, transport = null;
 function updateStage() {
   var view = transport ? transport.view : 4;
   var which = picker ? "picker" : browser ? "browser" : wave ? "wave" : (view >= 1 && view <= 3) ? "song" : "track";
+  leaveStage(which);
   ["picker", "browser", "wave", "song", "track"].forEach(function (id) {
     var el = $(id), on = id === which;
     if (el.classList.contains("show") !== on) el.classList.toggle("show", on);
   });
   if (which === "wave") drawWave();
   if (which === "song") renderSong();
+  followStage(which);
 }
 
 // ---- Picker (any open context menu). Instrument and kit type lists get a drawing per tile.
@@ -1506,7 +1588,9 @@ function showPicker(p) {
       tiles.appendChild(t);
     });
   }
+  var wasOpen = stageNow === "picker";
   updateStage();
+  if (picker) showOnPage($("pickerTiles").querySelector(".tile.sel"), wasOpen);
 }
 
 // ---- Browser (preset, song, pattern and sample browsers): a window of names around the selected one
@@ -1542,7 +1626,7 @@ function highlightBrowser(sel) {
   for (var r = 0; r < rows.length; r++) {
     var on = +rows[r].getAttribute("data-abs") === sel;
     rows[r].className = rows[r].className.replace(/ (sel|tapped)/g, "") + (on ? " sel" : "");
-    if (on) rows[r].scrollIntoView({ block: "nearest" });
+    if (on) showInList($("browserList"), rows[r]);
   }
 }
 
@@ -1815,8 +1899,10 @@ function renderKnob(key) {
     b.querySelector(".ks").innerHTML = knobSvg(k.pos, k.bipolar);
     b.querySelector(".kv").textContent = (k.bipolar && k.value > 0 ? "+" : "") + k.value;
   }
+  var wasOpen = b.classList.contains("open");
   b.className = "knob" + (k.isSwitch ? " switch" : "") + (k.open ? " open" : "") + (k.cant ? " cant" : "") +
     (b.classList.contains("drag") ? " drag" : "");
+  if (k.open && !wasOpen) followKnob(b);
   b.title = k.cant ? "Not available on this sound (the Deluge would say CANT)"
     : k.isSwitch ? "Tap to switch" : "Drag up or down to turn, tap to open it on the Deluge";
 }
@@ -3671,7 +3757,7 @@ function onMessage(ev) {
   case "clipPos": clipPos = m.pos; placeClipHeads(); return;
   case "diag": $("waveDiag").textContent = m.text; return;
   case "gold": showGold(m); return;
-  case "panel": if (!m.open || m.ok) showPanel(m); return;
+  case "panel": if (!m.open || m.ok) { showPanel(m); panelKind = m.open ? m.which : 0; followTrack(); } return;
   case "wtable": if (m.ok) wtTable(m); return;
   case "wtpos": if (m.ok) wtPos(m); return;
   case "beat": beatAt = { phase: m.phase, time: performance.now() }; return;
@@ -3681,7 +3767,8 @@ function onMessage(ev) {
     if (lastSeq >= 0 && m.seq !== ((lastSeq + 1) & 0x7F)) dropped++;
     lastSeq = m.seq; stateCount++;
     state = m;
-    break;
+    render(); followTrack();
+    return;
   default:
     rows = m.rows;
   }
