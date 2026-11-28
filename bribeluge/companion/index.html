@@ -62,7 +62,7 @@
     <h1 class="bx-mega bx-glitch" data-text="BRIBELUGE COMPANION" data-fit><span class="bx-fit">BRIBELUGE COMPANION</span></h1>
     <div class="bx-hero-grid">
       <div>
-        <p class="bx-lede">A second screen for the Synthstrom Deluge on a phone, tablet or laptop, over USB. The display spelled out in full, knobs and engine drawings, waveforms with draggable markers, a song view you can tap, and a panel for every engine, drawn like the machine it comes from. Built on the <a href="#credits" style="color:var(--bx-pink)">Deluge Community firmware</a>.</p>
+        <p class="bx-lede">A second screen for the Synthstrom Deluge on a phone, tablet or laptop, over USB. The display spelled out in full, knobs and engine drawings, waveforms with draggable markers, a song view you can tap, the Deluge's menus whole page, every setting of the sound laid out by section, picture pickers for engines and effect types, and a panel for every engine, drawn like the machine it comes from. Built on the <a href="#credits" style="color:var(--bx-pink)">Deluge Community firmware</a>.</p>
         <div class="cx-ctas">
           <a class="bx-btn bx-solid cx-launch" href="/bribeluge/companion/launch/">Launch Companion</a>
           <small>Chrome or Edge. Works with Bribeluge v1.32+ and stock community firmware 1.3.</small>
@@ -132,6 +132,31 @@
     </div>
   </section>
 
+  <section class="bx-section" id="settings">
+
+    <div class="bx-sec-head">
+
+      <h2>Every setting, and picture pickers</h2>
+
+      <p>Below the panels, every setting of the sound being played, laid out by section. Needs Bribeluge v1.50.</p>
+
+    </div>
+
+    <dl class="bx-rows">
+
+      <div><dt>The whole sound</dt><dd>Oscillators, filters, all four envelopes and LFOs, voice, effects, EQ and drive, sidechain, arp and stutter, and the song's master clip: a hundred and five settings, each a knob or a list that works both ways. Only what the sound has shows, so a drum engine row skips the oscillators.</dd></div>
+
+      <div><dt>NAV</dt><dd>OSC, FILTER, ENV, LFO, VOICE, EXT, FX, DRIVE, SIDE and MASTER down the left. EXT holds envelopes 3 and 4 and LFOs 3 and 4, below the main voice.</dd></div>
+
+      <div><dt>Engine picker</dt><dd>Open SYNTH MODE on a kit row or a synth, from the Deluge or the engine bar, and every engine comes up as its panel, in Synths, Drum voices and Drum machines. Tap one to switch.</dd></div>
+
+      <div><dt>Type tiles</dt><dd>Oscillator types as their waves, and crush, saturation and master clip types as a sine going in and what comes out, with a line on how each sounds.</dd></div>
+
+    </dl>
+
+  </section>
+
+
   <section class="bx-section" id="connect">
     <div class="bx-sec-head">
       <h2>Connect your Deluge</h2>
@@ -176,7 +201,7 @@
       <li><b>Screen over SysEx, by <a href="https://github.com/bfredl" target="_blank" rel="noopener">bfredl</a>.</b> The OLED and 7SEG mirror the companion shows is the community firmware's display-over-SysEx feature (2023), first shown in bfredl's <a href="https://bfredl.github.io/delugeclient/app.html" target="_blank" rel="noopener">delugeclient</a>. The companion unpacks the same stream: 7-to-8 bit packing with run-length encoding, the inverse of the firmware's <code>pack_8to7_rle</code>.</li>
       <li><b>DEx, by <a href="https://github.com/silicakes/deluge-extensions" target="_blank" rel="noopener">silicakes</a>.</b> The best general Deluge web client (MIT), and the reference for how the companion drives the mirror (keep-alive, display swap). No DEx code is included; the companion is written from scratch.</li>
       <li><b>MIDI Follow.</b> A community firmware feature. In STOCK mode every knob in the companion is a MIDI Follow CC, using the firmware's default map.</li>
-      <li><b>What Bribeluge adds.</b> Extra SysEx messages under the same header, for track state, kit rows, pickers, the browser, waveforms, params, transport, clips, the arranger and the synth panels. These only exist in Bribeluge.</li>
+      <li><b>What Bribeluge adds.</b> Extra SysEx messages under the same header, for track state, kit rows, pickers, the browser, waveforms, params, transport, clips, the arranger, the engine panels, the menu and every setting of the sound. These only exist in Bribeluge.</li>
       <li><b>Licence.</b> The companion is Bribery's own code, licensed under the <a href="/bribeluge/companion/LICENSE.txt">PolyForm Noncommercial License 1.0.0</a> plus two additional permissions: you can make and sell music with it, and Synthstrom Audible may use it commercially with credit. Free to use, study, change and share; don't sell it. The Bribeluge firmware it talks to is a separate program and stays GPL-3.0.</li>
     </ul>
   </section>
@@ -190,7 +215,7 @@
       <div><dt>Transport</dt><dd>Plain USB MIDI, through the browser's Web MIDI with SysEx permission. No OSC, no NRPN, no custom USB driver. Any of the Deluge's USB MIDI ports works.</dd></div>
       <div><dt>Header</dt><dd>Community SysEx with Synthstrom's manufacturer ID: <span class="cx-hex">F0 00 21 7B 01 02 &hellip; F7</span>, where <span class="cx-hex">02</span> is the display command. Older docs and clients show <span class="cx-hex">F0 7D</span>: that was the developer ID the community used until February 2024, when it moved to the official Synthstrom ID.</dd></div>
       <div><dt>Screen mirror</dt><dd>Out: <span class="cx-hex">00 02</span> keep alive, <span class="cx-hex">00 03</span> force a full frame, <span class="cx-hex">00 04</span> swap 7SEG / OLED. In: <span class="cx-hex">40</span> OLED frame (packed + RLE, full or a page range), <span class="cx-hex">41</span> 7SEG digits. Works on stock community firmware 1.3.</dd></div>
-      <div><dt>Bribeluge state</dt><dd>Out: <span class="cx-hex">03 &lt;mode&gt;</span> after the header (subscribe, keep alive, picker, browser, SELECT / BACK, markers, pads, transport, clips, panels). In: <span class="cx-hex">42</span> to <span class="cx-hex">4F</span> and <span class="cx-hex">56</span> to <span class="cx-hex">58</span>. Bribeluge only.</dd></div>
+      <div><dt>Bribeluge state</dt><dd>Out: <span class="cx-hex">03 &lt;mode&gt;</span> after the header (subscribe, keep alive, picker, browser, SELECT / BACK, markers, pads, transport, clips, panels, knobs, the menu, the sound's settings). In: <span class="cx-hex">42</span> to <span class="cx-hex">4F</span>, <span class="cx-hex">56</span> to <span class="cx-hex">5B</span> and <span class="cx-hex">70</span>. Bribeluge only.</dd></div>
       <div><dt>Knobs in STOCK</dt><dd>MIDI Follow CCs on the Follow channel, with the Deluge's feedback coming back the same way.</dd></div>
       <div><dt>Tempo and play light</dt><dd>MIDI clock from the Deluge: tempo from 24 ticks per beat, play from start / continue / stop.</dd></div>
     </dl>
@@ -218,18 +243,30 @@ Bribeluge companion (Bribeluge only)
   out  03 08 &lt;cmd&gt;          top bar: 0 play, 1 record, 2 select, 3 back, 4 left, 5 right
   out  03 09 &lt;hi&gt; &lt;lo&gt;      launch or stop a session clip
   out  03 0A &lt;section&gt;      launch a section
+  out  03 0B &lt;row&gt;          select a kit row and open its sample's waveform
+  out  03 0C &lt;button&gt;       press a mod button (light its gold knob pair)
   out  03 0D &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a BRUNO106 panel control
   out  03 0E &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a BROPHET panel control
   out  03 0F &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a WAVE panel control
+  out  03 10 &lt;group&gt; &lt;x&gt; &lt;y&gt; &lt;hi&gt; &lt;lo&gt;  set a PARAMS knob
+  out  03 11 &lt;button&gt; &lt;knob&gt; &lt;hi&gt; &lt;lo&gt;  turn a gold knob
+  out  03 12 &lt;period&gt;       stream CPU and memory (59) every period x 10 ms
+  out  03 13 &lt;region&gt;       send a memory map (70) of one RAM region
   out  03 14 &lt;panel&gt; &lt;id&gt; &lt;hi&gt; &lt;lo&gt;  move a control on any other panel (4 to 15)
   out  03 15 &lt;row&gt;          select a kit row
   out  03 16 &lt;row&gt; &lt;on&gt;     hold or release a kit row's audition
   out  03 17 &lt;panel&gt; &lt;id&gt;   a control was touched: light its gold knobs
   out  03 18 &lt;panel&gt; &lt;id&gt;   the same, and open its setting (SHORTCUT)
+  out  03 19 &lt;level&gt; &lt;entry&gt; &lt;enter&gt;  go to an entry of the open menu
+  out  03 1A &lt;offset+64&gt;    turn the select knob in the open menu
+  out  03 1B &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a SOUND setting
+  out  03 1C &lt;which&gt;        open SYNTH MODE (0) or an oscillator type (1, 2)
+  out  03 1D &lt;option&gt; &lt;leave&gt;  pick an option of the open setting
   in   42 STATE   43 KIT_ROWS   44 TEXT      45 PICKER     46 BROWSER
   in   47 BROWSER_SEL           48 WAVEFORM  49 PLAYHEAD   4A PARAMS
   in   4B TRANSPORT  4C OUTPUTS 4D CLIPS     4E ARRANGER   4F ARRANGER_POS
-  in   56 PANEL (every engine)   57 WTABLE   58 WTPOS</pre>
+  in   56 PANEL (every engine)   57 WTABLE   58 WTPOS     59 CPU
+  in   5A MENU   5B SOUND (every setting of the sound)   70 RAMMAP</pre>
     </details>
     <p class="bx-prose" style="margin-top:18px">The firmware side is in <a href="https://github.com/thisisbribery/DelugeFirmware/blob/bribes/src/deluge/hid/hid_sysex.cpp" target="_blank" rel="noopener">hid_sysex.cpp</a> on the Bribeluge branch. The app is one unminified HTML file: <a href="/bribeluge/companion/launch/">open it</a> and view source.</p>
   </section>
