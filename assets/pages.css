@@ -57,6 +57,8 @@ a.bx-stat:hover span::after,a.bx-stat:focus-visible span::after{opacity:1}
 .bx-feat{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr) auto;gap:clamp(12px,2.6vw,36px);align-items:baseline;padding:18px 0;border-bottom:1px solid var(--bx-line)}
 .bx-feat h4{margin:0;font-size:clamp(17px,1.6vw,21px);font-weight:800;text-transform:uppercase;letter-spacing:-.005em}
 .bx-feat h4 small{display:block;margin-top:5px;font:600 11.5px var(--bx-mono);letter-spacing:.12em;color:var(--bx-pink)}
+.bx-feat:has(.bx-art){align-items:start}
+.bx-feat h4 .bx-art{display:block;width:min(100%,170px);height:auto;margin:0 0 12px}
 .bx-feat p{margin:0;color:#cfc8cd;font-size:16px}
 .bx-feat a.bx-more{font:700 11.5px var(--bx-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--bx-muted);text-decoration:none;white-space:nowrap}
 .bx-feat a.bx-more:hover{color:var(--bx-pink)}
