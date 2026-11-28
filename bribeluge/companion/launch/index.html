@@ -982,6 +982,180 @@ html[data-mode="classic"] main{padding-bottom:72px}
 #gin .bhint{color:#7f8a95}
 /* Tablet widths: a little smaller so each half of TRIBE (and every row) fits on one line */
 @media (max-width:1180px){.cpanel.dk{--kw:44px;--ks:38px}.cpanel.dk .bctl.big{--kw:70px;--ks:60px;--bh:74px}}
+
+/* ===================================================================================================================
+   Synth engine panels, round 3: ULTRAKIK, XIA, BRIBERING, 303, DX7, and the Deluge's own SUBTRACTIVE / FM / RINGMOD
+   =================================================================================================================== */
+/* Arc knobs (thin value arc instead of ticks): BRIBERING and the Deluge family */
+.cpanel.arc .bk .ring{display:none}
+.cpanel.arc .bk .leds{display:block;
+  background:conic-gradient(from -150deg,var(--arc) 0 calc(var(--f,0) * 300deg),var(--arcoff,rgba(255,255,255,.1)) calc(var(--f,0) * 300deg) 300deg,transparent 300deg);
+  -webkit-mask:radial-gradient(circle,transparent calc(var(--ks) / 2 - 2.5px),#000 calc(var(--ks) / 2 - 2px));
+  mask:radial-gradient(circle,transparent calc(var(--ks) / 2 - 2.5px),#000 calc(var(--ks) / 2 - 2px))}
+.cpanel.arc .bk .dial{left:calc((var(--kw) - var(--ks)) / 2 + 5px);top:11px;width:calc(var(--ks) - 10px);height:calc(var(--ks) - 10px)}
+
+/* ---- ULTRAKIK: an oxblood kick drum shell, a chrome hoop, chrome knobs, a drum head showing the pitch drop ---- */
+#ukp{border:0;color:#f1ede4;
+  background:radial-gradient(140% 120% at 30% 0,#8a1a28,#5a0f19 55%,#3d0911);
+  box-shadow:inset 0 0 0 3px #c9ccd2,inset 0 0 0 4px #6d7076,inset 0 0 0 7px #2a0509,0 8px 20px rgba(0,0,0,.5);
+  --sec:rgba(18,9,10,.82);--secb:#4a1e24;--tbar:transparent;--ink2:#f1ede4;--lab:#e9e2d4;--val:#ff9fb0;--acc1:#ff1fd6;--acc2:#ff1fd6;
+  --hot:#ffd0da;--glow:rgba(255,31,214,.5);--tick:#9a9ea6;--pointer:#121417;
+  --knob:radial-gradient(circle at 50% 40%,#fbfbfc 0 18%,#c9ccd2 40%,#8d9299 62%,#e4e6e9 66%,#9fa3ab 80%,#5d6268 100%);
+  --btn:linear-gradient(#2e1c1f,#140b0c);--btnink:#f1ede4}
+#ukp .bsec{border-radius:10px;box-shadow:inset 0 0 0 1px #000a}
+#ukp .bsec > .bt{border-bottom:1px solid #ff1fd655;letter-spacing:.28em}
+#ukp .bb.on i{background:#ff1fd6;border-color:#ff7ae8;box-shadow:0 0 7px #ff1fd6}
+#ukp .ukhead{display:flex;align-items:center;gap:16px;margin:4px 8px 12px}
+#ukp .ukword{font:900 italic 46px/.9 var(--sans);letter-spacing:.01em;padding-right:6px;
+  background:linear-gradient(180deg,#ffffff 0,#dfe1e4 42%,#8d9299 52%,#eef0f2 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 #2a0509)}
+#ukp .uksub{font:700 10px var(--mono);letter-spacing:.22em;color:#f0c9cf;text-transform:uppercase;line-height:1.55}
+#ukp .uksub b{display:block;color:#fff;font-size:12px}
+#ukp .head{margin-left:auto;width:190px;height:70px}
+
+/* ---- XIA: silver modules on black rails ---- */
+#xiap{border-color:#2a2b2f;color:#1d1f22;padding:20px 12px 18px;
+  background:linear-gradient(#5b5e63,#3c3f43) top/100% 9px no-repeat,linear-gradient(#3c3f43,#5b5e63) bottom/100% 9px no-repeat,#141518;
+  --sec:linear-gradient(#e4e6e9,#c5c8cd);--secb:#8e9298;--tbar:transparent;--ink2:#1d1f22;--lab:#26282c;--val:#6a6e75;--acc1:#ff1fd6;--acc2:#19ffe0;
+  --hot:#c4128f;--glow:rgba(255,31,214,.45);--tick:#6d7076;--pointer:#f4f4f2;
+  --knob:radial-gradient(circle at 50% 38%,#3a3c40 0 24%,#1b1c1f 28% 72%,#0c0c0e 75%);
+  --btn:linear-gradient(#f4f5f7,#d4d6da);--btnink:#1d1f22}
+#xiap .bsec{background:var(--sec);border-radius:3px;position:relative;box-shadow:inset 0 1px 0 #fffa,0 3px 6px #000c;border-color:#9a9ea4}
+#xiap .bsec::before,#xiap .bsec::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#9a9ea6,#3d4045)}
+#xiap .bsec::before{left:6px;top:6px}
+#xiap .bsec::after{right:6px;bottom:6px}
+#xiap .bsec > .bt{background:none;border:0;color:#1d1f22;letter-spacing:.24em;padding-top:9px}
+#xiap .bsec.red > .bt{color:#c4128f}
+#xiap .bb.on i{background:#ff1fd6;border-color:#ff7ae8;box-shadow:0 0 7px #ff1fd6}
+#xiap .bb i{background:#d8c9d4;border-color:#b6a6b2}
+#xiap .xhead{display:flex;align-items:center;gap:16px;margin:0 0 10px;padding:8px 14px;border-radius:3px;background:linear-gradient(#e4e6e9,#c5c8cd);box-shadow:inset 0 1px 0 #fffa,0 3px 6px #000c}
+#xiap .xword{font:900 42px/.9 var(--sans);letter-spacing:.16em;color:#1d1f22}
+#xiap .xsub{font:700 10px var(--mono);letter-spacing:.22em;color:#5b5f66;text-transform:uppercase;line-height:1.55}
+#xiap .xsub b{display:block;color:#1d1f22;font-size:12px}
+#xiap .xeng{margin-left:auto;display:flex;gap:8px}
+#xiap .xeng span{font:800 10px var(--mono);letter-spacing:.12em;padding:6px 10px;border-radius:4px;background:#1b1c1f;color:#9a9ea6;display:flex;align-items:center;gap:7px}
+#xiap .xeng span i{width:7px;height:7px;border-radius:50%;background:#3a3c40}
+#xiap .xeng span.on{color:#fff}
+#xiap .xeng span.on[data-e="0"] i{background:#ff1fd6;box-shadow:0 0 7px #ff1fd6}
+#xiap .xeng span.on[data-e="1"] i{background:#19ffe0;box-shadow:0 0 7px #19ffe0}
+#xiap .xjacks{display:flex;gap:10px}
+#xiap .xjacks span{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#0c0c0e 0 3px,#2b2d31 3.5px 5px,#a3a7ad 5.5px 7px)}
+#xiap .vk{--key:linear-gradient(#e4e6e9,#c5c8cd);--keyink:#1d1f22;--ledoff:#b6a6b2;--ledon:#ff1fd6;border-radius:3px}
+#xiap .bhint{color:#8e9298}
+
+/* ---- BRIBERING: deep teal, a resonator that rings with its settings ---- */
+#ringsp{border-color:#1d3a37;color:#dff7f3;
+  background:radial-gradient(120% 140% at 75% 0,#14373a,#0a1716 60%,#070f0e);
+  --sec:rgba(5,14,13,.6);--secb:#1d3a37;--tbar:transparent;--ink2:#e6fbf8;--lab:#a9d9d2;--val:#19ffe0;--acc1:#19ffe0;--acc2:#ff1fd6;
+  --hot:#a8fff2;--glow:rgba(25,255,224,.45);--arc:#19ffe0;--arcoff:rgba(25,255,224,.12);--pointer:#e6fbf8;
+  --knob:radial-gradient(circle at 50% 38%,#2d4441 0 30%,#14201f 34% 72%,#0a1110 75%);
+  --btn:linear-gradient(#173230,#0b1817);--btnink:#cfeee9}
+#ringsp .bsec > .bt{background:none;border:0;border-bottom:1px solid #19ffe033;letter-spacing:.3em;color:#cfeee9}
+#ringsp .bb{border-color:#0a1312}
+#ringsp .bb i{background:#0f3a35;border-color:#164a44}
+#ringsp .bb.on i{background:#19ffe0;border-color:#8ffff0;box-shadow:0 0 8px #19ffe0}
+#ringsp .rhead{display:flex;align-items:center;gap:18px;margin:4px 6px 12px}
+#ringsp .rword{font:300 34px/.9 var(--sans);letter-spacing:.42em;color:#e6fbf8;text-shadow:0 0 18px rgba(25,255,224,.35)}
+#ringsp .rsub{font:700 10px var(--mono);letter-spacing:.22em;color:#6fb8ae;text-transform:uppercase;line-height:1.55}
+#ringsp .rsub b{display:block;color:#e6fbf8;font-size:12px}
+#ringsp .reso{margin-left:auto;width:200px;height:74px}
+#ringsp .vk{--key:linear-gradient(#173230,#0b1817);--keyink:#cfeee9;--ledoff:#0f3a35;--ledon:#19ffe0}
+#ringsp .bhint{color:#6fb8ae}
+
+/* ---- 303: brushed silver, black knobs, red ---- */
+#tbp{border-color:#8e9298;color:#1b1c1f;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 3px),linear-gradient(180deg,#dcdfe2,#b9bdc2);
+  --sec:rgba(255,255,255,.12);--secb:#8e9298;--tbar:transparent;--ink2:#1b1c1f;--lab:#26282c;--val:#5a5e64;--acc1:#d8342c;--acc2:#d8342c;
+  --hot:#b01f18;--glow:rgba(216,52,44,.45);--tick:#6e7278;--pointer:#f4f4f2;
+  --knob:radial-gradient(circle at 50% 38%,#4a4c50 0 20%,#1c1d20 24% 70%,#0d0d0f 73%);
+  --btn:linear-gradient(#2a2b2e,#141517);--btnink:#e9e7e2}
+#tbp .bsec{border:0;border-top:2px solid #1b1c1f;border-radius:0;box-shadow:none;background:none}
+#tbp .bsec > .bt{background:none;border:0;text-align:left;padding-left:2px;letter-spacing:.26em;color:#1b1c1f}
+#tbp .bsec.red > .bt{color:#b01f18}
+#tbp .bsw{height:auto;min-height:var(--bh);gap:3px;padding:2px 0}
+#tbp .bsw .well{background:#1b1c1f;height:30px}
+#tbp .bsw .nub{height:13px}
+#tbp .bsw.down .nub{top:15px}
+#tbp .bsw .o{color:#6e7278}
+#tbp .bsw .o.on{color:#b01f18}
+#tbp .thead2{display:flex;align-items:center;gap:16px;margin:2px 4px 14px}
+#tbp .tbword{font:900 52px/.85 var(--sans);letter-spacing:.02em;color:#1b1c1f}
+#tbp .tbsub{font:800 11px var(--mono);letter-spacing:.3em;color:#1b1c1f;text-transform:uppercase;line-height:1.5;padding:4px 10px;background:#1b1c1f;color:#e9e7e2}
+#tbp .tbled{width:10px;height:10px;border-radius:50%;background:#ff3b2f;box-shadow:0 0 8px #ff3b2f}
+#tbp .tbkeys{margin-left:auto;display:flex;gap:4px}
+#tbp .tbkeys span{width:18px;height:26px;border-radius:3px;background:linear-gradient(#f4f4f2,#d8d9da);box-shadow:0 2px 0 #7d8187}
+#tbp .tbkeys span.k{background:linear-gradient(#3a3c40,#1b1c1f);height:18px}
+#tbp .bhint{color:#4d5157}
+
+/* ---- DX7: dark brown body, a green LCD, coloured operator strips, faders ---- */
+#dxp{border-color:#1a1614;color:#e9e2d8;background:linear-gradient(#3a322e 0 86px,#2b2522 86px);
+  --sec:#231d1a;--secb:#40372f;--tbar:transparent;--ink2:#efe7dc;--lab:#d6cdc1;--val:#7fd4a8;--acc1:#7fd4a8;--acc2:#ff8a1f;
+  --hot:#b8f0d2;--glow:rgba(127,212,168,.45);--tick:#6f655e;--pointer:#efe7dc;
+  --knob:radial-gradient(circle at 50% 38%,#4e4540 0 24%,#221c19 28% 72%,#110e0c 75%);
+  --btn:linear-gradient(#e9e2d4,#c9c0ae);--btnink:#2b2522}
+#dxp .bsec > .bt{background:none;border:0;border-bottom:3px solid var(--opc,#7fd4a8);letter-spacing:.22em;border-radius:0}
+#dxp .bsec.op1{--opc:#e9e2d4} #dxp .bsec.op2{--opc:#ff8a1f} #dxp .bsec.op3{--opc:#7fd4a8}
+#dxp .bsec.op4{--opc:#e9e2d4} #dxp .bsec.op5{--opc:#ff8a1f} #dxp .bsec.op6{--opc:#7fd4a8}
+#dxp .bb.on i{background:#7fd4a8;border-color:#b8f0d2;box-shadow:0 0 7px #7fd4a8}
+#dxp .bb i{background:#44403a;border-color:#2b2522}
+#dxp .bs{height:104px}
+/* An operator: ON, RATIO and FINE stacked beside a tall LEVEL fader */
+#dxp .bsec[class*="op"] .bitems{display:grid;grid-template-columns:auto auto;gap:0 6px;justify-content:center;align-items:start}
+#dxp .bsec[class*="op"] .bitems > :nth-child(1){grid-column:1;grid-row:1}
+#dxp .bsec[class*="op"] .bitems > :nth-child(2){grid-column:2;grid-row:1 / 4}
+#dxp .bsec[class*="op"] .bitems > :nth-child(3){grid-column:1;grid-row:2}
+#dxp .bsec[class*="op"] .bitems > :nth-child(4){grid-column:1;grid-row:3}
+#dxp .bsec[class*="op"] .bbs{min-height:34px}
+#dxp .bsec[class*="op"] .bs{height:190px}
+#dxp .bs .cap{background:linear-gradient(#efe7dc,#c9c0ae)}
+#dxp .dhead{display:flex;align-items:center;gap:16px;margin:0 4px 16px;height:62px}
+#dxp .dword{font:900 46px/.9 var(--sans);letter-spacing:.04em;color:#efe7dc}
+#dxp .dstripes{display:flex;flex-direction:column;gap:4px}
+#dxp .dstripes i{display:block;width:70px;height:4px;border-radius:1px}
+#dxp .dlcd{margin-left:auto;width:260px;height:54px;border-radius:3px;padding:6px 12px;background:linear-gradient(#8ddcb6,#69c095);
+  box-shadow:0 0 0 3px #110e0c,0 0 0 5px #4e4540,inset 0 2px 6px rgba(0,0,0,.35);font:700 15px/1.25 var(--mono);color:#123222;letter-spacing:.12em;white-space:pre}
+#dxp .vk{--key:linear-gradient(#e9e2d4,#c9c0ae);--keyink:#2b2522;--ledoff:#44403a;--ledon:#7fd4a8}
+#dxp .bhint{color:#a79c8e}
+
+/* ---- The Deluge's own synth modes: aluminium, dark pad-coloured sections, one accent per mode ---- */
+.cpanel.dl{border-color:#a9adb3;color:#1b1c1f;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px),linear-gradient(180deg,#e9ebee,#cdd0d5);
+  --sec:#1d1f23;--secb:#2c2f34;--tbar:transparent;--ink2:#eef0f3;--lab:#c3c8ce;--val:var(--acc1);--tick:#5a5f66;--pointer:#f4f5f7;--hot:#fff;--arcoff:rgba(255,255,255,.1);
+  --knob:radial-gradient(circle at 50% 38%,#50545a 0 22%,#26292d 26% 72%,#141518 75%);--btn:linear-gradient(#34373c,#1f2125);--btnink:#e9ecef}
+.cpanel.dl .bsec{box-shadow:0 1px 0 #fff9,inset 0 1px 0 #3a3d42}
+.cpanel.dl .bsec > .bt{background:none;border:0;border-bottom:2px solid var(--acc1);letter-spacing:.24em;color:#eef0f3}
+.cpanel.dl .bb.on i{background:var(--acc1);border-color:#fff;box-shadow:0 0 7px var(--acc1)}
+.cpanel.dl .bb i{background:#3a3d42;border-color:#2a2c30}
+.cpanel.dl .dlhead{display:flex;align-items:center;gap:16px;margin:2px 4px 12px}
+.cpanel.dl .dlword{font:800 30px/.9 var(--sans);letter-spacing:.3em;color:#1b1c1f}
+.cpanel.dl .dlsub{font:700 10px var(--mono);letter-spacing:.22em;color:#5a5f66;text-transform:uppercase;line-height:1.55}
+.cpanel.dl .dlsub b{display:block;color:#1b1c1f;font-size:12px}
+.cpanel.dl .dlpads{margin-left:auto;display:grid;grid-template-columns:repeat(8,12px);gap:3px}
+.cpanel.dl .dlpads i{width:12px;height:12px;border-radius:2px;background:#2a2c30;box-shadow:inset 0 0 0 1px #0006}
+.cpanel.dl .dlsym{width:150px;height:56px}
+.cpanel.dl .bhint{color:#5a5f66}
+#subtp{--acc1:#ff1fd6;--acc2:#ff1fd6;--arc:#ff1fd6;--glow:rgba(255,31,214,.5)}
+#fmp{--acc1:#19ffe0;--acc2:#19ffe0;--arc:#19ffe0;--glow:rgba(25,255,224,.5)}
+#rmodp{--acc1:#ffb020;--acc2:#ffb020;--arc:#ffb020;--glow:rgba(255,176,32,.5)}
+
+/* Narrower pages (the NAV rail): a touch smaller again so every table built panel keeps its rows */
+@media (max-width:1060px){.cpanel.dk{--kw:40px;--ks:35px}.cpanel.dk .bl,.cpanel.dk .bv{font-size:9.5px}.cpanel.dk .bctl.big{--kw:64px;--ks:54px;--bh:68px}
+  .cpanel.dk .bb{width:33px;font-size:9px}.cpanel.dk .bsec > .bt{font-size:10px;letter-spacing:.16em}}
+
+/* BRUNO106, rebuilt: three rows that fill the width (the synth's panel; the amp and envelopes; the effects), shorter
+   sliders, the name as big as the other panels' */
+#bruno{--bh:104px;padding:12px 12px 10px}
+#bruno .bhead{margin:2px 4px 12px}
+#bruno .bname{font:900 30px/1 var(--sans);letter-spacing:.08em;color:#f2f0ea}
+#bruno .bsub{font-size:11px}
+#bruno .bsec{flex:1 0 auto}
+#bruno .bitems{justify-content:space-around}
+#bruno .bctl{width:44px}
+#bruno .bctl.wide{width:auto;min-width:46px}
+#bruno .bbs{gap:4px}
+#bruno .bb{height:30px}
+@media (max-height:700px){#bruno{--bh:92px}}
+
 </style>
 <style>
 /* Two-way knobs: drag the knob grid and the gold knobs to turn them on the Deluge */
@@ -1124,6 +1298,14 @@ html[data-mode="classic"] body:not(.stock) .bx-mode-float{left:calc(var(--navw) 
       <div id="cyc" class="cpanel dk"></div>
       <div id="lxr" class="cpanel dk"></div>
       <div id="gin" class="cpanel dk"></div>
+      <div id="ukp" class="cpanel dk"></div>
+      <div id="xiap" class="cpanel dk"></div>
+      <div id="ringsp" class="cpanel dk arc"></div>
+      <div id="tbp" class="cpanel dk"></div>
+      <div id="dxp" class="cpanel dk"></div>
+      <div id="subtp" class="cpanel dk dl arc"></div>
+      <div id="fmp" class="cpanel dk dl arc"></div>
+      <div id="rmodp" class="cpanel dk dl arc"></div>
       <div id="gold" class="frame" style="display:none"><div class="label">Gold knobs</div><div class="goldgrid"></div></div>
       <div id="special" class="frame" style="display:none"><div class="label"></div><div class="sbody"></div></div>
       <div id="knobs"></div>
@@ -1167,7 +1349,7 @@ html[data-mode="classic"] body:not(.stock) .bx-mode-float{left:calc(var(--navw) 
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v31 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v32 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1615,7 +1797,7 @@ function followTrack() {
 // each message for a moment, until a hand scrolls or touches.
 var mainUntil = 0;
 function mainEl() {
-  var ps = [bruno, brophet, wavet, tribe, cyc, lxr, gin];
+  var ps = allPanels();
   for (var i = 0; i < ps.length; i++) if (ps[i].open && ps[i].root.getClientRects().length) return ps[i].root;
   if ($("special").style.display !== "none" && $("special").getClientRects().length) return $("special");
   if ($("knobs").children.length) return $("knobs");
@@ -1639,7 +1821,7 @@ function shown(el) { return !!el && el.style.display !== "none" && el.getClientR
 // The sections the track has, in page order (measured with the track showing, else by what it holds)
 function navSections() {
   var list = [{ key: "top", label: "TOP", el: $("hero") }];
-  var ps = [bruno, brophet, wavet, tribe, cyc, lxr, gin];
+  var ps = allPanels();
   for (var i = 0; i < ps.length; i++) if (ps[i].open) { list.push({ key: "panel", label: "PANEL", el: ps[i].root }); break; }
   if ($("gold").style.display !== "none") list.push({ key: "gold", label: "GOLD", el: $("gold"), cls: "gold" });
   var sp = $("special");
@@ -2390,31 +2572,33 @@ Panel.prototype.show = function (m) {
 
 var bruno = new Panel({
   root: $("bruno"), cmd: 0x0D, n: 38,
-  head: '<div class="bhead"><span class="bname">BRUNO106</span><span class="bsub">DCO poly</span><span class="bstripe"></span></div>',
+  head: '<div class="bhead"><span class="bname">BRUNO106</span><span class="bsub">DCO poly synth</span><span class="bstripe"></span></div>',
   hint: "Drag a slider and the Deluge follows. Turn a knob on the Deluge and the slider moves.",
-  sections: [ // row 1: the synth's own panel; row 2: the second envelope and the Deluge's effects
+  sections: [ // row 1: the synth's own panel; row 2: the amp and the envelopes; row 3: the Deluge's effects
     { t: "LFO", c: [{ id: 0, n: "Rate", k: "std" }] },
     { t: "DCO", c: [
       { id: 1, n: "Range", b: [{ l: "16'" }, { l: "8'" }, { l: "4'" }], mode: "radio", vals: [0, 1, 2] },
       { id: 2, n: "LFO", k: "dcolfo" }, { id: 3, n: "PWM", k: "ctl" },
-      { id: 4, n: "PWM", k: "sw", o: ["LFO", "MAN"] },
+      { id: 4, n: "PWM src", k: "sw", o: ["LFO", "MAN"] },
       { n: "Wave", b: [{ id: 5, w: "pulse", a: "Pulse" }, { id: 6, w: "saw", a: "Saw" }], mode: "toggle" },
-      { id: 7, n: "Sub", k: "ctl" }, { id: 8, n: "Noise", k: "ctl" }, { id: 9, n: "Slop", k: "ctl" }] },
+      { id: 7, n: "Sub", k: "ctl" }, { id: 8, n: "Noise", k: "ctl" }] },
     { t: "HPF", red: true, c: [{ id: 10, n: "Freq", k: "hpf" }] },
     { t: "VCF", c: [
-      { id: 11, n: "Freq", k: "std" }, { id: 12, n: "Res", k: "std" }, { id: 13, n: "Env", k: "sw", o: ["NORM", "INV"] },
-      { id: 14, n: "Env", k: "env" }, { id: 15, n: "LFO", k: "vcflfo" }, { id: 16, n: "Kybd", k: "kybd" }] },
-    { t: "VCA", red: true, c: [{ id: 17, n: "Mode", k: "sw", o: ["ENV", "GATE"] }, { id: 18, n: "Level", k: "std" }] },
-    { t: "ENV 1", c: [{ id: 19, n: "A", k: "std" }, { id: 20, n: "D", k: "std" }, { id: 21, n: "S", k: "std" }, { id: 22, n: "R", k: "std" }] },
-    { t: "ENV 2", row: 2, c: [{ id: 24, n: "A", k: "std" }, { id: 25, n: "D", k: "std" }, { id: 26, n: "S", k: "std" }, { id: 27, n: "R", k: "std" }] },
+      { id: 11, n: "Freq", k: "std" }, { id: 12, n: "Res", k: "std" }, { id: 13, n: "Env pol", k: "sw", o: ["NORM", "INV"] },
+      { id: 14, n: "Env amt", k: "env" }, { id: 15, n: "LFO", k: "vcflfo" }, { id: 16, n: "Kybd", k: "kybd" }] },
+    { t: "VCA", red: true, row: 2, c: [{ id: 17, n: "Mode", k: "sw", o: ["ENV", "GATE"] }, { id: 18, n: "Level", k: "std" }] },
+    { t: "ENV 1", row: 2, c: [{ id: 19, n: "A", k: "std" }, { id: 20, n: "D", k: "std" }, { id: 21, n: "S", k: "std" }, { id: 22, n: "R", k: "std" }] },
+    { t: "ENV 2", red: true, row: 2, c: [{ id: 24, n: "A", k: "std" }, { id: 25, n: "D", k: "std" }, { id: 26, n: "S", k: "std" }, { id: 27, n: "R", k: "std" }] },
+    { t: "Voice", row: 2, c: [{ id: 9, n: "Slop", k: "ctl" }] },
     // I and II, both for I+II: bits 1 = I, 2 = II, 3 = I+II, 0 = off, the same numbers as the Deluge's
-    { t: "Chorus", red: true, row: 2, c: [{ id: 23, n: "", b: [{ l: "I" }, { l: "II" }], mode: "bits", none: true },
+    { t: "Chorus", red: true, row: 3, c: [{ id: 23, n: "", b: [{ l: "I" }, { l: "II" }], mode: "bits", none: true },
       { id: 28, n: "Rate", k: "crate" }, { id: 29, n: "Depth", k: "cdepth" }] },
-    { t: "Drive", row: 2, c: [{ id: 30, n: "Drive", k: "std" }, { id: 31, n: "Crush", k: "std" }, { id: 32, n: "Deci", k: "std" }, { id: 33, n: "Sat", k: "std" }] },
-    { t: "Delay", red: true, row: 2, c: [{ id: 34, n: "Amt", k: "std" }, { id: 35, n: "Rate", k: "std" }, { id: 36, n: "Fdbk", k: "std" }] },
-    { t: "Reverb", row: 2, c: [{ id: 37, n: "Amt", k: "std" }] }
+    { t: "Drive", row: 3, c: [{ id: 30, n: "Drive", k: "std" }, { id: 31, n: "Crush", k: "std" }, { id: 32, n: "Deci", k: "std" }, { id: 33, n: "Sat", k: "std" }] },
+    { t: "Delay", red: true, row: 3, c: [{ id: 34, n: "Amt", k: "std" }, { id: 35, n: "Rate", k: "std" }, { id: 36, n: "Fdbk", k: "std" }] },
+    { t: "Reverb", row: 3, c: [{ id: 37, n: "Amt", k: "std" }] }
   ]
 });
+bruno.grow = true; // Rows filled edge to edge, the space shared by control
 
 // BROPHET: the P5 (woodgrain) or P8 (black, red LEDs) look, a choice kept on this device
 var BROPHET_SKIN_KEY = "bribeluge-brophet-skin";
@@ -2965,7 +3149,7 @@ gin.voice = function () { gin.root.querySelector(".gsub b").textContent = gin.vo
 
 var DRUM_PANELS = { 4: tribe, 5: cyc, 6: lxr, 7: gin };
 function showDrumPanels(m) {
-  [tribe, cyc, lxr, gin].forEach(function (P) {
+  DRUM_PANEL_LIST.forEach(function (P) {
     if (m.which !== P.kind) { P.show(null); return; }
     if (P.prepare) P.prepare(m);
     P.show(m);
@@ -3020,7 +3204,7 @@ function addShortcut(P) {
   b.onclick = function () { setPanelShortcut(!panelShortcut); };
   foot.appendChild(b);
 }
-function panelExtras() { [bruno, brophet, wavet, tribe, cyc, lxr, gin].forEach(addShortcut); }
+function panelExtras() { allPanels().forEach(addShortcut); }
 
 // ---- The drum machines as the panels draw them: for the kit picker cards, the hero and the kit rows
 ENGINES.push(["TRIBE KICK", "tribe"], ["TRIBE SNARE", "tribe"], ["TRIBE CLAP", "tribe"], ["TRIBE TOM", "tribe"],
@@ -3098,6 +3282,255 @@ ART.gin = function () {
   return s;
 };
 
+// ---- Round 3 engine panels: ULTRAKIK (8), XIA (9), BRIBERING (10), 303 (11), DX7 (12), and the Deluge's own
+// SUBTRACTIVE (13), FM (14) and RINGMOD (15). Table built on the Deluge like the drum panels (03 14 <panel> <id> <hi> <lo>).
+var pReadout3 = panelReadout;
+panelReadout = function (kind, p, P) {
+  var f = p / PANEL_MAX, k;
+  switch (kind) {
+  case "dx99": return String(Math.round(f * 99));
+  case "ratio": k = Math.round(f * 31); return k === 0 ? "0.50" : k + ".00";
+  }
+  return pReadout3(kind, p, P);
+};
+function pK(id, n, k, o) { var c = { id: id, n: n, k: k || "ctl", knob: true }; for (var x in o || {}) c[x] = o[x]; return c; }
+function pS(id, n, names) { return pK(id, n, "ctl", { steps: names.length - 1, names: names }); }
+function pB(id, n, labels) { return { id: id, n: n, b: labels.map(function (l) { return WAVE_SVG[l] ? { w: l, a: l } : { l: l }; }), mode: "radio", vals: labels.map(function (_, i) { return i; }) }; }
+function pT(id, label) { return { n: "", b: [{ id: id, l: label }], mode: "toggle" }; }
+function pOut6(a) { return [pK(a, "Level", "std"), pK(a + 1, "Pan", "pan"), pK(a + 2, "LPF", "std"), pK(a + 3, "HPF", "std"), pK(a + 4, "Delay", "std"), pK(a + 5, "Reverb", "std")]; }
+
+/* ULTRAKIK: an oxblood kick drum shell, a chrome hoop, a drum head drawing the pitch drop */
+var UK_PRESETS = ["DEEP 808", "GRIME SLIDE", "BOOM ROOM", "909 THUMP", "ULTRA", "CLUB 909", "TUBE FAT", "TRAP KNOCK", "HARDSTYLE",
+  "DISTORTO", "RUMBLE", "GABBER", "BITCRUSHR", "FUZZ BOMB", "FOLD STORM", "ANNIHILATE"];
+var pUk = new DrumPanel({
+  root: $("ukp"), kind: 8, n: 26,
+  head: '<div class="ukhead"><div class="ukword">ULTRAKIK</div><div class="uksub"><b></b>Kick engine</div>' +
+    '<svg class="head" viewBox="0 0 190 70"><defs><radialGradient id="ukHead" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#fbf7ee"/><stop offset="1" stop-color="#e2d8c6"/></radialGradient></defs>' +
+    '<rect x="3" y="3" width="184" height="64" rx="32" fill="url(#ukHead)" stroke="#c9ccd2" stroke-width="4"/><rect x="3" y="3" width="184" height="64" rx="32" fill="none" stroke="#5d6268" stroke-width="1"/>' +
+    '<path class="ukcurve" fill="none" stroke="#ff1fd6" stroke-width="2.2" stroke-linecap="round"/><path class="ukbody" fill="none" stroke="#5a0f19" stroke-width="1.2" opacity=".55"/></svg></div>',
+  hint: "PUNCH and SWEEP drop the pitch, BODY shapes the tone. The drum head draws the pitch drop.",
+  sections: [
+    { t: "Pitch", row: 1, c: [pK(0, "Punch", "ctl", { big: true }), pK(1, "Sweep"), pK(2, "Sweep t"), pK(3, "Bend", "ctl64"), pK(4, "Bend t")] },
+    { t: "Body", red: true, row: 1, c: [pB(5, "Wave", ["sine", "RND", "tri", "saw"]), pK(6, "Fold"), pK(7, "Grit"), pK(8, "Sub"), pK(9, "Hold")] },
+    { t: "Click", row: 2, c: [pK(10, "Click"), pB(11, "Type", ["THUD", "TICK", "NSE", "ZAP"]), pK(12, "Tone"), pK(13, "Snap")] },
+    { t: "Drive", red: true, row: 2, c: [pK(14, "Drive"), pB(15, "Type", ["WARM", "HARD", "TUBE", "FUZZ"]), pK(16, "Crush")] },
+    { t: "Amp", row: 2, c: [pK(17, "Decay"), pK(18, "Tune", "tune")] },
+    { t: "Preset", red: true, row: 2, c: [pS(19, "Kick", UK_PRESETS)] },
+    { t: "Out", row: 3, c: pOut6(20) }
+  ]
+});
+pUk.afterDraw = function () {
+  if (!pUk.built) return;
+  var punch = Math.max(0, pUk.v[0]) / PANEL_MAX, sweep = Math.max(0, pUk.v[1]) / PANEL_MAX, time = 0.08 + Math.max(0, pUk.v[2]) / PANEL_MAX * 0.6, wave = Math.max(0, pUk.v[5]), d = "", b = "";
+  for (var x = 0; x <= 150; x += 2) {
+    var t = x / 150, drop = Math.exp(-t / time) * (0.35 + 0.65 * sweep) + Math.exp(-t / 0.03) * punch * 0.5;
+    d += (x ? "L" : "M") + (20 + x) + " " + (56 - drop * 40).toFixed(1);
+    var ph = t * 9 * (1 + drop * 3), fr = ph % 1, s = wave === 3 ? 1 - 2 * fr : wave === 2 ? 1 - 4 * Math.abs(fr - 0.5) : Math.sin(fr * 2 * Math.PI);
+    b += (x ? "L" : "M") + (20 + x) + " " + (35 - s * 11 * Math.exp(-t * 2.2)).toFixed(1);
+  }
+  pUk.root.querySelector(".ukcurve").setAttribute("d", d);
+  pUk.root.querySelector(".ukbody").setAttribute("d", b);
+};
+pUk.voice = function () { pUk.root.querySelector(".uksub b").textContent = pUk.voiceName(UK_PRESETS[Math.max(0, pUk.v[19])] || ""); pUk.afterDraw(); };
+
+/* XIA: silver modules on black rails. DXIA (three operators into a carrier) or DIIA (partials and a strike) */
+var XIA_LAYOUTS = [
+  [
+    { t: "Op 1", row: 1, c: [pK(3, "Blendex"), pK(4, "Freq", "ctl64")] },
+    { t: "Op 2", row: 1, c: [pK(6, "Blendex"), pK(7, "Freq", "ctl64")] },
+    { t: "Op 3", row: 1, c: [pK(8, "Blendex"), pK(9, "Freq", "ctl64")] },
+    { t: "Engine", red: true, row: 1, c: [pK(1, "Drive"), pK(0, "Decay"), pT(5, "PUNCH")] },
+    { t: "Variant", row: 1, c: [pB(10, "", ["L", "B", "C"])] },
+    { t: "Out", row: 2, c: [pK(2, "Tune", "tune")].concat(pOut6(11)) }
+  ],
+  [
+    { t: "Partials", row: 1, c: [pK(3, "Weight"), pK(4, "Alloy"), pK(6, "Shape")] },
+    { t: "Strike", row: 1, c: [pK(7, "Strike")] },
+    { t: "Engine", red: true, row: 1, c: [pK(1, "Drive"), pK(0, "Decay"), pT(5, "PUNCH")] },
+    { t: "Variant", row: 1, c: [pB(10, "", ["G", "I", "H"])] },
+    { t: "Out", row: 2, c: [pK(2, "Tune", "tune")].concat(pOut6(11)) }
+  ]
+];
+var pXia = new DrumPanel({
+  root: $("xiap"), kind: 9, n: 17,
+  head: '<div class="xhead"><div class="xword">XIA</div><div class="xsub"><b></b><span>Phase modulation percussion</span></div>' +
+    '<div class="xjacks"><span></span><span></span><span></span></div>' +
+    '<div class="xeng"><span data-e="0"><i></i>DXIA</span><span data-e="1"><i></i>DIIA</span></div></div>',
+  hint: "DXIA: three operators into a carrier. DIIA: inharmonic partials struck by noise. VARIANT loads that variant's sound.",
+  sections: XIA_LAYOUTS[0]
+});
+pXia.prepare = function (m) {
+  if (m.variant === pXia.variant) return;
+  pXia.variant = m.variant;
+  pXia.sections = XIA_LAYOUTS[m.variant] || XIA_LAYOUTS[0];
+  if (pXia.built) { pXia.build(); pXia.open = false; for (var i = 0; i < pXia.n; i++) pXia.v[i] = -1; }
+};
+pXia.voice = function (m) {
+  var e = m.variant === 1 ? 1 : 0, letter = (e ? ["G", "I", "H"] : ["L", "B", "C"])[Math.max(0, pXia.v[10])] || "";
+  pXia.root.querySelector(".xsub b").textContent = pXia.voiceName((e ? "DIIA " : "DXIA ") + letter);
+  pXia.root.querySelector(".xsub span").textContent = e ? "Inharmonic partials" : "Phase modulation percussion";
+  Array.prototype.forEach.call(pXia.root.querySelectorAll(".xeng span"), function (s) { s.classList.toggle("on", +s.getAttribute("data-e") === e); });
+};
+
+/* BRIBERING: deep teal, a resonator that rings with its settings */
+var RINGS_MODELS_P = ["MODAL", "SYMPATHETIC", "STRING", "FM", "CHORD"];
+var pRings = new DrumPanel({
+  root: $("ringsp"), kind: 10, n: 16,
+  head: '<div class="rhead"><div class="rword">BRIBERING</div><div class="rsub"><b></b>Resonator</div>' +
+    '<svg class="reso" viewBox="0 0 200 74"><g class="rrings" fill="none"></g><path class="rstring" fill="none" stroke="#ff1fd6" stroke-width="1.8" stroke-linecap="round"/></svg></div>',
+  hint: "STRUCTURE tunes the partials, BRIGHTNESS and DAMPING shape the ring, POSITION is where it's struck.",
+  sections: [
+    { t: "Resonator", row: 1, c: [pB(0, "Model", ["MODAL", "SYMP", "STRNG", "FM", "CHORD"]), pB(1, "Poly", ["4 V", "2 V"])] },
+    { t: "Exciter", row: 1, c: [pK(6, "Bow"), pK(7, "Drive")] },
+    { t: "Ring", row: 2, c: [pK(2, "Structure", "ctl", { big: true }), pK(3, "Brightness", "ctl", { big: true }), pK(4, "Damping", "ctl", { big: true }), pK(5, "Position", "ctl", { big: true })] },
+    { t: "Tune", row: 3, c: [pK(8, "Tune", "tune"), pK(15, "Attack", "std"), pK(9, "Release", "std")] },
+    { t: "Filter", row: 3, c: [pK(10, "LPF", "std"), pK(11, "HPF", "std")] },
+    { t: "Out", row: 3, c: [pK(12, "Level", "std"), pK(13, "Delay", "std"), pK(14, "Reverb", "std")] }
+  ]
+});
+pRings.afterDraw = function () {
+  if (!pRings.built) return;
+  var st = Math.max(0, pRings.v[2]) / PANEL_MAX, br = Math.max(0, pRings.v[3]) / PANEL_MAX, dm = Math.max(0, pRings.v[4]) / PANEL_MAX, pos = Math.max(0, pRings.v[5]) / PANEL_MAX, g = "";
+  var n = 3 + Math.round(st * 6);
+  for (var i = 1; i <= n; i++) {
+    var r = i * (30 / n) * (1 + st * 0.4 * Math.sin(i * 1.7)), op = Math.max(0.06, (1 - (i - 1) / n * (0.4 + dm * 0.6)) * (0.35 + br * 0.65));
+    g += '<ellipse cx="60" cy="37" rx="' + (r * 1.6).toFixed(1) + '" ry="' + r.toFixed(1) + '" stroke="#19ffe0" stroke-width="1.6" opacity="' + op.toFixed(2) + '"/>';
+  }
+  pRings.root.querySelector(".rrings").innerHTML = g + '<circle cx="60" cy="37" r="3" fill="#19ffe0"/>';
+  var d = "";
+  for (var x = 0; x <= 70; x += 2) { var t = x / 70; d += (x ? "L" : "M") + (125 + x) + " " + (37 - Math.sin(t * Math.PI) * Math.sin((t - pos) * 18) * 10 * (1 - dm * 0.6)).toFixed(1); }
+  pRings.root.querySelector(".rstring").setAttribute("d", d);
+};
+pRings.voice = function () { pRings.root.querySelector(".rsub b").textContent = pRings.voiceName(RINGS_MODELS_P[Math.max(0, pRings.v[0])] || ""); pRings.afterDraw(); };
+
+/* 303: brushed silver, black knobs, red */
+var pTb = new DrumPanel({
+  root: $("tbp"), kind: 11, n: 14,
+  head: '<div class="thead2"><div class="tbword">303</div><div class="tbsub">Bass line</div><span class="tbled"></span>' +
+    '<div class="tbkeys"><span></span><span class="k"></span><span></span><span class="k"></span><span></span><span></span><span class="k"></span><span></span><span class="k"></span><span></span><span class="k"></span><span></span></div></div>',
+  hint: "Slide and accent come from the sequencer's slide steps and velocity, as on the original.",
+  sections: [
+    { t: "Synthesizer", row: 1, c: [pK(0, "Tuning", "tune"), pK(1, "Cutoff", "std", { big: true }), pK(2, "Resonance", "std"), pK(3, "Env mod", "std"), pK(4, "Decay", "std"), pK(5, "Accent", "std")] },
+    { t: "Wave", red: true, row: 1, c: [pK(6, "Saw>Sqr", "std")] },
+    { t: "Slide", row: 2, c: [pK(7, "Time", "std")] },
+    { t: "Filter", red: true, row: 2, c: [pB(10, "Type", ["303", "LP18", "DIRT"]), pK(8, "Drive", "std")] },
+    { t: "Amp", row: 2, c: [pK(9, "Decay", "std")] },
+    { t: "Out", row: 2, c: [pK(11, "Level", "std"), pK(12, "Delay", "std"), pK(13, "Reverb", "std")] }
+  ]
+});
+pTb.voice = function () {};
+
+/* DX7: brown body, a green screen, six operator strips */
+var DX_ALGOS = []; for (var dxa = 1; dxa <= 32; dxa++) DX_ALGOS.push(String(dxa));
+var DX_SECS = [
+  { t: "Algorithm", row: 1, c: [pS(0, "Algo", DX_ALGOS), pS(1, "Feedback", ["0", "1", "2", "3", "4", "5", "6", "7"])] },
+  { t: "LFO", row: 1, c: [pK(27, "Speed", "dx99"), pK(28, "Pitch", "dx99"), pK(29, "Amp", "dx99")] },
+  { t: "Out", row: 1, c: [pK(26, "Transpose", "semis"), pK(30, "Level", "std"), pK(31, "Delay", "std"), pK(32, "Reverb", "std")] }
+];
+for (var dxo = 0; dxo < 6; dxo++) {
+  DX_SECS.push({ t: "Op " + (dxo + 1), cls: "op" + (dxo + 1), row: 2, c: [pT(2 + dxo * 4, "ON"), { id: 3 + dxo * 4, n: "Level", k: "dx99" },
+    pK(4 + dxo * 4, "Ratio", "ratio"), pK(5 + dxo * 4, "Fine", "dx99")] });
+}
+var pDx = new DrumPanel({
+  root: $("dxp"), kind: 12, n: 33,
+  head: '<div class="dhead"><div class="dword">DX7</div><div class="dstripes"><i style="background:#ff8a1f"></i><i style="background:#e9e2d4"></i><i style="background:#7fd4a8"></i></div>' +
+    '<div class="dlcd"></div></div>',
+  hint: "Six operators: LEVEL is each one's output, RATIO and FINE its frequency. The screen shows the voice and algorithm.",
+  sections: DX_SECS
+});
+pDx.voiceText = "";
+pDx.afterDraw = function () {
+  if (!pDx.built) return;
+  var on = ""; for (var o = 0; o < 6; o++) on += pDx.v[2 + o * 4] > 0 ? String(o + 1) : "-";
+  var name = (pDx.voiceText + "          ").slice(0, 10);
+  pDx.root.querySelector(".dlcd").textContent = name + "  " + on + "\nALG " + ("0" + (Math.max(0, pDx.v[0]) + 1)).slice(-2) + "    FB " + Math.max(0, pDx.v[1]);
+};
+pDx.voice = function (m) { pDx.voiceText = (m.name || "").trim() || "DX7"; pDx.afterDraw(); };
+
+/* The Deluge's own synth modes: aluminium, dark sections, one accent each */
+var DL_OSC = ["SINE", "TRI", "SQR", "ASQR", "SAW", "ASAW", "WAVE", "SMPL"];
+var DL_LFO = ["SINE", "TRI", "SQR", "SAW", "S&H", "RAND", "WRBL"];
+var DL_MODFX = ["OFF", "FLNG", "CHRS", "PHSR", "STCH", "WRBL", "DIMN", "GRAN", "BRNO", "SHFT"];
+var DL_LPF = ["12DB", "24DB", "DRIVE", "BROP", "BRUNO", "SVF-B", "SVF-N", "OFF"];
+var DL_HPF = ["SVF-B", "SVF-N", "LADDR", "OFF"];
+function dlAdsr(t, a, row) { return { t: t, row: row, c: [pK(a, "A", "std"), pK(a + 1, "D", "std"), pK(a + 2, "S", "std"), pK(a + 3, "R", "std")] }; }
+function dlHead(name, sub, extra) {
+  var pads = "", cols = ["#ff1fd6", "#19ffe0", "#ffb020", "#2f6fe0", "#69db7c", "#ff3b2f", "#c77dff", "#e9ecef"];
+  for (var i = 0; i < 16; i++) pads += "<i" + ((i * 7) % 5 === 1 ? ' style="background:' + cols[i % 8] + ';box-shadow:0 0 6px ' + cols[i % 8] + '"' : "") + "></i>";
+  return '<div class="dlhead"><div class="dlword">' + name + '</div><div class="dlsub"><b>DELUGE</b>' + sub + "</div>" + (extra || "") + '<div class="dlpads">' + pads + "</div></div>";
+}
+var pSubt = new DrumPanel({
+  root: $("subtp"), kind: 13, n: 40,
+  head: dlHead("SUBTRACTIVE", "Synth engine"),
+  hint: "The Deluge's own synth: two oscillators and noise, a low pass and a high pass, two envelopes, two LFOs. A wavetable or sample is picked on the Deluge.",
+  sections: [
+    { t: "Osc 1", row: 1, c: [pS(0, "Type", DL_OSC), pK(1, "Transpose", "tune"), pK(2, "PW", "std"), pK(3, "Level", "std")] },
+    { t: "Osc 2", row: 1, c: [pS(4, "Type", DL_OSC), pK(5, "Transpose", "tune"), pK(6, "PW", "std"), pK(7, "Level", "std"), pT(8, "SYNC")] },
+    { t: "Noise", row: 1, c: [pK(9, "Level", "std")] },
+    { t: "Master", row: 1, c: [pK(36, "Level", "std"), pK(37, "Porta", "std")] },
+    { t: "LPF", row: 2, c: [pK(10, "Freq", "std"), pK(11, "Res", "std"), pK(12, "Morph", "std"), pS(13, "Mode", DL_LPF)] },
+    { t: "HPF", row: 2, c: [pK(14, "Freq", "std"), pK(15, "Res", "std"), pS(16, "Mode", DL_HPF)] },
+    dlAdsr("Env 1", 17, 2),
+    dlAdsr("Env 2", 21, 3),
+    { t: "LFO 1", row: 3, c: [pK(25, "Rate", "std"), pS(26, "Shape", DL_LFO)] },
+    { t: "LFO 2", row: 3, c: [pK(27, "Rate", "std"), pS(28, "Shape", DL_LFO)] },
+    { t: "Mod FX", row: 3, c: [pS(29, "Type", DL_MODFX), pK(30, "Rate", "std"), pK(31, "Depth", "std")] },
+    { t: "Delay", row: 4, c: [pK(32, "Amount", "std"), pK(33, "Rate", "std"), pK(34, "Fdbk", "std")] },
+    { t: "Reverb", row: 4, c: [pK(35, "Amount", "std")] },
+    { t: "Unison", row: 4, c: [pS(38, "Voices", ["1", "2", "3", "4", "5", "6", "7", "8"]), pK(39, "Detune", "std")] }
+  ]
+});
+var pFm = new DrumPanel({
+  root: $("fmp"), kind: 14, n: 32,
+  head: dlHead("FM", "FM engine",
+    '<svg class="dlsym" viewBox="0 0 150 56"><g fill="none" stroke="#1b1c1f" stroke-width="1.4"><rect x="8" y="4" width="34" height="16" rx="3"/><rect x="58" y="4" width="34" height="16" rx="3"/>' +
+    '<rect x="8" y="36" width="34" height="16" rx="3"/><rect x="58" y="36" width="34" height="16" rx="3"/><path d="M25 20 V36 M75 20 V36 M42 12 H58"/></g>' +
+    '<g font-family="ui-monospace,Menlo,monospace" font-size="8" font-weight="700" fill="#1b1c1f" text-anchor="middle"><text x="25" y="15">MOD 2</text><text x="75" y="15">MOD 1</text><text x="25" y="47">CAR 1</text><text x="75" y="47">CAR 2</text></g>' +
+    '<path d="M100 44 H140" stroke="#19ffe0" stroke-width="3" stroke-linecap="round"/></svg>'),
+  hint: "Two modulators into two carriers. MOD 2 goes to the carriers or into MOD 1.",
+  sections: [
+    { t: "Mod 2", row: 1, c: [pK(9, "Amount", "std"), pK(10, "Transpose", "tune"), pK(11, "Fdbk", "std"), pB(12, "Dest", ["CAR", "MOD1"])] },
+    { t: "Mod 1", row: 1, c: [pK(6, "Amount", "std"), pK(7, "Transpose", "tune"), pK(8, "Fdbk", "std")] },
+    { t: "Carrier 1", row: 2, c: [pK(0, "Level", "std"), pK(1, "Transpose", "tune"), pK(2, "Fdbk", "std")] },
+    { t: "Carrier 2", row: 2, c: [pK(3, "Level", "std"), pK(4, "Transpose", "tune"), pK(5, "Fdbk", "std")] },
+    { t: "Master", row: 2, c: [pK(30, "Level", "std"), pK(31, "Porta", "std")] },
+    dlAdsr("Env 1", 13, 3),
+    dlAdsr("Env 2", 17, 3),
+    { t: "LFO 1", row: 3, c: [pK(21, "Rate", "std"), pS(22, "Shape", DL_LFO)] },
+    { t: "Mod FX", row: 4, c: [pS(23, "Type", DL_MODFX), pK(24, "Rate", "std"), pK(25, "Depth", "std")] },
+    { t: "Delay", row: 4, c: [pK(26, "Amount", "std"), pK(27, "Rate", "std"), pK(28, "Fdbk", "std")] },
+    { t: "Reverb", row: 4, c: [pK(29, "Amount", "std")] }
+  ]
+});
+var pRmod = new DrumPanel({
+  root: $("rmodp"), kind: 15, n: 33,
+  head: dlHead("RINGMOD", "Ring mod engine",
+    '<svg class="dlsym" viewBox="0 0 150 56"><circle cx="75" cy="28" r="18" fill="none" stroke="#1b1c1f" stroke-width="2"/><path d="M62 15 L88 41 M88 15 L62 41" stroke="#1b1c1f" stroke-width="2"/>' +
+    '<path d="M8 28 Q16 12 24 28 T40 28 T56 28" fill="none" stroke="#ffb020" stroke-width="2"/><path d="M94 28 H142" stroke="#1b1c1f" stroke-width="1.4"/>' +
+    '<path d="M100 28 Q104 18 108 28 T116 28 T124 28 T132 28 T140 28" fill="none" stroke="#ffb020" stroke-width="2"/></svg>'),
+  hint: "Oscillator 1 times oscillator 2: their sum and difference tones, through the Deluge's filters.",
+  sections: [
+    { t: "Osc 1", row: 1, c: [pS(0, "Type", DL_OSC), pK(1, "Transpose", "tune"), pK(2, "PW", "std")] },
+    { t: "Osc 2", row: 1, c: [pS(3, "Type", DL_OSC), pK(4, "Transpose", "tune"), pK(5, "PW", "std"), pT(6, "SYNC")] },
+    { t: "Noise", row: 1, c: [pK(7, "Level", "std")] },
+    { t: "Master", row: 1, c: [pK(31, "Level", "std"), pK(32, "Porta", "std")] },
+    { t: "LPF", row: 2, c: [pK(8, "Freq", "std"), pK(9, "Res", "std"), pK(10, "Morph", "std"), pS(11, "Mode", DL_LPF)] },
+    { t: "HPF", row: 2, c: [pK(12, "Freq", "std"), pK(13, "Res", "std")] },
+    dlAdsr("Env 1", 14, 2),
+    dlAdsr("Env 2", 18, 3),
+    { t: "LFO 1", row: 3, c: [pK(22, "Rate", "std"), pS(23, "Shape", DL_LFO)] },
+    { t: "Mod FX", row: 3, c: [pS(24, "Type", DL_MODFX), pK(25, "Rate", "std"), pK(26, "Depth", "std")] },
+    { t: "Delay", row: 4, c: [pK(27, "Amount", "std"), pK(28, "Rate", "std"), pK(29, "Fdbk", "std")] },
+    { t: "Reverb", row: 4, c: [pK(30, "Amount", "std")] }
+  ]
+});
+[pSubt, pFm, pRmod].forEach(function (P) { P.voice = function () {}; });
+
+// Every engine panel, in one place: the page's panel lists read these
+var DRUM_PANEL_LIST = [tribe, cyc, lxr, gin, pUk, pXia, pRings, pTb, pDx, pSubt, pFm, pRmod];
+function allPanels() { return [bruno, brophet, wavet].concat(DRUM_PANEL_LIST); }
+[pUk, pXia, pRings, pTb, pDx, pSubt, pFm, pRmod].forEach(function (P) { wirePanelTouch(P, P.kind); });
+
 // PANEL: which engine panel, if any
 function showPanel(m) {
   bruno.show(m.which === 1 ? m : null);
@@ -3114,7 +3547,7 @@ function showPanel(m) {
   if (wavet.open) wtDraw();
   showDrumPanels(m);
   panelExtras();
-  $("track").classList.toggle("panel-on", bruno.open || brophet.open || wavet.open || tribe.open || cyc.open || lxr.open || gin.open);
+  $("track").classList.toggle("panel-on", allPanels().some(function (P) { return P.open; }));
 }
 
 // ---- Gold knobs: each mod button's pair, the lit one glowing. Tapping a pair presses its mod button.
@@ -3801,8 +4234,9 @@ function parse(d) {
   }
   if (kind === 0x54) return { kind: "diag", text: readName(d, 8).text };
   if (kind === 0x56) {
-    // Which panel: 0 none, 1 BRUNO106, 2 BROPHET, 3 WAVE, 4 TRIBE, 5 CYC, 6 LXR, 7 GIN
-    var bp = { kind: "panel", which: d[8], open: d[8] >= 1 && d[8] <= 7, v: [] };
+    // Which panel: 0 none, 1 BRUNO106, 2 BROPHET, 3 WAVE, 4 TRIBE, 5 CYC, 6 LXR, 7 GIN, 8 ULTRAKIK, 9 XIA, 10 BRIBERING,
+    // 11 303, 12 DX7, 13 SUBTRACTIVE, 14 FM, 15 RINGMOD
+    var bp = { kind: "panel", which: d[8], open: d[8] >= 1 && d[8] <= 15, v: [] };
     if (!bp.open) return bp;
     for (var bq = 0, bn = d[9]; bq < bn && 11 + bq * 2 < d.length; bq++) bp.v.push((d[10 + bq * 2] << 7) | d[11 + bq * 2]);
     var bj = 10 + bp.v.length * 2;
@@ -3813,6 +4247,8 @@ function parse(d) {
       for (var br = 0; br < brc && bj < d.length; br++) {
         var brn = readName(d, bj + 1); bp.rows.push({ row: d[bj], name: brn.text }); bj = brn.next;
       }
+      // Then a name (DX7: the voice's), from firmware that sends one
+      if (bj < d.length && d[bj] !== 0xF7) { var bnm = readName(d, bj); bp.name = bnm.text; bj = bnm.next; }
     }
     bp.ok = d[bj] === 0xF7;
     return bp;
