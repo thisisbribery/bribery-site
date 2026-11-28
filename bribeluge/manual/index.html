@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Manual · BRIBELUGE v1.48 · BRIBERY</title>
+<title>Manual · BRIBELUGE v1.49 · BRIBERY</title>
 <meta name="description" content="The full Bribeluge manual: every feature of the Deluge Bribes firmware, with controls, install steps and quick reference.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBELUGE manual">
@@ -87,7 +87,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <body class="bx" data-bx-page="bribeluge" data-bx-foot>
 <div id="top"></div>
 <header class="m-hero">
-  <p class="bx-kicker">Bribeluge v1.48 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
+  <p class="bx-kicker">Bribeluge v1.49 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
   <h1 class="bx-mega bx-glitch" data-text="MANUAL" data-fit><span class="bx-fit">MANUAL</span></h1>
   <div class="bx-ctas">
     <a class="bx-btn bx-solid" href="#download" data-bx-download>Download</a>
@@ -157,7 +157,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p>Bribeluge is an unofficial modified firmware for the Synthstrom Deluge, rebased on the latest official community firmware release (CFW v1.3.0, Derbyshire) from <a href="https://delugecommunity.com/" target="_blank" rel="noopener">delugecommunity.com</a>, with thanks to <a href="https://github.com/SynthstromAudible/DelugeFirmware/graphs/contributors" target="_blank" rel="noopener">everyone who has contributed to it</a>.</p>
 <p>I build Bribeluge for those who want more wonk, more destruction options, more speed, and a "studio in a box" mentality. I could not have done any of this without the incredible work of the original Deluge creators, Rohan Hill and <a href="https://synthstrom.com/" target="_blank" rel="noopener">Synthstrom Audible</a>, and the tireless work of the community firmware team ever since the Deluge was open sourced.</p>
 <p><strong>Built on the community firmware:</strong> Bribeluge is a set of additions. The firmware underneath is the work of Rohan Hill and Synthstrom Audible, who made the Deluge and open sourced its firmware, and of the volunteers who have built the <a href="https://delugecommunity.com/" target="_blank" rel="noopener">Deluge Community Firmware</a> since. Anything Bribeluge does that isn't in the numbered list below is theirs, not mine: see the community firmware's own <a href="https://github.com/SynthstromAudible/DelugeFirmware/blob/v1.3.0/docs/community_features.md" target="_blank" rel="noopener">feature list</a>. More in <a href="#design-and-credit">Design and credit</a>.</p>
-<p><strong>Source code (GPL-3.0):</strong> the complete source, with the community firmware's full history and contributors, is at <a href="https://github.com/thisisbribery/DelugeFirmware" target="_blank" rel="noopener">thisisbribery/DelugeFirmware</a>, a fork of the community firmware. This release is tag <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.48" target="_blank" rel="noopener"><code>bribes-v1.48</code></a>, the exact commit the bin was built from, and a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.47" target="_blank" rel="noopener">v1.47 release</a>. See <a href="#source-code">Source code</a>.</p>
+<p><strong>Source code (GPL-3.0):</strong> the complete source, with the community firmware's full history and contributors, is at <a href="https://github.com/thisisbribery/DelugeFirmware" target="_blank" rel="noopener">thisisbribery/DelugeFirmware</a>, a fork of the community firmware. This release is tag <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.49" target="_blank" rel="noopener"><code>bribes-v1.49</code></a>, the exact commit the bin was built from, and a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.49" target="_blank" rel="noopener">v1.49 release</a>. See <a href="#source-code">Source code</a>.</p>
 <p>What Bribeluge adds:</p>
 <ol>
 <li><strong><a href="#1-stumble-swing">Stumble swing</a>:</strong> Four extra swing styles (HOPP, DEEP, SQEZ, FOLD), seven levels each, on SHIFT + TEMPO. New songs start on Stumble SQEZ.</li>
@@ -200,8 +200,8 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p>Names in <strong>bold capitals</strong> in brackets are what the 7-segment display shows.</p>
 <h2 id="download"><a class="m-anchor" href="#download" aria-hidden="true" tabindex="-1">#</a>Download</h2>
 <p><strong>Everything in one zip:</strong> the firmware, every preset below and the steps for putting them on the SD card download together from <a href="/bribeluge/#download">thisisbribery.com/bribeluge</a>. The files here are the same ones, piece by piece.</p>
-<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.48.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.48.bin</code></a></p>
-<p>SHA-256: <code>aed6e853203755f1d49d38f0a0dd1becf2077a911598efecfcaf8833d4c72f68</code></p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.49.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.49.bin</code></a></p>
+<p>SHA-256: <code>d806690d75549de751fc9e32e123b8ae105d52532382c0bdd08da240329e6ab1</code></p>
 <p>Presets (optional), copied to the same place on the SD card:</p>
 <ul>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN and TRIBE kits are built into the firmware.</li>
@@ -215,7 +215,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="install"><a class="m-anchor" href="#install" aria-hidden="true" tabindex="-1">#</a>Install</h2>
 <ol>
-<li>Copy <code>deluge-bribes-v1.48.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
+<li>Copy <code>deluge-bribes-v1.49.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
 <li>Turn the Deluge off.</li>
 <li>Hold <strong>SHIFT</strong> and switch the Deluge on. Let go once it starts loading the new firmware.</li>
 </ol>
@@ -1207,6 +1207,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <ul>
 <li>The full settings list and a pad-per-setting editor (GIN has its own) are in the sound menu under <strong>Drum synth</strong> (<strong>DRUM</strong>). In the pad editor, turn the horizontal encoder or press <strong>SCALE</strong> (left) and <strong>CROSS SCREEN</strong> (right) to move between settings; both buttons are lit while it's open (new in v1.39.1). <strong>Load preset</strong> (<strong>PRST</strong>) there has the seven kit sounds and each DXIA and DIIA variant.</li>
 <li><strong>SHIFT + press SELECT &gt; CPU load</strong> (<strong>LOAD</strong>) shows the audio engine's load, for checking how many drum synth voices you can run.</li>
+<li><strong>One voice per row (from v1.49):</strong> a kit row on a drum engine plays one voice, like a drum machine. A new hit cuts the last one and starts again, whatever the row's gate length or polyphony setting, so ratchets, Autofill fills and long notes never pile voices up. Choke groups work as before.</li>
 <li><strong>Settings &gt; Defaults &gt; High CPU Indicator</strong> (<strong>CPU</strong>) set to <strong>ON</strong> makes the <strong>PLAY</strong> button blink whenever the Deluge runs out of CPU and cuts notes to keep up (voice stealing). It's off until you turn it on.</li>
 <li><strong>From v1.17</strong> each hit ends once it's 72 dB down (it was 100 dB, 80 on GIN). The Cyc engines fade out over the last few samples. When the CPU runs short, a hit that's 40 dB down is cut before notes you can still hear. See <a href="#top">New in v1.17</a> at the top.</li>
 <li><strong>From v1.18</strong> the Cycles engines build their sines from a lookup table and cost an estimated third to a quarter of what they did, for the same sound. Metal's feedback is chaotic, so its waveform never comes out exactly the same from one build to the next, but it sounds the same.</li>
@@ -3143,6 +3144,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <p>Newest first: what changed in each release, why, and what it taught me.</p>
 <ul>
 <li>
+<p><strong>v1.49: More room in the Deluge's fast memory.</strong> A TRIBE kit now takes 79 KB of the Deluge's on-chip RAM, down from 135 KB, and a 16-row sample kit loaded next to it stays in on-chip RAM instead of spilling 87 KB into the slower SDRAM. Three changes, and only the first is one you can hear, on hits that used to overlap: each <a href="#6-drum-synth">drum engine</a> row plays one voice and retriggers it, the store of drum engine voices starts at 8 and grows only as far as a song needs (it made 48 up front), and every kit row and kit fits a 2 KB block again. <em>Why:</em> the more of a song that lives in on-chip RAM, the less the Deluge has to fall back on SDRAM, which is slower for voices and, once full, takes room from loaded samples. <em>Learned:</em> measure before guessing. The Deluge now streams its CPU load, time per engine and free memory over USB, and can list every block of memory in use, so I could see what each kit really takes. The Deluge hands out memory in power-of-two blocks: Bribeluge's extra settings had pushed every kit row from 1,864 to 2,384 bytes, just past 2 KB, so each row took a 4 KB block. Moving the settings only some sounds use (303, BRUNO106, the newer crush types and saturation, drum engine settings) out of the row put it back at 2,024. The stream also showed a TRIBE voice costs about 1.5 times a sample voice, which is the next thing to work on. See <a href="#measuring-cpu-and-memory">Measuring CPU and memory</a>.</p>
+</li>
+<li>
 <p><strong>v1.48: The Deluge's menu, whole page, by touch.</strong> With a menu open on the Deluge (a clip's, the song's or SHIFT + SELECT settings), the <a href="#27-bribeluge-companion">companion</a> shows every open level as a column you can tap: any entry at any level is one tap away, a setting gets its value, steps and named choices as tiles, and the page goes back to what it showed when the menu closes. <em>Why:</em> the select knob walks a long menu one entry at a time, and a screen can show the whole tree at once. <em>Learned:</em> the companion doesn't need its own copy of the menu: the Deluge sends each level as it is (only what applies to this sound), and a tap is played back as the presses a hand would make (BACK up, turn, SELECT), so everything the Deluge does on the way still happens.</p>
 </li>
 <li>
@@ -3385,6 +3389,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 ./dbt configure
 ./dbt build release</pre></div>
 <p>The firmware is written to <code>build/Release/deluge.bin</code>.</p>
+<h3 id="measuring-cpu-and-memory"><a class="m-anchor" href="#measuring-cpu-and-memory" aria-hidden="true" tabindex="-1">#</a>Measuring CPU and memory</h3>
+<p>For anyone working on the firmware's performance. From v1.49, over USB, the Deluge streams its render load, its slowest render, voices playing and voices cut, free on-chip RAM and SDRAM, the time each engine's voices take, and the time spent in each part of the render (kit rows, kit FX, reverb, song FX and the rest). It can also list every block of memory in use, grouped by size. Nothing is sent or timed unless a computer asks for it.</p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/tools/deluge_bench.py" target="_blank" rel="noopener"><code>tools/deluge_bench.py</code></a> reads it on a computer (Python 3 with <code>mido</code> and <code>python-rtmidi</code>): a live readout, a timed run that starts the song and saves the results, a voice count sweep, memory snapshots and maps per kit with the difference between two, and a before and after comparison of two builds on the same song. The protocol is at the top of the script.</p>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="licence"><a class="m-anchor" href="#licence" aria-hidden="true" tabindex="-1">#</a>Licence</h2>
 <p>GNU General Public License v3.0. See <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a>.</p>
