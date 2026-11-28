@@ -991,8 +991,40 @@ html[data-mode="classic"] main{padding-bottom:72px}
 .gcol .knob.none{pointer-events:none}
 .gcol .knob.drag{outline:1px solid var(--gold);box-shadow:0 0 12px var(--gold-glow)}
 </style>
+<style>
+/* NAV rail: the track's sections down the left, always there */
+:root{--navw:78px}
+#nav{position:fixed;left:0;top:0;bottom:0;width:var(--navw);z-index:20;display:flex;flex-direction:column;gap:2px;
+  padding:10px 6px 14px;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);border-right:1px solid var(--line);
+  scrollbar-width:none}
+#nav::-webkit-scrollbar{display:none}
+#nav .nhead{font:700 10px/1 var(--mono);letter-spacing:.22em;color:var(--muted);text-align:center;padding:14px 0 12px}
+#nav .nsep{height:1px;background:var(--line);margin:6px 4px}
+#nav button{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-height:42px;padding:4px 2px;
+  border-radius:8px;border:1px solid transparent;font:700 11px/1.15 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  text-align:center;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  position:relative;overflow-wrap:anywhere}
+#nav button:hover{border-color:var(--line)}
+#nav button:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+#nav button.on{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:var(--accent);color:var(--accent)}
+#nav button.on::before{content:"";position:absolute;left:-6px;top:8px;bottom:8px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
+#nav button.gold{color:var(--gold)}
+#nav button.gold.on{background:color-mix(in srgb,var(--gold) 16%,transparent);border-color:var(--gold)}
+#nav button.gold.on::before{background:var(--gold)}
+#nav button.stagei{color:var(--accent)}
+#nav.away button.tr{opacity:.35;pointer-events:none}
+html[data-mode="new"] #nav button{border-radius:0}
+body:not(.stock){padding-left:var(--navw)}
+body.stock #nav{display:none}
+html[data-mode="classic"] body:not(.stock) .bx-mode-float{left:calc(var(--navw) + 10px)}
+.navflash{animation:navflash .9s ease-out}
+@keyframes navflash{0%{box-shadow:0 0 0 3px var(--accent),0 0 26px var(--pink-glow)}100%{box-shadow:0 0 0 3px transparent,0 0 0 transparent}}
+@media (prefers-reduced-motion:reduce){.navflash{animation:none}}
+@media (max-width:700px){:root{--navw:58px} #nav{padding:8px 4px} #nav button{font-size:9.5px;min-height:38px;letter-spacing:.04em} #nav .nhead{font-size:9px}}
+</style>
 </head>
 <body data-bx-page="companion" data-bx-no-top>
+<nav id="nav" aria-label="Sections"><div class="nhead">NAV</div></nav>
 <div id="bar"><div class="barin">
   <div class="row1">
     <a class="brand" href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener" title="Mods by Bribery">
@@ -1135,7 +1167,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v30 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v31 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1597,6 +1629,89 @@ function centreMain() {
 }
 function focusMain() { mainUntil = performance.now() + 1500; restoreY = -1; centreMain(); }
 function keepMain() { if (stageNow === "track" && performance.now() < mainUntil) centreMain(); }
+// ---- NAV rail: the track's sections down the left. Tap one to glide to it, centred below the bar; the one in view
+// is lit as the page scrolls. A menu, browser, waveform or song view on the stage is listed above them.
+var NAV_KNOB = { "Oscillators": "OSC", "Filters": "FILTER", "Envelope 1": "ENV 1", "Envelope 2": "ENV 2", "Voice": "VOICE",
+  "Effects": "FX", "LFOs": "LFO" };
+var NAV_STAGE = { picker: "MENU", browser: "BROWSE", wave: "WAVE", song: "SONG" };
+var navKey = "", navEls = [], navPinned = null, navPinUntil = 0, navRaf = 0;
+function shown(el) { return !!el && el.style.display !== "none" && el.getClientRects().length > 0; }
+// The sections the track has, in page order (measured with the track showing, else by what it holds)
+function navSections() {
+  var list = [{ key: "top", label: "TOP", el: $("hero") }];
+  var ps = [bruno, brophet, wavet, tribe, cyc, lxr, gin];
+  for (var i = 0; i < ps.length; i++) if (ps[i].open) { list.push({ key: "panel", label: "PANEL", el: ps[i].root }); break; }
+  if ($("gold").style.display !== "none") list.push({ key: "gold", label: "GOLD", el: $("gold"), cls: "gold" });
+  var sp = $("special");
+  if (sp.style.display !== "none" && !$("track").classList.contains("panel-on")) list.push({ key: "engine", label: "ENGINE", el: sp });
+  Array.prototype.forEach.call($("knobs").querySelectorAll(":scope > .kgroup"), function (g, n) {
+    var name = g.querySelector(".label").textContent;
+    list.push({ key: "k" + n + name, label: NAV_KNOB[name] || name.toUpperCase().slice(0, 7), el: g });
+  });
+  if ($("rows").children.length) list.push({ key: "rows", label: "ROWS", el: $("rows") });
+  if ($("kitSamples").style.display !== "none" && $("kitSamples").children.length) list.push({ key: "samples", label: "SAMPLES", el: $("kitSamples") });
+  return list;
+}
+var navTimer = 0; // A timer, not a frame: it still runs while the tab is in the background
+function navSoon() { if (!navTimer) navTimer = setTimeout(function () { navTimer = 0; navBuild(); navSpy(); }, 30); }
+function navBuild() {
+  var nav = $("nav"), secs = navSections(), away = stageNow !== "track";
+  var key = (away ? stageNow : "") + "|" + secs.map(function (s) { return s.key + "=" + s.label; }).join(",");
+  nav.classList.toggle("away", away);
+  if (key === navKey) { navEls.forEach(function (n, i) { if (secs[i]) n.sec = secs[i]; }); return; }
+  navKey = key; navEls = [];
+  nav.innerHTML = '<div class="nhead">NAV</div>';
+  if (away) {
+    var sb = document.createElement("button"); sb.type = "button"; sb.className = "stagei on";
+    sb.textContent = NAV_STAGE[stageNow] || stageNow.toUpperCase();
+    sb.title = "On the Deluge now"; sb.onclick = function () { pageTo(0, true); };
+    nav.appendChild(sb);
+    var sep = document.createElement("div"); sep.className = "nsep"; nav.appendChild(sep);
+  }
+  secs.forEach(function (s) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "tr" + (s.cls ? " " + s.cls : "");
+    b.textContent = s.label; b.sec = s; b.title = s.label === "TOP" ? "The engine and its name" : "Go to " + s.label;
+    b.onclick = function () { navGo(b); };
+    nav.appendChild(b); navEls.push(b);
+  });
+}
+// Glide to a section: centred below the bar, its top when taller than the room, then a brief glow
+function navGo(b) {
+  if (stageNow !== "track") return;
+  var s = b.sec, el = s.el; mainUntil = 0; restoreY = -1;
+  navPinned = s.key; navPinUntil = performance.now() + 1200; navLight(s.key);
+  if (s.key === "top") pageTo(0, true);
+  else {
+    var r = el.getBoundingClientRect(), top = barBottom(), room = window.innerHeight - top;
+    pageTo(window.scrollY + r.top - top - (r.height < room ? (room - r.height) / 2 : 8), true);
+  }
+  el.classList.remove("navflash"); void el.offsetWidth; el.classList.add("navflash");
+  setTimeout(function () { el.classList.remove("navflash"); }, 950);
+}
+function navLight(key) { navEls.forEach(function (n) { n.classList.toggle("on", n.sec.key === key); }); }
+// Which section is in view: the one across the middle of the room below the bar, else the nearest to it
+function navSpy() {
+  if (stageNow !== "track" || !navEls.length) { navLight(""); return; }
+  if (navPinned && performance.now() < navPinUntil) { navLight(navPinned); return; }
+  var top = barBottom(), mid = top + (window.innerHeight - top) / 2, best = [], bestD = Infinity;
+  var pinnedHere = navPinned && navEls.some(function (n) { return n.sec.key === navPinned; });
+  if (window.scrollY < 4) { navLight("top"); return; }
+  if (pinnedHere && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) { navLight(navPinned); return; }
+  navEls.forEach(function (n) {
+    if (!shown(n.sec.el)) return;
+    var r = n.sec.el.getBoundingClientRect();
+    var d = mid < r.top ? r.top - mid : mid > r.bottom ? mid - r.bottom : 0;
+    if (d < bestD - 1) { bestD = d; best = [n.sec.key]; } else if (d <= bestD + 1) best.push(n.sec.key);
+  });
+  // Knob groups sit side by side: of a row, the one last tapped, else the first
+  navLight(pinnedHere && best.indexOf(navPinned) >= 0 ? navPinned : best[0] || "");
+}
+window.addEventListener("scroll", function () { if (!navRaf) navRaf = requestAnimationFrame(function () { navRaf = 0; navSpy(); }); }, { passive: true });
+window.addEventListener("resize", navSoon);
+["wheel", "touchmove", "keydown"].forEach(function (ev) {
+  window.addEventListener(ev, function (e) { if (!(e.target && e.target.nodeType && $("nav").contains(e.target))) navPinned = null; }, { passive: true });
+});
+
 // A setting opened on the Deluge: its knob into view (not when the finger opened it, it is under the finger)
 function followKnob(b) {
   if (stageNow !== "track" || fingerOnPage()) return;
@@ -1617,6 +1732,7 @@ function updateStage() {
   if (which === "wave") drawWave();
   if (which === "song") renderSong();
   followStage(which);
+  navSoon();
 }
 
 // ---- Picker (any open context menu). Instrument and kit type lists get a drawing per tile.
@@ -3803,6 +3919,7 @@ function onMessage(ev) {
     return;
   }
   if (!QUIET[m.kind]) log("<", ev.data);
+  navSoon();
   switch (m.kind) {
   case "text": showText(m); return;
   case "picker": showPicker(m); return;
