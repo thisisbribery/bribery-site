@@ -30,6 +30,16 @@
 .cx-hex{font:600 .92em var(--bx-mono);color:var(--bx-ink);white-space:nowrap}
 .cx-proto{margin-top:clamp(18px,3vw,28px);border:1px solid var(--bx-line)}
 .cx-proto summary{cursor:pointer;padding:14px 16px;font:700 13px var(--bx-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--bx-pink)}
+.cx-shots::after{display:none}
+.cx-slides{position:relative;aspect-ratio:1604/1150}
+.cx-slides img{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;background:none;opacity:0;transition:opacity .9s ease}
+.cx-slides img.on{opacity:1}
+.cx-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px}
+.cx-dots button{all:unset;cursor:pointer;padding:6px 11px;border:1.5px solid var(--bx-line);color:#a99fa6;font:700 11px var(--bx-mono);letter-spacing:.14em;-webkit-tap-highlight-color:transparent}
+.cx-dots button[aria-selected="true"]{background:var(--bx-pink);border-color:var(--bx-pink);color:var(--bx-black)}
+.cx-dots button:hover{border-color:var(--bx-pink)}
+.cx-dots button:focus-visible{outline:2px solid var(--bx-pink);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.cx-slides img{transition:none}}
 .cx-gal-group{margin-top:clamp(26px,4vw,44px)}
 .cx-gal-group h3{font:700 13px var(--bx-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--bx-pink);margin:0 0 6px}
 .cx-gal-group > p{margin:0 0 16px;color:#a99fa6;font-size:14px;max-width:62ch}
@@ -65,8 +75,19 @@
           <button type="button" class="bx-btn" data-bx-beta>Beta tester</button>
         </div>
       </div>
-      <figure class="bx-shot">
-        <img src="/assets/devices/companion.webp" width="1600" height="1000" alt="A tablet showing the Bribeluge Companion next to a Deluge">
+      <figure class="bx-shot cx-shots">
+        <div class="cx-slides">
+          <img class="on" src="/assets/companion/hero-tribe-sm.webp" srcset="/assets/companion/hero-tribe-sm.webp 900w, /assets/companion/hero-tribe.webp 1600w" sizes="(max-width:900px) 100vw, 50vw" width="1604" height="1150" alt="The Companion on a tablet, showing a TRIBE kit: the 808 / 909 panel and the kit rows">
+          <img src="/assets/companion/hero-lxr-sm.webp" srcset="/assets/companion/hero-lxr-sm.webp 900w, /assets/companion/hero-lxr.webp 1600w" sizes="(max-width:900px) 100vw, 50vw" width="1604" height="1150" alt="The Companion on a tablet, showing an LXR kit on its snare row" loading="lazy" aria-hidden="true">
+          <img src="/assets/companion/hero-dx7-sm.webp" srcset="/assets/companion/hero-dx7-sm.webp 900w, /assets/companion/hero-dx7.webp 1600w" sizes="(max-width:900px) 100vw, 50vw" width="1604" height="1150" alt="The Companion on a tablet, showing a DX7 synth with its six operators" loading="lazy" aria-hidden="true">
+          <img src="/assets/companion/hero-wave-sm.webp" srcset="/assets/companion/hero-wave-sm.webp 900w, /assets/companion/hero-wave.webp 1600w" sizes="(max-width:900px) 100vw, 50vw" width="1604" height="1150" alt="The Companion on a tablet, showing a wavetable synth drawn in 3D" loading="lazy" aria-hidden="true">
+        </div>
+        <div class="cx-dots" role="tablist" aria-label="Companion screens">
+          <button type="button" role="tab" aria-selected="true" data-i="0">TRIBE</button>
+          <button type="button" role="tab" aria-selected="false" data-i="1">LXR</button>
+          <button type="button" role="tab" aria-selected="false" data-i="2">DX7</button>
+          <button type="button" role="tab" aria-selected="false" data-i="3">WAVE</button>
+        </div>
       </figure>
     </div>
   </section>
@@ -234,6 +255,26 @@ Bribeluge companion (Bribeluge only)
   </section>
 </main>
 
+<script>
+// Hero: the four Companion screens, one after another (paused while pointed at, still with reduced motion)
+(function () {
+  var imgs = Array.prototype.slice.call(document.querySelectorAll(".cx-slides img"));
+  var dots = Array.prototype.slice.call(document.querySelectorAll(".cx-dots button"));
+  if (!imgs.length) return;
+  var at = 0, timer = 0, still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function show(i) {
+    at = (i + imgs.length) % imgs.length;
+    imgs.forEach(function (im, j) { im.classList.toggle("on", j === at); if (j === at) im.removeAttribute("aria-hidden"); else im.setAttribute("aria-hidden", "true"); });
+    dots.forEach(function (d, j) { d.setAttribute("aria-selected", String(j === at)); });
+  }
+  function run() { clearInterval(timer); if (!still) timer = setInterval(function () { show(at + 1); }, 4500); }
+  dots.forEach(function (d) { d.addEventListener("click", function () { show(+d.getAttribute("data-i")); run(); }); });
+  var fig = document.querySelector(".cx-shots");
+  fig.addEventListener("mouseenter", function () { clearInterval(timer); });
+  fig.addEventListener("mouseleave", run);
+  run();
+})();
+</script>
 <script>
 // Connection steps: tabs, opening on the visitor's own platform.
 (function () {
