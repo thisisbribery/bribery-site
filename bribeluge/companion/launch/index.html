@@ -1104,7 +1104,7 @@ html[data-mode="classic"] main{padding-bottom:72px}
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v28 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v29 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1478,10 +1478,10 @@ function tx(bytes) { if (output) output.send(HDR.concat(bytes, [0xF7])); }
 // engine panel starts at the top. A setting opened on the Deluge brings its knob into view.
 var stageNow = "track", trackSaved = null, settleUntil = 0, trackCore = "", trackFull = "", panelKind = 0;
 var restoreY = -1, lastTouchAt = 0;
-document.addEventListener("pointerdown", function () { lastTouchAt = performance.now(); }, true);
+document.addEventListener("pointerdown", function () { lastTouchAt = performance.now(); mainUntil = 0; }, true);
 // The user scrolling by hand cancels a restore still waiting for the page to grow back
 ["wheel", "touchmove", "keydown"].forEach(function (ev) {
-  window.addEventListener(ev, function () { restoreY = -1; }, { passive: true });
+  window.addEventListener(ev, function () { restoreY = -1; mainUntil = 0; }, { passive: true });
 });
 function fingerOnPage() { return performance.now() - lastTouchAt < 900; }
 function pageTo(y, smooth) {
@@ -1520,24 +1520,24 @@ function leaveStage(which) {
 function followStage(which) {
   if (which === stageNow) return;
   stageNow = which;
-  restoreY = -1;
+  restoreY = -1; mainUntil = 0;
   if (which !== "track") { pageTo(0); return; }
   if (trackSaved && trackSaved.key === trackKey(true)) {
     pageTo(trackSaved.y);
     if (window.scrollY < trackSaved.y - 2) restoreY = trackSaved.y; // Clamped: the panel is still on its way back
     settleUntil = performance.now() + 1500; // A new kit's name can arrive just after the menu closes
-  } else { pageTo(0); settleUntil = 0; }
+  } else { focusMain(); settleUntil = 0; }
   trackCore = trackKey(false); trackFull = trackKey(true);
 }
 // After each STATE or PANEL message
 function followTrack() {
   var core = trackKey(false), full = trackKey(true), settling = performance.now() < settleUntil;
   if (stageNow === "track") {
-    if (full !== trackFull && settling) { pageTo(0); settleUntil = 0; restoreY = -1; }
+    if (full !== trackFull && settling) { focusMain(); settleUntil = 0; }
     else if (core !== trackCore) {
       // Just back from a menu, the panel coming back (or going while it redraws) is not a new layout
       var panelOnly = core.replace(/:\d+$/, "") === trackCore.replace(/:\d+$/, "");
-      if (!(settling && panelOnly)) { pageTo(0); restoreY = -1; }
+      if (!(settling && panelOnly)) focusMain();
     }
     if (restoreY >= 0) {
       if (!settling) restoreY = -1;
@@ -1545,7 +1545,27 @@ function followTrack() {
     }
   }
   trackCore = core; trackFull = full;
+  keepMain();
 }
+// A new sound lands on its main panel, centred below the bar: the engine panel, else the engine's controls, else
+// the knobs (their top, when taller than the screen). It can arrive just after the name, so it is centred again on
+// each message for a moment, until a hand scrolls or touches.
+var mainUntil = 0;
+function mainEl() {
+  var ps = [bruno, brophet, wavet, tribe, cyc, lxr, gin];
+  for (var i = 0; i < ps.length; i++) if (ps[i].open && ps[i].root.getClientRects().length) return ps[i].root;
+  if ($("special").style.display !== "none" && $("special").getClientRects().length) return $("special");
+  if ($("knobs").children.length) return $("knobs");
+  return null;
+}
+function centreMain() {
+  var el = mainEl();
+  if (!el) { pageTo(0); return; }
+  var r = el.getBoundingClientRect(), top = barBottom(), room = window.innerHeight - top;
+  pageTo(window.scrollY + r.top - top - (r.height < room ? (room - r.height) / 2 : 8));
+}
+function focusMain() { mainUntil = performance.now() + 1500; restoreY = -1; centreMain(); }
+function keepMain() { if (stageNow === "track" && performance.now() < mainUntil) centreMain(); }
 // A setting opened on the Deluge: its knob into view (not when the finger opened it, it is under the finger)
 function followKnob(b) {
   if (stageNow !== "track" || fingerOnPage()) return;
@@ -3748,7 +3768,7 @@ function onMessage(ev) {
   case "browserSel": highlightBrowser(m.selected); return;
   case "wave": if (m.open) m.kind = m.kindCode; showWave(m); return;
   case "playhead": wavePlayheads = m.heads; drawWave(); return;
-  case "params": showParams(m); return;
+  case "params": showParams(m); keepMain(); return;
   case "transport": if (fwMode !== "stock") showTransport(m); return;
   case "outputs": outputs = m.list; renderSong(); return;
   case "clips": clips = m.list; renderSong(); return;
