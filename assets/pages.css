@@ -162,7 +162,7 @@ code.bx-code{font:600 .9em var(--bx-mono);color:var(--bx-teal);word-break:break-
 /* Bribeluge: "Out now" bar at the very top, smooth-scrolls to #download */
 html:has(body[data-bx-page="bribeluge"]){scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html:has(body[data-bx-page="bribeluge"]){scroll-behavior:auto}}
-.bx-outnow{display:flex;justify-content:center;align-items:center;gap:14px;padding:12px var(--bx-gutter);background:var(--bx-pink);color:var(--bx-black);text-decoration:none;font:800 13px var(--bx-mono);letter-spacing:.16em;text-transform:uppercase}
+.bx-outnow{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:clamp(24px,4vw,48px);padding:16px clamp(16px,3vw,28px);background:var(--bx-pink);color:var(--bx-black);text-decoration:none;font:800 13px var(--bx-mono);letter-spacing:.16em;text-transform:uppercase}
 .bx-outnow b{font-weight:900;background:var(--bx-black);color:var(--bx-pink);padding:3px 8px}
 .bx-outnow i{font-style:normal;transition:transform .2s}
 .bx-outnow:hover span,.bx-outnow:focus-visible span{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
