@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Manual · BRIBELUGE v1.45.1 · BRIBERY</title>
+<title>Manual · BRIBELUGE v1.46 · BRIBERY</title>
 <meta name="description" content="The full Bribeluge manual: every feature of the Deluge Bribes firmware, with controls, install steps and quick reference.">
 <meta name="theme-color" content="#000000">
 <meta property="og:title" content="BRIBELUGE manual">
@@ -87,7 +87,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <body class="bx" data-bx-page="bribeluge" data-bx-foot>
 <div id="top"></div>
 <header class="m-hero">
-  <p class="bx-kicker">Bribeluge v1.45.1 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
+  <p class="bx-kicker">Bribeluge v1.46 <span>/</span> Deluge firmware <span>/</span> Full manual</p>
   <h1 class="bx-mega bx-glitch" data-text="MANUAL" data-fit><span class="bx-fit">MANUAL</span></h1>
   <div class="bx-ctas">
     <a class="bx-btn bx-solid" href="#download" data-bx-download>Download</a>
@@ -157,7 +157,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p>Bribeluge is an unofficial modified firmware for the Synthstrom Deluge, rebased on the latest official community firmware release (CFW v1.3.0, Derbyshire) from <a href="https://delugecommunity.com/" target="_blank" rel="noopener">delugecommunity.com</a>, with thanks to <a href="https://github.com/SynthstromAudible/DelugeFirmware/graphs/contributors" target="_blank" rel="noopener">everyone who has contributed to it</a>.</p>
 <p>I build Bribeluge for those who want more wonk, more destruction options, more speed, and a "studio in a box" mentality. I could not have done any of this without the incredible work of the original Deluge creators, Rohan Hill and <a href="https://synthstrom.com/" target="_blank" rel="noopener">Synthstrom Audible</a>, and the tireless work of the community firmware team ever since the Deluge was open sourced.</p>
 <p><strong>Built on the community firmware:</strong> Bribeluge is a set of additions. The firmware underneath is the work of Rohan Hill and Synthstrom Audible, who made the Deluge and open sourced its firmware, and of the volunteers who have built the <a href="https://delugecommunity.com/" target="_blank" rel="noopener">Deluge Community Firmware</a> since. Anything Bribeluge does that isn't in the numbered list below is theirs, not mine: see the community firmware's own <a href="https://github.com/SynthstromAudible/DelugeFirmware/blob/v1.3.0/docs/community_features.md" target="_blank" rel="noopener">feature list</a>. More in <a href="#design-and-credit">Design and credit</a>.</p>
-<p><strong>Source code (GPL-3.0):</strong> the complete source, with the community firmware's full history and contributors, is at <a href="https://github.com/thisisbribery/DelugeFirmware" target="_blank" rel="noopener">thisisbribery/DelugeFirmware</a>, a fork of the community firmware. This release is tag <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.45.1" target="_blank" rel="noopener"><code>bribes-v1.45.1</code></a>, the exact commit the bin was built from, and a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.45.1" target="_blank" rel="noopener">v1.45.1 release</a>. See <a href="#source-code">Source code</a>.</p>
+<p><strong>Source code (GPL-3.0):</strong> the complete source, with the community firmware's full history and contributors, is at <a href="https://github.com/thisisbribery/DelugeFirmware" target="_blank" rel="noopener">thisisbribery/DelugeFirmware</a>, a fork of the community firmware. This release is tag <a href="https://github.com/thisisbribery/DelugeFirmware/tree/bribes-v1.46" target="_blank" rel="noopener"><code>bribes-v1.46</code></a>, the exact commit the bin was built from, and a full source download on the <a href="https://github.com/thisisbribery/deluge-bribes-v1/releases/tag/v1.46" target="_blank" rel="noopener">v1.46 release</a>. See <a href="#source-code">Source code</a>.</p>
 <p>What Bribeluge adds:</p>
 <ol>
 <li><strong><a href="#1-stumble-swing">Stumble swing</a>:</strong> Four extra swing styles (HOPP, DEEP, SQEZ, FOLD), seven levels each, on SHIFT + TEMPO. New songs start on Stumble SQEZ.</li>
@@ -190,7 +190,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <li><strong><a href="#28-master-clip">Master clip</a>:</strong> A clipper or limiter at the very end of the song: five curves and a lookahead limiter, with drive and a ceiling, so the output never hits the Deluge's harsh digital clip.</li>
 <li><strong><a href="#29-shift">SHIFT</a>:</strong> A three-band frequency shifter as a Mod FX type on any track: each band moves by its own number of hertz, so harmonics stop lining up. Feedback shifts it again on every pass.</li>
 <li><strong><a href="#30-tribe">TRIBE</a>:</strong> An 808 / 909 drum machine: eight voices, each with an 808 &gt; 909 knob that blends smoothly from one machine to the other, every knob centred on the real machine, extras after Hexinverter's Mutant drums, and eleven kits. Never more CPU than the Cyc engines.</li>
-<li><strong><a href="#31-scrolling-7seg-text">Scrolling 7SEG text</a>:</strong> An option for 7-segment Deluges: every menu name and option shows its full name instead of four letters, flashing and then scrolling when it doesn't fit.</li>
+<li><strong><a href="#31-scrolling-7seg-text">Scrolling 7SEG text</a>:</strong> An option for 7-segment Deluges: every menu name and option flashes its four letter name, then scrolls its full name when there's more to say.</li>
 <li><strong><a href="#32-kit-mixer">Kit mixer</a>:</strong> A level fader for every kit row: hold <strong>LEVEL/PAN</strong> and press <strong>KEYBOARD</strong>, and each row's pads show and set its level. The same again brings the steps back, untouched.</li>
 <li><strong><a href="#33-drum-engine-panels">Drum engine panels</a>:</strong> The companion gets a hardware-style panel for each Bribeluge drum engine: TRIBE as an 808 on the left and a 909 on the right with MORPH on the seam, CYC in bone and grey, LXR in black with pink LED rings and GIN in machined gunmetal with a scope of its sound. Both ways, with a key per kit row to pick the voice and hear it. Touch any panel control and the Deluge lights the gold knobs that turn it, or opens its setting with <strong>SHORTCUT</strong>.</li>
 </ol>
@@ -200,8 +200,8 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p>Names in <strong>bold capitals</strong> in brackets are what the 7-segment display shows.</p>
 <h2 id="download"><a class="m-anchor" href="#download" aria-hidden="true" tabindex="-1">#</a>Download</h2>
 <p><strong>Everything in one zip:</strong> the firmware, every preset below and the steps for putting them on the SD card download together from <a href="/bribeluge/#download">thisisbribery.com/bribeluge</a>. The files here are the same ones, piece by piece.</p>
-<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.45.1.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.45.1.bin</code></a></p>
-<p>SHA-256: <code>855aa10e07d950cb199ba513a35866633e36cb05cfc5a5ec7f87fcdca525cb1f</code></p>
+<p><a href="https://github.com/thisisbribery/deluge-bribes-v1/raw/main/firmware/deluge-bribes-v1.46.bin" target="_blank" rel="noopener"><code>firmware/deluge-bribes-v1.46.bin</code></a></p>
+<p>SHA-256: <code>ac12b3ed700f196151f6229a1ad7973b9638cd3f9808ec16638de4e90463f3d7</code></p>
 <p>Presets (optional), copied to the same place on the SD card:</p>
 <ul>
 <li><a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/CYCLES" target="_blank" rel="noopener"><code>presets/KITS/CYCLES</code></a> and <a href="https://github.com/thisisbribery/deluge-bribes-v1/blob/main/presets/KITS/LXR" target="_blank" rel="noopener"><code>presets/KITS/LXR</code></a> to <code>KITS/CYCLES</code> and <code>KITS/LXR</code> (42 LXR kits). The GIN and TRIBE kits are built into the firmware.</li>
@@ -215,7 +215,7 @@ mark.m-hit{background:var(--bx-pink);color:var(--bx-black)}
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="install"><a class="m-anchor" href="#install" aria-hidden="true" tabindex="-1">#</a>Install</h2>
 <ol>
-<li>Copy <code>deluge-bribes-v1.45.1.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
+<li>Copy <code>deluge-bribes-v1.46.bin</code> to the top level of the Deluge's SD card. Remove any other <code>.bin</code> files from the top level.</li>
 <li>Turn the Deluge off.</li>
 <li>Hold <strong>SHIFT</strong> and switch the Deluge on. Let go once it starts loading the new firmware.</li>
 </ol>
@@ -2748,12 +2748,12 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </ul>
 <p class="m-top"><a href="#top">Back to top &#8593;</a></p>
 <h2 id="31-scrolling-7seg-text"><a class="m-anchor" href="#31-scrolling-7seg-text" aria-hidden="true" tabindex="-1">#</a>31. Scrolling 7SEG text</h2>
-<p>Four letters don't say much. With <strong>7SEG text</strong> set to <strong>SCROLL</strong>, the 7-segment display shows the full name of every menu item and option instead: <strong>Crush type</strong> rather than <strong>CTYP</strong>, <strong>Elektron P-locks</strong> rather than <strong>ELEK</strong>.</p>
+<p>Four letters don't say much. With <strong>7SEG text</strong> set to <strong>SCROLL</strong>, the 7-segment display flashes each menu item's and option's four letter name, then scrolls its full name: <strong>CTYP</strong> then <strong>Crush type</strong>, <strong>ENV1</strong> then <strong>Envelope 1</strong>. You read the short name at once and get the full one if you wait.</p>
 <p>To turn it on: <strong>SHIFT + press SELECT</strong> to open Settings, go to <strong>Community Features</strong> (<strong>FEAT</strong>) and set <strong>7SEG text</strong> (<strong>TEXT</strong>) to <strong>SCROLL</strong>. It starts on <strong>7SEG</strong>, the four letter names, as before.</p>
 <ul>
-<li><strong>Menu names:</strong> a name that fits shows still, with its dot, as before. A longer one flashes twice, then scrolls back and forth until you move on.</li>
-<li><strong>Options:</strong> a setting's choices show their full names and scroll when they don't fit, with no flashing, so turning SELECT reads straight away.</li>
-<li><strong>Context menus:</strong> their options show full names too, flashing then scrolling as they already did.</li>
+<li><strong>Menu names and options:</strong> the four letter name flashes three times (with its dot), then the full name scrolls back and forth until you move on.</li>
+<li><strong>When the full name says nothing more,</strong> the four letter name shows as it always did, with no flash and no scroll: a name that fits (<strong>FX</strong>), the same letters in other case or spacing (<strong>LFO1</strong> for LFO 1, <strong>ULAW</strong> for u-Law), or one that fits once its spaces go (<strong>LP18</strong> for 18 dB).</li>
+<li><strong>Context menus:</strong> the four letter option blinks, then its full name scrolls.</li>
 <li>Turning SELECT replaces the text at once. You never wait for a scroll to finish.</li>
 </ul>
 <h3 id="good-to-know-18"><a class="m-anchor" href="#good-to-know-18" aria-hidden="true" tabindex="-1">#</a>Good to know</h3>
@@ -3072,7 +3072,7 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 </tr>
 <tr>
 <td><strong>SETTINGS &gt; Community Features &gt; 7SEG text</strong></td>
-<td><strong>7SEG</strong>: four letter names. <strong>SCROLL</strong>: full menu names and options, flashed then scrolled (<strong>TEXT</strong>, new in v1.42)</td>
+<td><strong>7SEG</strong>: four letter names. <strong>SCROLL</strong>: the four letter name flashes three times, then the full name scrolls (<strong>TEXT</strong>, new in v1.42, flash first from v1.46)</td>
 </tr>
 <tr>
 <td><strong>In a kit clip: hold LEVEL/PAN + press KEYBOARD</strong></td>
@@ -3125,6 +3125,9 @@ python3 tools/sort_synth_presets.py /Volumes/DELUGE</pre></div>
 <h2 id="changelog"><a class="m-anchor" href="#changelog" aria-hidden="true" tabindex="-1">#</a>Changelog</h2>
 <p>Newest first: what changed in each release, why, and what it taught me.</p>
 <ul>
+<li>
+<p><strong>v1.46: Scrolling 7SEG text flashes the short name first.</strong> On <strong>SCROLL</strong>, a menu name or option now flashes its four letter 7SEG name three times, then scrolls the full name, and names where the full one says nothing more (<strong>LFO1</strong>, <strong>ULAW</strong>, <strong>LP18</strong>) show as they always did. See <a href="#31-scrolling-7seg-text">Scrolling 7SEG text</a>. Also has the v1.45.1 kit name fix. <em>Why:</em> a suggestion on the community Discord. With only the full name, ENV1 to ENV4 all start "Envelope", so you wait for the scroll to tell them apart; the community docs show both, short then long. <em>Learned:</em> the full name isn't always better. Plenty of OLED names are the 7SEG ones with a space added, and scrolling those just costs time.</p>
+</li>
 <li>
 <p><strong>v1.45.1: Preset kits keep their name.</strong> Choosing a preset kit renames the kit to the preset, so the name no longer goes back to <strong>KIT 0xx</strong> on the next audition or in the companion. LXR and Cycles <strong>Default</strong> keeps the kit's name, and the renamed kit is the song's own until saved. See <a href="#kit-presets">Kit presets</a>. <em>Why:</em> the preset's name only flashed up, then the kit's old name came back the moment you played a row. <em>Learned:</em> showing a name and giving it are different things: the display only shows what the kit is called, so the kit has to carry the name.</p>
 </li>

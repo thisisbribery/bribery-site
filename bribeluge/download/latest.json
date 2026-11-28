@@ -1,26 +1,26 @@
 {
-  "version": "1.45.1",
-  "file": "/bribeluge/download/deluge-bribes-v1.45.1.bin",
-  "name": "deluge-bribes-v1.45.1.bin",
-  "bytes": 2274956,
-  "sha256": "855aa10e07d950cb199ba513a35866633e36cb05cfc5a5ec7f87fcdca525cb1f",
+  "version": "1.46",
+  "file": "/bribeluge/download/deluge-bribes-v1.46.bin",
+  "name": "deluge-bribes-v1.46.bin",
+  "bytes": 2277096,
+  "sha256": "ac12b3ed700f196151f6229a1ad7973b9638cd3f9808ec16638de4e90463f3d7",
   "zip": {
-    "file": "/bribeluge/download/Bribeluge-v1.45.1.zip",
-    "name": "Bribeluge-v1.45.1.zip",
-    "bytes": 3686594,
-    "sha256": "413e77c1346fa93bd0b22ec0eaba71bad38dcef12afed134b5e290edbb0e5d0b",
+    "file": "/bribeluge/download/Bribeluge-v1.46.zip",
+    "name": "Bribeluge-v1.46.zip",
+    "bytes": 3682785,
+    "sha256": "a8bcadcdf16ead6ab0d3b84608a92d170585d70cfcd00ea5fb962e52e557cf18",
     "presets": 1230
   },
   "files": [
     {
       "label": "firmware + presets",
-      "file": "/bribeluge/download/Bribeluge-v1.45.1.zip",
-      "name": "Bribeluge-v1.45.1.zip"
+      "file": "/bribeluge/download/Bribeluge-v1.46.zip",
+      "name": "Bribeluge-v1.46.zip"
     },
     {
       "label": ".bin only",
-      "file": "/bribeluge/download/deluge-bribes-v1.45.1.bin",
-      "name": "deluge-bribes-v1.45.1.bin"
+      "file": "/bribeluge/download/deluge-bribes-v1.46.bin",
+      "name": "deluge-bribes-v1.46.bin"
     }
   ]
 }
