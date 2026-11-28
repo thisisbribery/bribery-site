@@ -30,6 +30,16 @@
 .cx-hex{font:600 .92em var(--bx-mono);color:var(--bx-ink);white-space:nowrap}
 .cx-proto{margin-top:clamp(18px,3vw,28px);border:1px solid var(--bx-line)}
 .cx-proto summary{cursor:pointer;padding:14px 16px;font:700 13px var(--bx-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--bx-pink)}
+.cx-gal-group{margin-top:clamp(26px,4vw,44px)}
+.cx-gal-group h3{font:700 13px var(--bx-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--bx-pink);margin:0 0 6px}
+.cx-gal-group > p{margin:0 0 16px;color:#a99fa6;font-size:14px;max-width:62ch}
+.cx-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2vw,22px)}
+@media (max-width:760px){.cx-gal{grid-template-columns:1fr}}
+.cx-gal figure{margin:0;border:1px solid var(--bx-line);background:#0b0b0c;display:flex;flex-direction:column}
+.cx-gal a{display:block;line-height:0}
+.cx-gal img{width:100%;height:auto;display:block}
+.cx-gal figcaption{padding:12px 14px 14px;font-size:14px;line-height:1.45;color:#cfc8cd}
+.cx-gal figcaption b{display:block;font:700 13px var(--bx-mono);letter-spacing:.14em;color:var(--bx-ink);margin-bottom:3px}
 .cx-proto pre{margin:0;padding:0 16px 18px;overflow-x:auto;font:12.5px/1.6 var(--bx-mono);color:#cfc8cd;white-space:pre}
 </style>
 <script src="/assets/site.js"></script>
@@ -42,12 +52,13 @@
     <h1 class="bx-mega bx-glitch" data-text="BRIBELUGE COMPANION" data-fit><span class="bx-fit">BRIBELUGE COMPANION</span></h1>
     <div class="bx-hero-grid">
       <div>
-        <p class="bx-lede">A second screen for the Synthstrom Deluge on a phone, tablet or laptop, over USB. The display spelled out in full, knobs and engine drawings, waveforms with draggable markers, a song view you can tap, and slider panels for BRUNO106 and BROPHET. Built on the <a href="#credits" style="color:var(--bx-pink)">Deluge Community firmware</a>.</p>
+        <p class="bx-lede">A second screen for the Synthstrom Deluge on a phone, tablet or laptop, over USB. The display spelled out in full, knobs and engine drawings, waveforms with draggable markers, a song view you can tap, and a panel for every engine, drawn like the machine it comes from. Built on the <a href="#credits" style="color:var(--bx-pink)">Deluge Community firmware</a>.</p>
         <div class="cx-ctas">
           <a class="bx-btn bx-solid cx-launch" href="/bribeluge/companion/launch/">Launch Companion</a>
           <small>Chrome or Edge. Works with Bribeluge v1.32+ and stock community firmware 1.3.</small>
         </div>
         <div class="bx-ctas" style="margin-top:18px">
+          <a class="bx-btn" href="#panels">The panels</a>
           <a class="bx-btn" href="#connect">Connect steps</a>
           <a class="bx-btn" href="#protocol">How it talks</a>
           <a class="bx-btn" href="/bribeluge/">Get the firmware</a>
@@ -57,6 +68,46 @@
       <figure class="bx-shot">
         <img src="/assets/devices/companion.webp" width="1600" height="1000" alt="A tablet showing the Bribeluge Companion next to a Deluge">
       </figure>
+    </div>
+  </section>
+
+  <section class="bx-section" id="panels">
+    <div class="bx-sec-head">
+      <h2>A panel for every engine</h2>
+      <p>Each engine gets its own panel, drawn like the machine it comes from. Drag a control and the Deluge follows; turn a knob on the Deluge and the panel moves. Touch a control and the Deluge lights the gold knobs that turn it; with SHORTCUT lit it opens that setting too.</p>
+    </div>
+    <div class="cx-gal-group">
+      <h3>Synths</h3>
+      <p>The Deluge's own synth modes and the synth engines Bribeluge adds.</p>
+      <div class="cx-gal">
+        <figure><a href="/assets/panels/subtractive.webp"><img src="/assets/panels/subtractive-sm.webp" srcset="/assets/panels/subtractive-sm.webp 800w, /assets/panels/subtractive.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="895" loading="lazy" alt="The SUBTRACTIVE panel in the Bribeluge Companion"></a><figcaption><b>SUBTRACTIVE</b>The Deluge's own synth: two oscillators and noise, both filters, two envelopes, two LFOs, mod FX and unison.</figcaption></figure>
+        <figure><a href="/assets/panels/fm.webp"><img src="/assets/panels/fm-sm.webp" srcset="/assets/panels/fm-sm.webp 800w, /assets/panels/fm.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="926" loading="lazy" alt="The FM panel in the Bribeluge Companion"></a><figcaption><b>FM</b>The Deluge's FM mode: two modulators into two carriers, with a drawing of how they route.</figcaption></figure>
+        <figure><a href="/assets/panels/ringmod.webp"><img src="/assets/panels/ringmod-sm.webp" srcset="/assets/panels/ringmod-sm.webp 800w, /assets/panels/ringmod.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="926" loading="lazy" alt="The RINGMOD panel in the Bribeluge Companion"></a><figcaption><b>RINGMOD</b>The Deluge's ring mod: oscillator 1 times oscillator 2, through its filters and envelopes.</figcaption></figure>
+        <figure><a href="/assets/panels/wave.webp"><img src="/assets/panels/wave-sm.webp" srcset="/assets/panels/wave-sm.webp 800w, /assets/panels/wave.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="844" loading="lazy" alt="The WAVE panel in the Bribeluge Companion"></a><figcaption><b>WAVE</b>Wavetable oscillators drawn as a 3D stack of frames, with every playing voice moving through it.</figcaption></figure>
+        <figure><a href="/assets/panels/dx7.webp"><img src="/assets/panels/dx7-sm.webp" srcset="/assets/panels/dx7-sm.webp 800w, /assets/panels/dx7.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="783" loading="lazy" alt="The DX7 panel in the Bribeluge Companion"></a><figcaption><b>DX7</b>Six operator strips, algorithm and feedback, and a screen that shows the voice's name.</figcaption></figure>
+        <figure><a href="/assets/panels/tb303.webp"><img src="/assets/panels/tb303-sm.webp" srcset="/assets/panels/tb303-sm.webp 800w, /assets/panels/tb303.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="552" loading="lazy" alt="The 303 panel in the Bribeluge Companion"></a><figcaption><b>303</b>Cutoff, resonance, env mod, decay, accent, slide and the DIRT filter, on a silver bass line box.</figcaption></figure>
+        <figure><a href="/assets/panels/brophet.webp"><img src="/assets/panels/brophet-sm.webp" srcset="/assets/panels/brophet-sm.webp 800w, /assets/panels/brophet.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="879" loading="lazy" alt="The BROPHET panel in the Bribeluge Companion"></a><figcaption><b>BROPHET</b>The poly synth, knob for knob, in its black P8 look or the woodgrain P5.</figcaption></figure>
+        <figure><a href="/assets/panels/bruno106.webp"><img src="/assets/panels/bruno106-sm.webp" srcset="/assets/panels/bruno106-sm.webp 800w, /assets/panels/bruno106.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="896" loading="lazy" alt="The BRUNO106 panel in the Bribeluge Companion"></a><figcaption><b>BRUNO106</b>DCO, filter, envelopes and chorus on sliders, in the order of the panel it comes from.</figcaption></figure>
+        <figure><a href="/assets/panels/bribering.webp"><img src="/assets/panels/bribering-sm.webp" srcset="/assets/panels/bribering-sm.webp 800w, /assets/panels/bribering.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="793" loading="lazy" alt="The BRIBERING panel in the Bribeluge Companion"></a><figcaption><b>BRIBERING</b>The modal resonator. Structure, brightness, damping and position, with a resonator that rings as you turn them.</figcaption></figure>
+      </div>
+    </div>
+    <div class="cx-gal-group">
+      <h3>Drum machines</h3>
+      <p>Whole kits: every row is one of the machine's voices, and the keys along the bottom pick a row and play it.</p>
+      <div class="cx-gal">
+        <figure><a href="/assets/panels/tribe.webp"><img src="/assets/panels/tribe-sm.webp" srcset="/assets/panels/tribe-sm.webp 800w, /assets/panels/tribe.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="600" loading="lazy" alt="The TRIBE panel in the Bribeluge Companion"></a><figcaption><b>TRIBE</b>An 808 on the left, a 909 on the right and MORPH on the seam. The row keys along the bottom play each voice.</figcaption></figure>
+        <figure><a href="/assets/panels/cyc.webp"><img src="/assets/panels/cyc-sm.webp" srcset="/assets/panels/cyc-sm.webp 800w, /assets/panels/cyc.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="611" loading="lazy" alt="The CYC panel in the Bribeluge Companion"></a><figcaption><b>CYC</b>Bone and grey, with four machine knobs that change job with the machine on the row.</figcaption></figure>
+        <figure><a href="/assets/panels/lxr.webp"><img src="/assets/panels/lxr-sm.webp" srcset="/assets/panels/lxr-sm.webp 800w, /assets/panels/lxr.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="607" loading="lazy" alt="The LXR panel in the Bribeluge Companion"></a><figcaption><b>LXR</b>Black with pink LEDs. The layout follows the row: kick and toms, snare, or cymbals and hats.</figcaption></figure>
+        <figure><a href="/assets/panels/gin.webp"><img src="/assets/panels/gin-sm.webp" srcset="/assets/panels/gin-sm.webp 800w, /assets/panels/gin.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="828" loading="lazy" alt="The GIN panel in the Bribeluge Companion"></a><figcaption><b>GIN</b>Machined gunmetal, with a scope of the tone and its noise burst.</figcaption></figure>
+      </div>
+    </div>
+    <div class="cx-gal-group">
+      <h3>Drum voices</h3>
+      <p>Single engines for one kit row, alongside samples or any other kit's voices.</p>
+      <div class="cx-gal">
+        <figure><a href="/assets/panels/ultrakik.webp"><img src="/assets/panels/ultrakik-sm.webp" srcset="/assets/panels/ultrakik-sm.webp 800w, /assets/panels/ultrakik.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="866" loading="lazy" alt="The ULTRAKIK panel in the Bribeluge Companion"></a><figcaption><b>ULTRAKIK</b>The kick engine. Its drum head draws the pitch drop as you set punch and sweep.</figcaption></figure>
+        <figure><a href="/assets/panels/xia.webp"><img src="/assets/panels/xia-sm.webp" srcset="/assets/panels/xia-sm.webp 800w, /assets/panels/xia.webp 1600w" sizes="(max-width:760px) 100vw, 50vw" width="1600" height="652" loading="lazy" alt="The XIA panel in the Bribeluge Companion"></a><figcaption><b>XIA</b>DXIA and DIIA percussion as silver modules: three operators or a set of partials, and their variants.</figcaption></figure>
+      </div>
     </div>
   </section>
 
@@ -118,7 +169,7 @@
       <div><dt>Transport</dt><dd>Plain USB MIDI, through the browser's Web MIDI with SysEx permission. No OSC, no NRPN, no custom USB driver. Any of the Deluge's USB MIDI ports works.</dd></div>
       <div><dt>Header</dt><dd>Community SysEx with Synthstrom's manufacturer ID: <span class="cx-hex">F0 00 21 7B 01 02 &hellip; F7</span>, where <span class="cx-hex">02</span> is the display command. Older docs and clients show <span class="cx-hex">F0 7D</span>: that was the developer ID the community used until February 2024, when it moved to the official Synthstrom ID.</dd></div>
       <div><dt>Screen mirror</dt><dd>Out: <span class="cx-hex">00 02</span> keep alive, <span class="cx-hex">00 03</span> force a full frame, <span class="cx-hex">00 04</span> swap 7SEG / OLED. In: <span class="cx-hex">40</span> OLED frame (packed + RLE, full or a page range), <span class="cx-hex">41</span> 7SEG digits. Works on stock community firmware 1.3.</dd></div>
-      <div><dt>Bribeluge state</dt><dd>Out: <span class="cx-hex">03 &lt;mode&gt;</span> after the header (subscribe, keep alive, picker, browser, SELECT / BACK, markers, pads, transport, clips, panels). In: <span class="cx-hex">42</span> to <span class="cx-hex">4F</span> and <span class="cx-hex">56</span>. Bribeluge only.</dd></div>
+      <div><dt>Bribeluge state</dt><dd>Out: <span class="cx-hex">03 &lt;mode&gt;</span> after the header (subscribe, keep alive, picker, browser, SELECT / BACK, markers, pads, transport, clips, panels). In: <span class="cx-hex">42</span> to <span class="cx-hex">4F</span> and <span class="cx-hex">56</span> to <span class="cx-hex">58</span>. Bribeluge only.</dd></div>
       <div><dt>Knobs in STOCK</dt><dd>MIDI Follow CCs on the Follow channel, with the Deluge's feedback coming back the same way.</dd></div>
       <div><dt>Tempo and play light</dt><dd>MIDI clock from the Deluge: tempo from 24 ticks per beat, play from start / continue / stop.</dd></div>
     </dl>
@@ -148,10 +199,16 @@ Bribeluge companion (Bribeluge only)
   out  03 0A &lt;section&gt;      launch a section
   out  03 0D &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a BRUNO106 panel control
   out  03 0E &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a BROPHET panel control
+  out  03 0F &lt;id&gt; &lt;hi&gt; &lt;lo&gt; move a WAVE panel control
+  out  03 14 &lt;panel&gt; &lt;id&gt; &lt;hi&gt; &lt;lo&gt;  move a control on any other panel (4 to 15)
+  out  03 15 &lt;row&gt;          select a kit row
+  out  03 16 &lt;row&gt; &lt;on&gt;     hold or release a kit row's audition
+  out  03 17 &lt;panel&gt; &lt;id&gt;   a control was touched: light its gold knobs
+  out  03 18 &lt;panel&gt; &lt;id&gt;   the same, and open its setting (SHORTCUT)
   in   42 STATE   43 KIT_ROWS   44 TEXT      45 PICKER     46 BROWSER
   in   47 BROWSER_SEL           48 WAVEFORM  49 PLAYHEAD   4A PARAMS
   in   4B TRANSPORT  4C OUTPUTS 4D CLIPS     4E ARRANGER   4F ARRANGER_POS
-  in   56 PANEL (BRUNO106 / BROPHET)</pre>
+  in   56 PANEL (every engine)   57 WTABLE   58 WTPOS</pre>
     </details>
     <p class="bx-prose" style="margin-top:18px">The firmware side is in <a href="https://github.com/thisisbribery/DelugeFirmware/blob/bribes/src/deluge/hid/hid_sysex.cpp" target="_blank" rel="noopener">hid_sysex.cpp</a> on the Bribeluge branch. The app is one unminified HTML file: <a href="/bribeluge/companion/launch/">open it</a> and view source.</p>
   </section>
