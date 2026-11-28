@@ -1232,6 +1232,61 @@ html[data-mode="new"] #menu .mi{font:700 14px/1.2 var(--mono);letter-spacing:.04
 #nav button.mnav{font-size:10px;letter-spacing:.04em;min-height:38px}
 @media (max-width:700px){#menu .mcol{flex-basis:78%} #menu .mcol.leaf{flex-basis:88%} #menu .mval{font-size:30px}}
 </style>
+<style>
+/* v34: every setting of the sound below the panels, the OSC PICKER and the effect type tiles */
+#track #sound.on{display:block}
+#sound.snd{padding:12px 12px 10px}
+#sound .sengine{margin:0 0 4px}
+#sound .seng{display:flex;align-items:center;gap:12px;width:100%;padding:6px 12px 6px 6px;background:#151518;border:1px solid #2a2a2e;border-radius:9px;color:#f2f0ea;text-align:left;cursor:pointer}
+#sound .seng:hover{border-color:#ff1fd6}
+#sound .seng .sea{width:96px;flex:0 0 96px;display:block}
+#sound .seng .sea svg{width:96px;height:60px;display:block}
+#sound .seng .set{display:flex;flex-direction:column;min-width:0;flex:1}
+#sound .seng .sen{font:800 17px var(--sans);letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sound .seng .sef{font:600 10px var(--mono);letter-spacing:.16em;color:#8b8a86;text-transform:uppercase}
+#sound .seng > i{font:700 10px var(--mono);letter-spacing:.18em;color:#ff1fd6;font-style:normal;white-space:nowrap}
+#sound .sblk{margin-top:12px}
+#sound .sbh{display:flex;align-items:center;gap:10px;margin:0 2px 6px}
+#sound .sbh b{font:800 12px var(--mono);letter-spacing:.3em;color:#f2f0ea}
+#sound .sbh i{flex:1;height:2px;background:linear-gradient(90deg,#ff1fd6,transparent);opacity:.7}
+#sound .sbh span{font:600 10px var(--mono);letter-spacing:.12em;color:#8b8a86;text-transform:uppercase;white-space:nowrap}
+#sound .sblk[data-blk="ext"] .sbh i{background:linear-gradient(90deg,#19ffe0,transparent)}
+#sound .sblk[data-blk="master"] .sbh i{background:linear-gradient(90deg,#ff9a3c,transparent)}
+#sound .bsecs{gap:6px}
+#sound .bsec{flex:1 0 auto}
+#sound .bsec > .bt{border-bottom-color:#ff1fd6}
+#sound .bsec.red > .bt{border-bottom-color:#ff9a3c}
+#sound .sblk[data-blk="ext"] .bsec > .bt{border-bottom-color:#19ffe0}
+#sound .ddcol{width:auto;min-width:76px}
+#sound .sdd{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:76px;max-width:150px;height:30px;margin-top:14px;padding:0 8px;
+  background:#1b1b1f;border:1px solid #3a3a40;border-radius:6px;color:#f2f0ea;font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+#sound .sdd span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sound .sdd i{font-style:normal;color:#ff1fd6;font-size:10px}
+#sound .sdd:hover,#sound .sdd.tapped{border-color:#ff1fd6;box-shadow:0 0 10px rgba(255,31,214,.35)}
+.sddpop{position:absolute;z-index:60;display:flex;flex-direction:column;min-width:150px;max-height:60vh;overflow-y:auto;background:#0d0d0f;border:1px solid #ff1fd6;
+  border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.6);padding:4px}
+.sddpop button{background:none;border:0;border-radius:5px;color:#f2f0ea;text-align:left;padding:9px 12px;font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.sddpop button:hover{background:#1b1b1f}
+.sddpop button.sel{background:#ff1fd6;color:#000}
+/* The visual picker */
+#vpick .phead{display:flex;align-items:center;gap:8px}
+#vpick .phead .label{flex:1}
+#vpBody .vgroup{font:800 11px var(--mono);letter-spacing:.3em;color:#8b8a86;text-transform:uppercase;margin:14px 2px 8px}
+#vpBody .vgroup:first-child{margin-top:2px}
+#vpBody .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+#vpBody.vp-osc .vgrid,#vpBody.vp-crush .vgrid,#vpBody.vp-sat .vgrid,#vpBody.vp-clip .vgrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+#vpBody .vtile{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:8px;background:#0b0b0d;border:1px solid #26262b;border-radius:10px;color:#f2f0ea;cursor:pointer;text-align:left}
+#vpBody .vtile img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top center;border-radius:6px;background:#151518;display:block}
+#vpBody.vp-engine .vtile > svg{aspect-ratio:16/9;background:#151518;border-radius:6px;padding:6px 18%;box-sizing:border-box}
+#vpBody .vtile svg{width:100%;height:auto;display:block}
+#vpBody .vtile .vn{font:800 15px var(--sans);letter-spacing:.04em;text-transform:uppercase}
+#vpBody .vtile .vf{font:600 10.5px var(--mono);letter-spacing:.08em;color:#8b8a86;line-height:1.35}
+#vpBody .vtile:hover{border-color:#5b5a60}
+#vpBody .vtile.sel{border-color:#ff1fd6;box-shadow:inset 0 0 0 1px #ff1fd6,0 0 18px rgba(255,31,214,.45)}
+#vpBody .vtile.sel .vn{color:#ff1fd6}
+#vpBody .vtile.tapped{opacity:.6}
+@media (max-width:700px){#vpBody .vgrid{grid-template-columns:repeat(2,1fr)} #sound .seng .sea{display:none} #sound .seng > i{display:none}}
+</style>
 </head>
 <body data-bx-page="companion" data-bx-no-top>
 <nav id="nav" aria-label="Sections"><div class="nhead">NAV</div></nav>
@@ -1287,6 +1342,12 @@ html[data-mode="new"] #menu .mi{font:700 14px/1.2 var(--mono);letter-spacing:.04
     <section id="picker" class="card panel">
       <div class="phead"><div class="label" id="pickerTitle"></div></div>
       <div id="pickerTiles"></div>
+    </section>
+
+    <section id="vpick" class="card panel">
+      <div class="phead"><div class="label" id="vpTitle"></div>
+        <button class="secondary" id="vpBack">Back</button><button class="secondary" id="vpClose">Close</button></div>
+      <div id="vpBody"></div>
     </section>
 
     <section id="browser" class="card panel">
@@ -1353,6 +1414,7 @@ html[data-mode="new"] #menu .mi{font:700 14px/1.2 var(--mono);letter-spacing:.04
       <div id="fmp" class="cpanel dk dl arc"></div>
       <div id="rmodp" class="cpanel dk dl arc"></div>
       <div id="gold" class="frame" style="display:none"><div class="label">Gold knobs</div><div class="goldgrid"></div></div>
+      <div id="sound" class="cpanel dk snd"></div>
       <div id="special" class="frame" style="display:none"><div class="label"></div><div class="sbody"></div></div>
       <div id="knobs"></div>
       <div id="rows"></div>
@@ -1395,7 +1457,7 @@ html[data-mode="new"] #menu .mi{font:700 14px/1.2 var(--mono);letter-spacing:.04
 
   <div class="cx-chrome">
     <div class="bx-mode cx-modein" role="group" aria-label="Page style"><button type="button" data-m="new">New</button><button type="button" data-m="classic">Classic</button></div>
-  <footer>Bribeluge Companion v33 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
+  <footer>Bribeluge Companion v34 by <a href="https://www.instagram.com/thisisbribery/" target="_blank" rel="noopener">Bribery</a>. Runs entirely in your browser. <a href="/bribeluge/companion/LICENSE.txt" target="_blank" rel="noopener">PolyForm Noncommercial</a>. The screen mirror and MIDI Follow it builds on come from the <a href="/bribeluge/companion/#credits">Deluge Community firmware</a>. Not affiliated with or endorsed by Synthstrom Audible.</footer>
   </div>
 </main>
 
@@ -1861,7 +1923,7 @@ function keepMain() { if (stageNow === "track" && performance.now() < mainUntil)
 // is lit as the page scrolls. A menu, browser, waveform or song view on the stage is listed above them.
 var NAV_KNOB = { "Oscillators": "OSC", "Filters": "FILTER", "Envelope 1": "ENV 1", "Envelope 2": "ENV 2", "Voice": "VOICE",
   "Effects": "FX", "LFOs": "LFO" };
-var NAV_STAGE = { menu: "MENU", picker: "PICK", browser: "BROWSE", wave: "WAVE", song: "SONG" };
+var NAV_STAGE = { vpick: "PICK", menu: "MENU", picker: "PICK", browser: "BROWSE", wave: "WAVE", song: "SONG" };
 var navKey = "", navEls = [], navPinned = null, navPinUntil = 0, navRaf = 0;
 function shown(el) { return !!el && el.style.display !== "none" && el.getClientRects().length > 0; }
 // The sections the track has, in page order (measured with the track showing, else by what it holds)
@@ -1872,7 +1934,13 @@ function navSections() {
   if ($("gold").style.display !== "none") list.push({ key: "gold", label: "GOLD", el: $("gold"), cls: "gold" });
   var sp = $("special");
   if (sp.style.display !== "none" && !$("track").classList.contains("panel-on")) list.push({ key: "engine", label: "ENGINE", el: sp });
-  Array.prototype.forEach.call($("knobs").querySelectorAll(":scope > .kgroup"), function (g, n) {
+  var SOUND_NAV = { osc: "OSC", filter: "FILTER", env: "ENV", lfo: "LFO", voice: "VOICE", ext: "EXT", fx: "FX", drive: "DRIVE", more: "SIDE", master: "MASTER" };
+  if (soundP.open) Array.prototype.forEach.call($("sound").querySelectorAll(".sblk"), function (b) {
+    if (b.style.display === "none") return;
+    var k = b.getAttribute("data-blk");
+    list.push({ key: "s-" + k, label: SOUND_NAV[k] || k.toUpperCase(), el: b, cls: k === "ext" ? "ext" : "" });
+  });
+  if ($("knobs").style.display !== "none") Array.prototype.forEach.call($("knobs").querySelectorAll(":scope > .kgroup"), function (g, n) {
     var name = g.querySelector(".label").textContent;
     list.push({ key: "k" + n + name, label: NAV_KNOB[name] || name.toUpperCase().slice(0, 7), el: g });
   });
@@ -1960,6 +2028,7 @@ function showMenu(m) {
   }
   updateStage();
   if (menuOpen()) renderMenu();
+  if (stageNow === "vpick") renderVpick();
 }
 function menuEsc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 function menuGo(level, entry, enter) { tx([0x03, 0x19, level, entry, enter ? 1 : 0]); }
@@ -2042,12 +2111,13 @@ function menuNavKey() {
 var picker = null, browser = null, wave = null, transport = null;
 function updateStage() {
   var view = transport ? transport.view : 4;
-  var which = picker ? "picker" : browser ? "browser" : menuOpen() ? "menu" : wave ? "wave" : (view >= 1 && view <= 3) ? "song" : "track";
+  var which = picker ? "picker" : browser ? "browser" : vpOn() ? "vpick" : menuOpen() ? "menu" : wave ? "wave" : (view >= 1 && view <= 3) ? "song" : "track";
   leaveStage(which);
-  ["picker", "browser", "menu", "wave", "song", "track"].forEach(function (id) {
+  ["picker", "browser", "vpick", "menu", "wave", "song", "track"].forEach(function (id) {
     var el = $(id), on = id === which;
     if (el.classList.contains("show") !== on) el.classList.toggle("show", on);
   });
+  if (which === "vpick") renderVpick();
   if (which === "wave") drawWave();
   if (which === "song") renderSong();
   followStage(which);
@@ -3669,6 +3739,394 @@ var DRUM_PANEL_LIST = [tribe, cyc, lxr, gin, pUk, pXia, pRings, pTb, pDx, pSubt,
 function allPanels() { return [bruno, brophet, wavet].concat(DRUM_PANEL_LIST); }
 [pUk, pXia, pRings, pTb, pDx, pSubt, pFm, pRmod].forEach(function (P) { wirePanelTouch(P, P.kind); });
 
+// ==== v34: every setting of the sound below the panels (SOUND 0x5B), the OSC PICKER and the effect type tiles ====
+// SOUND brings each setting of the synth or kit row being played (14-bit, a stepped one its choice) and which of them
+// this sound has. A move here goes back as 03 1B <id> <hi> <lo>. 03 1C <which> opens a setting on the Deluge (0 SYNTH
+// MODE, 1 and 2 the oscillators' types); while it is open the page shows it as picture tiles, and a tap turns the
+// select knob to it (03 1A) and leaves the menu (03 19 127).
+var PANEL_IMG = "/assets/panels/";
+var SND_OSC = ["SINE", "TRIANGLE", "SQUARE", "ANALOG SQUARE", "SAW", "ANALOG SAW", "WAVETABLE", "SAMPLE", "DX7", "DRUM SYNTH",
+  "INPUT L", "INPUT R", "INPUT ST"];
+var SND_LPF = ["12 dB", "24 dB", "DRIVE", "BROPHET", "BRUNO106", "SVF BAND", "SVF NOTCH", "OFF"];
+var SND_HPF = ["SVF BAND", "SVF NOTCH", "LADDER", "OFF"];
+var SND_LFO = ["SINE", "TRIANGLE", "SQUARE", "SAW", "S&H", "RANDOM", "WARBLER"];
+var SND_MODFX = ["OFF", "FLANGER", "CHORUS", "PHASER", "STEREO CHORUS", "WARBLE", "DIMENSION", "GRAIN", "BRUNO CHORUS", "SHIFT"];
+var SND_ROUTE = ["HPF > LPF", "LPF > HPF", "PARALLEL"];
+var SND_POLY = ["AUTO", "POLY", "MONO", "LEGATO", "CHOKE"];
+var SND_PRIO = ["LOW", "MEDIUM", "HIGH"];
+var SND_UNISON = ["1", "2", "3", "4", "5", "6", "7", "8"];
+var FX_TYPES = {
+  crush: { title: "Crush type", names: ["CLASSIC", "HARD", "VINTAGE", "U-LAW", "JITTER", "DECAY"], notes: [
+    "The Deluge's own: steps and grit", "Pure digital: hard steps, few levels", "Old sampler: soft 12-bit steps, a little dark",
+    "Companded: quiet tails stay grainy", "Unsteady clock: crackly, sputtering", "A dying chip: dark, sags and drops out"] },
+  sat: { title: "Saturation type", names: ["CLASSIC", "TAPE", "WARM", "CLIP", "HARD", "FOLD"], notes: [
+    "The original soft clip", "Smooth, a little lopsided", "Softest knee, more lopsided", "Firmer knee, hardens sooner",
+    "Hard clip all the way", "Wavefolder: bright and metallic"] },
+  clip: { title: "Master clip", names: ["OFF", "SOFT", "TANH", "HARD", "TAPE", "FOLD", "LIMIT"], notes: [
+    "Nothing at the end of the song", "A gentle knee into the ceiling", "Rounded, warm squash", "A brick wall at the ceiling",
+    "Tape-like and lopsided", "Folds back over the ceiling", "Turns peaks down, keeps the shape"] }
+};
+
+// ---- Drawings: a sine through each type (faint) and what comes out (bright), 160 x 100
+function fxCurve(kind, i) {
+  var N = 160, pts = [], k, t, x, y, held = 0, holdUntil = -1, lp = 0;
+  function q(v, levels) { return Math.round(v * levels) / levels; }
+  function rnd(n) { var s = Math.sin(n * 12.9898) * 43758.5453; return s - Math.floor(s); }
+  for (k = 0; k <= N; k++) {
+    t = k / N; x = Math.sin(t * Math.PI * 2) * 0.92;
+    if (kind === "crush") {
+      var hold = [1 / 26, 1 / 11, 1 / 20, 1 / 34, 0, 1 / 15][i], levels = [7, 3, 9, 0, 6, 5][i];
+      if (i === 4) hold = (0.4 + rnd(Math.floor(t * 22)) * 1.4) / 22;
+      if (t >= holdUntil) {
+        holdUntil = t + hold;
+        if (i === 3) { var c = (x < 0 ? -1 : 1) * Math.log(1 + 255 * Math.abs(x)) / Math.log(256); c = q(c, 5); held = (c < 0 ? -1 : 1) * (Math.pow(256, Math.abs(c)) - 1) / 255; }
+        else held = q(x * (i === 5 ? 0.78 + 0.22 * Math.cos(t * 9) : 1), levels) + (i === 4 ? (rnd(k) - 0.5) * 0.08 : 0);
+        if (i === 5 && t > 0.56 && t < 0.66) held = 0;
+      }
+      y = held;
+      if (i === 2) { lp += (y - lp) * 0.3; y = lp; }
+    } else if (kind === "sat") {
+      var d = x * 2.3;
+      y = i === 0 ? Math.tanh(d) / Math.tanh(2.1)
+        : i === 1 ? Math.tanh(d + 0.45 * d * d * 0.3) / 1.05
+        : i === 2 ? (d + 0.55 * d * d * 0.25) / (1 + 0.75 * Math.abs(d)) * 1.25
+        : i === 3 ? d / Math.pow(1 + Math.pow(Math.abs(d), 6), 1 / 6)
+        : i === 4 ? Math.max(-1, Math.min(1, d * 1.1))
+        : Math.sin(d * 1.15);
+      y *= 0.92;
+    } else { // clip: ceiling at 0.72, drive 1.5
+      var ce = 0.72, v = x * 1.35;
+      y = i === 0 ? v
+        : i === 1 ? ce * (Math.abs(v) < ce * 0.6 ? v / ce : (v < 0 ? -1 : 1) * (0.6 + 0.4 * Math.tanh((Math.abs(v) / ce - 0.6) / 0.4)))
+        : i === 2 ? ce * Math.tanh(v / ce)
+        : i === 3 ? Math.max(-ce, Math.min(ce, v))
+        : i === 4 ? ce * Math.tanh(v / ce + 0.25 * (v / ce) * (v / ce) * 0.4) * 0.97
+        : i === 5 ? (Math.abs(v) <= ce ? v : (v < 0 ? -1 : 1) * (2 * ce - Math.abs(v)))
+        : v * ce / 1.35 * 0.98;
+    }
+    pts.push([t, Math.max(-1.1, Math.min(1.1, y))]);
+  }
+  return pts;
+}
+function fxArt(kind, i) {
+  function path(list) {
+    return list.map(function (p, n) { return (n ? "L" : "M") + (8 + p[0] * 144).toFixed(1) + " " + (50 - p[1] * 38).toFixed(1); }).join(" ");
+  }
+  var dry = [];
+  for (var k = 0; k <= 80; k++) dry.push([k / 80, Math.sin(k / 80 * Math.PI * 2) * 0.92 * (kind === "clip" ? 1.35 : 1)]);
+  var s = '<rect x="2" y="6" width="156" height="88" rx="6" fill="#0b0b0d" stroke="#26262b"/>' +
+    '<path d="M8 50 H152" stroke="#26262b" stroke-width="1"/>';
+  if (kind === "clip") s += '<path d="M8 22.6 H152 M8 77.4 H152" stroke="#ff9a3c" stroke-width="1" stroke-dasharray="3 3" opacity=".75"/>';
+  s += '<path d="' + path(dry) + '" fill="none" stroke="#5b5a60" stroke-width="1.2" stroke-dasharray="2 2"/>';
+  s += '<path d="' + path(fxCurve(kind, i)) + '" fill="none" stroke="#ff1fd6" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+  return '<svg viewBox="0 0 160 100" aria-hidden="true">' + s + "</svg>";
+}
+// The oscillator types as their waves
+function oscArt(i) {
+  var pts = [], k, t, y;
+  function wave(fn) { for (k = 0; k <= 96; k++) { t = k / 96; pts.push([t, fn(t * 2 % 1, t)]); } }
+  switch (i) {
+  case 0: wave(function (p) { return Math.sin(p * Math.PI * 2); }); break;
+  case 1: wave(function (p) { return p < 0.5 ? p * 4 - 1 : 3 - p * 4; }); break;
+  case 2: wave(function (p) { return p < 0.5 ? 0.9 : -0.9; }); break;
+  case 3: wave(function (p) { return p < 0.5 ? 0.9 * (1 - 0.25 * p) : -0.9 * (1 - 0.25 * (p - 0.5)); }); break;
+  case 4: wave(function (p) { return 1 - p * 2; }); break;
+  case 5: wave(function (p) { return 0.95 - 1.9 * Math.pow(p, 0.7); }); break;
+  case 6: wave(function (p, tt) { var m = tt; return Math.sin(p * Math.PI * 2) * (1 - m) + (p < 0.5 ? 0.8 : -0.8) * m; }); break;
+  case 7: wave(function (p, tt) { return Math.sin(tt * 61) * Math.sin(tt * 23 + 1) * Math.exp(-tt * 1.6); }); break;
+  case 8: wave(function (p, tt) { return Math.sin(tt * Math.PI * 4 + 2.2 * Math.sin(tt * Math.PI * 12)); }); break;
+  case 9: wave(function (p, tt) { return Math.sin(tt * 40 * (1 - tt * 0.6)) * Math.exp(-tt * 3.2); }); break;
+  default: wave(function (p, tt) { return 0.6 * Math.sin(tt * 37) * Math.sin(tt * 7 + 0.5); });
+  }
+  var d = pts.map(function (p, n) { return (n ? "L" : "M") + (10 + p[0] * 140).toFixed(1) + " " + (50 - p[1] * 34).toFixed(1); }).join(" ");
+  var s = '<rect x="2" y="6" width="156" height="88" rx="6" fill="#0b0b0d" stroke="#26262b"/><path d="M8 50 H152" stroke="#26262b"/>';
+  if (i === 6) s += '<path d="' + d + '" transform="translate(6,-8)" fill="none" stroke="#5b5a60" stroke-width="1"/><path d="' + d + '" transform="translate(3,-4)" fill="none" stroke="#8a8990" stroke-width="1"/>';
+  s += '<path d="' + d + '" fill="none" stroke="#19ffe0" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+  return '<svg viewBox="0 0 160 100" aria-hidden="true">' + s + "</svg>";
+}
+// A synth mode option: which panel render shows it, its family and a short name
+function engineTile(name) {
+  var n = String(name).toLowerCase().trim();
+  var map = [["subtractive", "subtractive", "Synths"], ["sample", null, "Synths"], ["fm", "fm", "Synths"], ["ringmod", "ringmod", "Synths"],
+    ["303", "tb303", "Synths"], ["brophet", "brophet", "Synths"], ["bruno106", "bruno106", "Synths"], ["bribering", "bribering", "Synths"],
+    ["kick / tom", "lxr", "Drum voices"], ["snare", "lxr", "Drum voices"], ["cymbal / hat", "lxr", "Drum voices"],
+    ["dxia", "xia", "Drum voices"], ["diia", "xia", "Drum voices"], ["ultrakik", "ultrakik", "Drum voices"],
+    ["cyc", "cyc", "Drum machines"], ["vtg", "cyc", "Drum machines"], ["clap", "cyc", "Drum machines"], ["gin", "gin", "Drum machines"],
+    ["tribe", "tribe", "Drum machines"]];
+  for (var i = 0; i < map.length; i++) if (n === map[i][0] || n.indexOf(map[i][0]) === 0) return { img: map[i][1], group: map[i][2] };
+  return { img: null, group: "Other" };
+}
+var ENGINE_FAMILY = { subtractive: "Deluge synth", fm: "FM", ringmod: "Ring mod", tb303: "Bass line", brophet: "Poly synth",
+  bruno106: "DCO poly", bribering: "Resonator", lxr: "LXR voice", xia: "XIA", ultrakik: "Kick", cyc: "Cycles", gin: "GIN", tribe: "808 / 909" };
+
+// ---- The visual picker stage: from the Deluge's open setting (src "menu") or a tap here (src "local")
+var vpLocal = null; // { kind, id, selected }
+function vpKindOf(items) {
+  var n = items.map(function (it) { return String(it.name).toLowerCase(); });
+  function has(s) { return n.indexOf(s) >= 0; }
+  if (has("fm") && has("ringmod")) return "engine";
+  if (has("sine") && has("saw")) return "osc";
+  if (has("vintage") && has("u-law")) return "crush";
+  if (has("tanh") && has("limit")) return "clip";
+  if (has("tape") && has("warm") && has("fold")) return "sat";
+  return null;
+}
+function vpFromMenu() {
+  if (!menu || !menu.levels.length) return null;
+  var lv = menu.levels[menu.levels.length - 1];
+  if (!lv || !lv.leaf || !lv.items || lv.items.length < 2) return null;
+  var kind = vpKindOf(lv.items);
+  return kind ? { src: "menu", kind: kind, title: lv.title, items: lv.items.map(function (it) { return it.name; }), selected: lv.selected, levels: menu.levels.length } : null;
+}
+function vpNow() {
+  if (vpLocal) {
+    var t = FX_TYPES[vpLocal.kind];
+    return { src: "local", kind: vpLocal.kind, title: t.title, items: t.names, selected: vpLocal.selected, id: vpLocal.id };
+  }
+  return vpFromMenu();
+}
+function vpOn() { return !!vpNow(); }
+var vpKey = "";
+function renderVpick() {
+  var v = vpNow(), body = $("vpBody");
+  if (!v) { vpKey = ""; vpShownKey = ""; return; }
+  var key = v.src + v.kind + v.items.join("|");
+  $("vpTitle").textContent = v.kind === "engine" ? "OSC PICKER · " + (v.title || "Synth mode") : v.kind === "osc" ? "OSC PICKER · " + (v.title || "Type") : v.title;
+  $("vpBack").style.display = v.src === "menu" && v.levels > 1 ? "" : "none";
+  if (key !== vpKey) {
+    vpKey = key;
+    body.className = "vp-" + v.kind;
+    var groups = {}, order = [];
+    v.items.forEach(function (name, idx) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "vtile"; b.setAttribute("data-i", idx);
+      var g = "";
+      if (v.kind === "engine") {
+        var e = engineTile(name); g = e.group;
+        b.innerHTML = (e.img ? '<img alt="" loading="lazy" src="' + PANEL_IMG + e.img + '-sm.webp">' : art(name.toLowerCase() === "sample" ? "mpc" : "subt")) +
+          '<span class="vn"></span><span class="vf"></span>';
+        b.querySelector(".vf").textContent = ENGINE_FAMILY[e.img] || "Sample kit row";
+        var im = b.querySelector("img");
+        if (im) im.onerror = function () { var s = document.createElement("span"); s.innerHTML = art(optionArt(name) || "subt"); im.replaceWith(s.firstChild); };
+      } else if (v.kind === "osc") {
+        b.innerHTML = oscArt(idx) + '<span class="vn"></span>';
+      } else {
+        b.innerHTML = fxArt(v.kind, idx) + '<span class="vn"></span><span class="vf"></span>';
+        b.querySelector(".vf").textContent = (FX_TYPES[v.kind].notes || [])[idx] || "";
+      }
+      b.querySelector(".vn").textContent = name;
+      b.onclick = function () {
+        var now = vpNow(); if (!now) return;
+        b.classList.add("tapped");
+        if (now.src === "local") { soundP.set(now.id, idx, 800); vpLocal = null; updateStage(); }
+        else {
+          // The select knob straight to it, then leave the menu (works on v1.48 firmware too)
+          menuTurn(idx - (now.selected < 0 ? 0 : now.selected));
+          setTimeout(function () { if (vpFromMenu()) tx([0x03, 0x19, 127, 0, 0]); }, 260);
+        }
+      };
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push(b);
+    });
+    body.innerHTML = "";
+    order.forEach(function (g) {
+      if (g) { var h = document.createElement("div"); h.className = "vgroup"; h.textContent = g; body.appendChild(h); }
+      var grid = document.createElement("div"); grid.className = "vgrid";
+      groups[g].forEach(function (b) { grid.appendChild(b); });
+      body.appendChild(grid);
+    });
+  }
+  var selEl = null, fresh = key !== vpShownKey;
+  Array.prototype.forEach.call(body.querySelectorAll(".vtile"), function (b) {
+    var on = +b.getAttribute("data-i") === v.selected;
+    b.classList.toggle("sel", on); if (on) { b.classList.remove("tapped"); selEl = b; }
+  });
+  // The chosen one in view: at once when the picker opens, then as the select knob moves it
+  if (selEl && (fresh || v.selected !== vpShownSel)) showOnPage(selEl, !fresh);
+  vpShownKey = key; vpShownSel = v.selected;
+}
+var vpShownKey = "", vpShownSel = -1;
+function vpClose() {
+  var v = vpNow(); if (!v) return;
+  if (v.src === "local") { vpLocal = null; updateStage(); }
+  else tx([0x03, 0x19, 127, 0, 0]); // Leave the menu
+}
+function openLocalPicker(kind, id) {
+  vpLocal = { kind: kind, id: id, selected: soundP.v[id] };
+  updateStage();
+}
+
+// ---- SOUND: the settings, a block per part of the sound, each a row of sections
+function SoundPanel(o) { DrumPanel.call(this, o); this.blocks = o.blocks; this.texts = {}; this.mask = []; this.kit = false; }
+SoundPanel.prototype = Object.create(DrumPanel.prototype);
+SoundPanel.prototype.constructor = SoundPanel;
+SoundPanel.prototype.send = function (id, p) {
+  var P = this;
+  P.dirty[id] = p;
+  if (P.timer) return;
+  P.timer = setTimeout(function () {
+    P.timer = 0;
+    var d = P.dirty; P.dirty = {};
+    Object.keys(d).forEach(function (k) { var q = d[k]; tx([0x03, 0x1B, +k, (q >> 7) & 0x7F, q & 0x7F]); });
+  }, 25);
+};
+// A dropdown: the setting's name on a button. Effect types open their picture tiles, oscillator types the OSC PICKER
+// (through the Deluge's own setting), the rest a list.
+SoundPanel.prototype.dropdown = function (c) {
+  var P = this, col = this.column(c, true);
+  col.classList.add("ddcol");
+  var b = document.createElement("button"); b.type = "button"; b.className = "sdd";
+  b.innerHTML = "<span></span><i>&#9662;</i>";
+  b.onclick = function (e) {
+    e.stopPropagation();
+    if (P.v[c.id] < 0) return;
+    if (c.picker) { openLocalPicker(c.picker, c.id); return; }
+    if (c.open !== undefined) { b.classList.add("tapped"); setTimeout(function () { b.classList.remove("tapped"); }, 400); tx([0x03, 0x1C, c.open]); return; }
+    P.popList(b, c);
+  };
+  col.querySelector(".bw").appendChild(b);
+  this.els[c.id] = { kind: "dd", type: "dd", col: col, el: b, names: c.dd };
+  return col;
+};
+SoundPanel.prototype.popList = function (anchor, c) {
+  var P = this, old = document.querySelector(".sddpop");
+  if (old) { old.remove(); if (old.forId === c.id) return; }
+  var pop = document.createElement("div"); pop.className = "sddpop"; pop.forId = c.id;
+  var top = c.id === 58 && !P.kit ? 3 : c.dd.length - 1; // CHOKE only on a kit row
+  c.dd.forEach(function (name, i) {
+    if (i > top) return;
+    var o = document.createElement("button"); o.type = "button"; o.textContent = name;
+    if (i === P.v[c.id]) o.className = "sel";
+    o.onclick = function (e) { e.stopPropagation(); P.set(c.id, i, 800); pop.remove(); };
+    pop.appendChild(o);
+  });
+  document.body.appendChild(pop);
+  var r = anchor.getBoundingClientRect();
+  pop.style.left = Math.max(8, Math.min(window.innerWidth - pop.offsetWidth - 8, r.left)) + "px";
+  pop.style.top = (window.scrollY + r.bottom + 4) + "px";
+};
+SoundPanel.prototype.build = function () {
+  var P = this;
+  var blocks = P.blocks.map(function (bk, n) {
+    return '<div class="sblk" data-blk="' + bk.key + '"><div class="sbh"><b>' + bk.t + '</b><i></i>' + (bk.note ? "<span>" + bk.note + "</span>" : "") +
+      '</div><div class="bsecs" data-row="' + (n + 1) + '"></div></div>';
+  }).join("");
+  P.root.innerHTML = '<div class="sengine"><button type="button" class="seng"><span class="sea"></span><span class="set"><b class="sen"></b><span class="sef"></span></span><i>CHANGE ENGINE &#9662;</i></button></div>' +
+    blocks + '<div class="bhint"></div>';
+  P.root.querySelector(".bhint").textContent = P.hint;
+  P.root.querySelector(".seng").onclick = function () { tx([0x03, 0x1C, 0]); };
+  P.els = {}; P.secEls = {}; P.secList = [];
+  P.sections.forEach(function (sec) {
+    var el = document.createElement("div"); el.className = "bsec" + (sec.red ? " red" : "");
+    el.innerHTML = '<div class="bt"></div><div class="bitems"></div>';
+    el.querySelector(".bt").textContent = sec.t.toUpperCase();
+    var items = el.querySelector(".bitems"), ids = [];
+    sec.c.forEach(function (c) {
+      items.appendChild(c.dd ? P.dropdown(c) : c.k === "sw" ? P.slide(c) : c.b ? P.buttons(c) : c.knob ? P.knob(c) : P.slider(c));
+      if (c.mode === "toggle") c.b.forEach(function (d) { ids.push(d.id); }); else ids.push(c.id);
+    });
+    P.root.querySelector('[data-row="' + (sec.row || 1) + '"]').appendChild(el);
+    P.secList.push({ el: el, ids: ids });
+  });
+  P.built = true;
+};
+SoundPanel.prototype.draw = function (id) {
+  var e = this.els[id], v = this.v[id]; if (!e || v < 0) return;
+  if (e.type === "dd") { e.el.querySelector("span").textContent = e.names[v] !== undefined ? e.names[v] : String(v); return; }
+  if (e.type === "knob" && (e.kind === "sync" || e.kind === "db" || e.kind === "ceil" || e.kind === "bip")) {
+    var f = e.steps ? v / e.steps : v / PANEL_MAX;
+    e.el.style.setProperty("--a", (f * 300 - 150).toFixed(1));
+    e.el.style.setProperty("--f", f.toFixed(4));
+    var t = e.kind === "sync" ? (this.texts[id] || (v ? String(v) : "OFF"))
+      : e.kind === "db" ? "+" + v + " dB" : e.kind === "ceil" ? (v - 12) + " dB"
+      : (function (k) { return (k > 0 ? "+" : "") + k; })(Math.round((v / PANEL_MAX - 0.5) * 50));
+    e.out.textContent = t;
+    return;
+  }
+  DrumPanel.prototype.draw.call(this, id);
+};
+SoundPanel.prototype.show = function (m) {
+  var P = this;
+  if (!m || !m.v.length) { if (P.open) { P.open = false; P.root.classList.remove("on"); $("knobs").style.display = ""; } return; }
+  P.texts = m.texts; P.mask = m.mask; P.kit = m.kit;
+  Panel.prototype.show.call(P, m);
+  for (var t in m.texts) if (P.els[t] && performance.now() >= P.hold[t]) P.draw(+t); // A sync's name can change on its own
+  // Only what this sound has: a setting it lacks goes, then a section with none left, then a block
+  Object.keys(P.els).forEach(function (k) { var e = P.els[k]; if (e.col) e.col.style.display = P.mask[k] === false ? "none" : ""; });
+  P.secList.forEach(function (s) {
+    s.el.style.display = s.ids.some(function (id) { return P.mask[id] !== false; }) ? "" : "none";
+  });
+  Array.prototype.forEach.call(P.root.querySelectorAll(".sblk"), function (b) {
+    b.style.display = Array.prototype.some.call(b.querySelectorAll(".bsec"), function (s) { return s.style.display !== "none"; }) ? "" : "none";
+  });
+  $("knobs").style.display = "none"; // These cover the knob grid
+  soundEngine();
+};
+// The engine button at the top: what the hero says
+function soundEngine() {
+  if (!soundP.built) return;
+  var r = soundP.root;
+  r.querySelector(".sen").textContent = $("engine").textContent || "-";
+  r.querySelector(".sef").textContent = $("family").textContent || "";
+  var ha = $("heroArt").innerHTML;
+  if (r.querySelector(".sea").getAttribute("data-k") !== ha.length + ":" + $("engine").textContent) {
+    r.querySelector(".sea").innerHTML = ha; r.querySelector(".sea").setAttribute("data-k", ha.length + ":" + $("engine").textContent);
+  }
+}
+function sK(id, n, k, o) { return pK(id, n, k || "std", o); }
+function sD(id, n, names, o) { var c = { id: id, n: n, dd: names }; for (var x in o || {}) c[x] = o[x]; return c; }
+function sSync(id) { return pK(id, "Sync", "sync", { steps: 27 }); }
+function sEnv(t, a, row) { return { t: t, row: row, c: [sK(a, "Attack"), sK(a + 1, "Decay"), sK(a + 2, "Sustain"), sK(a + 3, "Release")] }; }
+function sLfo(t, a, row) { return { t: t, row: row, c: [sD(a, "Shape", SND_LFO), sK(a + 1, "Rate"), sSync(a + 2)] }; }
+var soundP = new SoundPanel({
+  root: $("sound"), n: 105,
+  hint: "Every setting of this sound. Drag a knob, tap a box to pick. The Deluge follows, and turning a knob there moves it here.",
+  blocks: [
+    { key: "osc", t: "OSCILLATORS" }, { key: "filter", t: "FILTERS" }, { key: "env", t: "ENVELOPES" }, { key: "lfo", t: "LFOS" },
+    { key: "voice", t: "VOICE" }, { key: "ext", t: "EXT", note: "Envelopes 3 and 4, LFOs 3 and 4" }, { key: "fx", t: "EFFECTS" },
+    { key: "drive", t: "EQ AND DRIVE" }, { key: "more", t: "SIDECHAIN, ARP, STUTTER" }, { key: "master", t: "MASTER", note: "The whole song" }
+  ],
+  sections: [
+    { t: "Osc 1", row: 1, c: [sD(0, "Type", SND_OSC, { open: 1 }), sK(1, "Level"), sK(2, "Transpose", "tune"), sK(3, "PW"), sK(4, "Wave pos"), sK(5, "Fdbk")] },
+    { t: "Osc 2", row: 1, c: [sD(6, "Type", SND_OSC, { open: 2 }), sK(7, "Level"), sK(8, "Transpose", "tune"), sK(9, "PW"), sK(10, "Wave pos"), sK(11, "Fdbk")] },
+    { t: "Mix", row: 1, c: [pT(12, "SYNC"), sK(13, "Noise")] },
+    { t: "Mod 1", row: 1, c: [sK(14, "Amount"), sK(15, "Transpose", "tune"), sK(16, "Fdbk")] },
+    { t: "Mod 2", row: 1, c: [sK(17, "Amount"), sK(18, "Transpose", "tune"), sK(19, "Fdbk"), pB(20, "Dest", ["CAR", "MOD1"])] },
+    { t: "LPF", row: 2, c: [sD(21, "Mode", SND_LPF), sK(22, "Freq"), sK(23, "Res"), sK(24, "Morph")] },
+    { t: "HPF", row: 2, c: [sD(25, "Mode", SND_HPF), sK(26, "Freq"), sK(27, "Res"), sK(28, "Morph")] },
+    { t: "Route", row: 2, c: [sD(29, "Order", SND_ROUTE)] },
+    sEnv("Env 1", 30, 3), sEnv("Env 2", 34, 3),
+    sLfo("LFO 1", 46, 4), sLfo("LFO 2", 49, 4),
+    { t: "Voice", row: 5, c: [sD(58, "Poly", SND_POLY), sD(63, "Priority", SND_PRIO), sK(62, "Porta"), sK(64, "Transpose", "tune")] },
+    { t: "Unison", row: 5, c: [sD(59, "Voices", SND_UNISON), sK(60, "Detune"), sK(61, "Spread")] },
+    { t: "Output", row: 5, c: [sK(66, "Level"), sK(65, "Pan", "pan"), sK(67, "Pan sprd")] },
+    { t: "Shape", row: 5, c: [sK(68, "Fold"), sK(69, "Feedback")] },
+    sEnv("Env 3", 38, 6), sEnv("Env 4", 42, 6), sLfo("LFO 3", 52, 6), sLfo("LFO 4", 55, 6),
+    { t: "Mod FX", row: 7, c: [sD(70, "Type", SND_MODFX), sK(71, "Rate"), sK(72, "Depth"), sK(73, "Fdbk"), sK(74, "Offset")] },
+    { t: "Delay", row: 7, c: [sK(75, "Amount"), sK(76, "Rate"), sK(77, "Fdbk"), sK(78, "Tone", "bip"), sSync(79), pT(80, "PING"), pB(81, "Type", ["DIGI", "ANLG"])] },
+    { t: "Reverb", row: 7, c: [sK(82, "Amount"), sK(83, "Room"), sK(84, "Damp"), sK(85, "Width")] },
+    { t: "EQ", row: 8, c: [sK(86, "Bass"), sK(87, "Treble"), sK(88, "Bass f"), sK(89, "Treb f")] },
+    { t: "Saturation", row: 8, red: true, c: [sD(90, "Type", FX_TYPES.sat.names, { picker: "sat" }), sK(91, "Drive")] },
+    { t: "Crush", row: 8, red: true, c: [sD(92, "Type", FX_TYPES.crush.names, { picker: "crush" }), sK(93, "Bits"), sK(94, "Decim")] },
+    { t: "Sidechain", row: 9, c: [sK(95, "Send"), sK(96, "Duck"), sK(97, "Shape"), sK(98, "Comp")] },
+    { t: "Arp", row: 9, c: [sK(99, "Rate"), sK(100, "Gate")] },
+    { t: "Stutter", row: 9, c: [sK(101, "Rate")] },
+    { t: "Master clip", row: 10, red: true, c: [sD(102, "Type", FX_TYPES.clip.names, { picker: "clip" }), pK(103, "Drive", "db", { steps: 24 }), pK(104, "Ceiling", "ceil", { steps: 12 })] }
+  ]
+});
+function showSound(m) {
+  soundP.show(m.open ? m : null);
+  navSoon();
+}
+document.addEventListener("pointerdown", function (e) {
+  var pop = document.querySelector(".sddpop");
+  if (pop && !pop.contains(e.target) && !(e.target.closest && e.target.closest(".sdd"))) pop.remove();
+}, true);
+window.addEventListener("scroll", function () { var pop = document.querySelector(".sddpop"); if (pop && !fingerOnPage()) pop.remove(); }, { passive: true });
+$("vpClose").onclick = vpClose;
+$("vpBack").onclick = function () { tx([0x03, 0x08, 3]); };
+$("heroArt").title = "Tap to change the engine";
+$("heroArt").addEventListener("click", function () { if (fwMode !== "stock") tx([0x03, 0x1C, 0]); });
+
 // PANEL: which engine panel, if any
 function showPanel(m) {
   bruno.show(m.which === 1 ? m : null);
@@ -4413,6 +4871,19 @@ function parse(d) {
     wp.ok = d[wpj] === 0xF7;
     return wp;
   }
+  if (kind === 0x5B) {
+    // SOUND: count, flags (1 kit row), which settings this sound has (7 a byte), each one's position, then texts
+    var sd = { kind: "sound", open: d[8] > 0, v: [], mask: [], texts: {}, kit: (d[9] & 1) === 1 };
+    if (!sd.open) { sd.ok = d[9] === 0xF7; return sd; }
+    var sn = d[8], sj = 10;
+    for (var sm = 0; sm < sn; sm++) sd.mask.push(((d[sj + (sm / 7 | 0)] >> (sm % 7)) & 1) === 1);
+    sj += Math.ceil(sn / 7);
+    for (var sv = 0; sv < sn; sv++, sj += 2) sd.v.push((d[sj] << 7) | d[sj + 1]);
+    var stn = d[sj++];
+    for (var st = 0; st < stn && sj < d.length; st++) { var stx = readName(d, sj + 1); sd.texts[d[sj]] = stx.text; sj = stx.next; }
+    sd.ok = d[sj] === 0xF7;
+    return sd;
+  }
   if (kind === 0x5A) {
     // MENU: one open level of the Deluge's menu (see the firmware's hid_sysex.cpp)
     var mn = { kind: "menu", open: d[8] === 1 };
@@ -4523,6 +4994,7 @@ function onMessage(ev) {
   case "clipPos": clipPos = m.pos; placeClipHeads(); return;
   case "diag": $("waveDiag").textContent = m.text; return;
   case "gold": showGold(m); return;
+  case "sound": if (m.ok) showSound(m); return;
   case "panel": if (!m.open || m.ok) { showPanel(m); panelKind = m.open ? m.which : 0; followTrack(); } return;
   case "wtable": if (m.ok) wtTable(m); return;
   case "wtpos": if (m.ok) wtPos(m); return;
@@ -4533,7 +5005,7 @@ function onMessage(ev) {
     if (lastSeq >= 0 && m.seq !== ((lastSeq + 1) & 0x7F)) dropped++;
     lastSeq = m.seq; stateCount++;
     state = m;
-    render(); followTrack();
+    render(); followTrack(); soundEngine();
     return;
   default:
     rows = m.rows;
